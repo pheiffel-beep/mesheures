@@ -404,7 +404,7 @@ fr:{
 "r.bktxt":"Tes données restent uniquement sur ce téléphone. Enregistre régulièrement une sauvegarde : un fichier que tu ranges dans Fichiers (iCloud Drive), ton Drive ou que tu t'envoies par mail.",
 "r.bkfile":"Enregistrer une sauvegarde","r.bkopen":"Restaurer depuis un fichier","r.bkother":"Autre méthode : copier / coller",
 "r.bkcopy":"Copier la sauvegarde","r.bkpaste":"Colle ici une sauvegarde","r.bkload":"Restaurer cette sauvegarde",
-"r.version":"Version 0.14 · aucune donnée envoyée · rien d'autre que des horaires.",
+"r.version":"Version 0.15 · aucune donnée envoyée · rien d'autre que des horaires.",
 "nav.jour":"Jour","nav.mois":"Mois","nav.recap":"Récap","nav.reg":"Réglages",
 
 "s.s":"Service","s.r":"Rappel","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Congé","y.z":"Z","y.ex":"EX",
@@ -413,6 +413,7 @@ fr:{
 "d.weekend":"Week-end",
 "half.z":function(x){return "Demi-journée de Z ("+x+")"},
 "half.conge":function(x){return "Demi-journée de congé ("+x+")"},
+"rest.lab":"Compléter la journée avec du congé","ex.rest":function(a,b){return "Reste de la journée en congé : "+a+" ("+b+" j retiré du quota de congés)."},
 "ex.z":function(x){return x+" retirées des heures sup."},
 "ex.conge1":"1 jour retiré du quota de congés.","ex.congeh":"½ jour retiré du quota de congés.",
 "ex.ex":function(x){return "Exempt : compte "+x+"."},
@@ -522,7 +523,7 @@ nl:{
 "r.bktxt":"Je gegevens blijven enkel op deze telefoon. Maak regelmatig een back-up: een bestand dat je bewaart in Bestanden (iCloud Drive), in je Drive of dat je naar jezelf mailt.",
 "r.bkfile":"Back-up opslaan","r.bkopen":"Herstellen vanuit een bestand","r.bkother":"Andere methode: kopiëren / plakken",
 "r.bkcopy":"Back-up kopiëren","r.bkpaste":"Plak hier een back-up","r.bkload":"Deze back-up herstellen",
-"r.version":"Versie 0.14 · geen gegevens verstuurd · enkel uurroosters.",
+"r.version":"Versie 0.15 · geen gegevens verstuurd · enkel uurroosters.",
 "nav.jour":"Dag","nav.mois":"Maand","nav.recap":"Overzicht","nav.reg":"Instellingen",
 
 "s.s":"Dienst","s.r":"Oproep","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Verlof","y.z":"Z","y.ex":"EX",
@@ -531,6 +532,7 @@ nl:{
 "d.weekend":"Weekend",
 "half.z":function(x){return "Halve dag Z ("+x+")"},
 "half.conge":function(x){return "Halve dag verlof ("+x+")"},
+"rest.lab":"Dag aanvullen met verlof","ex.rest":function(a,b){return "Rest van de dag verlof: "+a+" ("+b+" d afgetrokken van het verloftegoed)."},
 "ex.z":function(x){return x+" afgetrokken van de overuren."},
 "ex.conge1":"1 dag afgetrokken van het verloftegoed.","ex.congeh":"½ dag afgetrokken van het verloftegoed.",
 "ex.ex":function(x){return "Vrijgesteld: telt als "+x+"."},
@@ -761,7 +763,9 @@ function segMin(s,live){
 }
 function worked(k,live){var x=day(k),t=0; x.segs.forEach(function(s){t+=segMin(s,live&&k===key(today()))}); return t;}
 function hasContent(x){return !!(x.type||x.segs.some(function(s){return s.a}))}
-function isHalf(x){return !!x.half&&(x.type==="conge"||x.type==="z")}
+function isHalf(x){return !!x.half&&x.type==="conge"}
+/* jour presté (Dispo/Opération) complété par du congé : le reste de la norme est pris en congé */
+function isRest(d,x){return !!x.rest&&(x.type==="dispo"||x.type==="ops")&&isWeekday(d)&&!ferie(d)}
 /* férié (lun.–ven.) où il a presté : +1 jour de congé, heures en heures sup */
 function workedFerie(d,x){
   if(!isWeekday(d)||!ferie(d)) return false;
@@ -773,9 +777,11 @@ function credit(k,live){
   if(ferie(d)) return w+NORM();
   if(x.type==="conge") return w+(isHalf(x)?NORM()/2:NORM());
   if(x.type==="ex") return w+NORM();
+  if(isRest(d,x)) return Math.max(w,NORM());
   return w; /* Z : rien n'est crédité, les 7 h 36 sortent des heures sup */
 }
 function congeUsed(d,x){
+  if(isRest(d,x)&&tracked(key(d))) return Math.max(0,NORM()-worked(key(d)))/NORM();
   if(x.type!=="conge"||!isWeekday(d)||ferie(d)) return 0;
   return isHalf(x)?0.5:1;
 }
@@ -878,14 +884,15 @@ function renderJour(keepSegs){
   $("dNorm").textContent=wd?fmt(NORM()):"—";
   $("dayCard").className="card daycard "+kcls(cur,x);
   document.querySelectorAll("#types .ty").forEach(function(b){b.classList.toggle("on",x.type===b.dataset.type)});
-  var showHalf=x.type==="conge"||x.type==="z";
+  var showHalf=(x.type==="dispo"||x.type==="ops")&&wd&&!f;
   $("halfRow").classList.toggle("hidden",!showHalf);
-  $("halfLab").textContent=x.type==="z"?t("half.z",fmt(NORM()/2)):t("half.conge",fmt(NORM()/2));
-  $("tHalf").classList.toggle("on",isHalf(x));
+  $("halfLab").textContent=t("rest.lab");
+  $("tHalf").classList.toggle("on",!!x.rest);
   $("dTotal").textContent=fmt(credit(k,true));
   var ex="";
   if(wd&&!f){
-    if(x.type==="z") ex=t("ex.z",fmt(isHalf(x)?NORM()/2:NORM()));
+    if(x.type==="z") ex=t("ex.z",fmt(NORM()));
+    if(isRest(cur,x)){ var rm=Math.max(0,NORM()-worked(k)); ex=t("ex.rest",fmt(rm),num(rm/NORM())); }
     if(x.type==="conge") ex=isHalf(x)?t("ex.congeh"):t("ex.conge1");
     if(x.type==="ex") ex=t("ex.ex",fmt(NORM()));
   }
@@ -1212,13 +1219,13 @@ $("segs").addEventListener("click",function(e){
   setTimeout(function(){if(b.isConnected){delete b.dataset.armed;b.textContent="×";b.style.color=""}},2500);
 });
 $("tGarde").onclick=function(){if(blocked(key(cur)))return;var x=day(key(cur),true);x.garde=!x.garde;save();render()};
-$("tHalf").onclick=function(){if(blocked(key(cur)))return;var x=day(key(cur),true);x.half=!x.half;save();render();if(x.type==="z")warnHS()};
+$("tHalf").onclick=function(){if(blocked(key(cur)))return;var x=day(key(cur),true);if(x.type!=="dispo"&&x.type!=="ops")return;x.rest=!x.rest;save();render()};
 $("types").addEventListener("click",function(e){
   var b=e.target.closest(".ty"); if(!b) return; if(blocked(key(cur))) return;
   var x=day(key(cur),true), ty=b.dataset.type, S=data.settings;
-  if(x.type===ty){ x.type=null; x.half=false; if(ty==="dispo") x.segs=x.segs.filter(function(s){return s.t!=="d"}); save(); render(); return; }
+  if(x.type===ty){ x.type=null; x.half=false; x.rest=false; if(ty==="dispo") x.segs=x.segs.filter(function(s){return s.t!=="d"}); save(); render(); return; }
   if(x.type==="dispo") x.segs=x.segs.filter(function(s){return s.t!=="d"});
-  x.type=ty; if(ty!=="conge"&&ty!=="z") x.half=false;
+  x.type=ty; x.half=false; if(ty!=="dispo"&&ty!=="ops") x.rest=false;
   if(ty==="dispo"){ x.segs=x.segs.filter(function(s){return s.a}); x.segs.unshift({t:"d",a:S.dispoA,b:S.dispoB,p:S.dispoP}); toast(t("tt.dispo",fmt(segMin(x.segs[0])))); }
   if(ty==="ops" && !x.segs.some(function(s){return s.t==="s"})){ x.segs.push({t:"s",a:"",b:""}); toast(t("t.enc")); }
   save(); render();
