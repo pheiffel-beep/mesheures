@@ -399,7 +399,7 @@ fr:{
 "r.bktxt":"Tes données restent uniquement sur ce téléphone. Enregistre régulièrement une sauvegarde : un fichier que tu ranges dans Fichiers (iCloud Drive), ton Drive ou que tu t'envoies par mail.",
 "r.bkfile":"Enregistrer une sauvegarde","r.bkopen":"Restaurer depuis un fichier","r.bkother":"Autre méthode : copier / coller",
 "r.bkcopy":"Copier la sauvegarde","r.bkpaste":"Colle ici une sauvegarde","r.bkload":"Restaurer cette sauvegarde",
-"r.version":"Version 0.12 · aucune donnée envoyée · rien d'autre que des horaires.",
+"r.version":"Version 0.13 · aucune donnée envoyée · rien d'autre que des horaires.",
 "nav.jour":"Jour","nav.mois":"Mois","nav.recap":"Récap","nav.reg":"Réglages",
 
 "s.s":"Service","s.r":"Rappel","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Congé","y.z":"Z","y.ex":"EX",
@@ -517,7 +517,7 @@ nl:{
 "r.bktxt":"Je gegevens blijven enkel op deze telefoon. Maak regelmatig een back-up: een bestand dat je bewaart in Bestanden (iCloud Drive), in je Drive of dat je naar jezelf mailt.",
 "r.bkfile":"Back-up opslaan","r.bkopen":"Herstellen vanuit een bestand","r.bkother":"Andere methode: kopiëren / plakken",
 "r.bkcopy":"Back-up kopiëren","r.bkpaste":"Plak hier een back-up","r.bkload":"Deze back-up herstellen",
-"r.version":"Versie 0.12 · geen gegevens verstuurd · enkel uurroosters.",
+"r.version":"Versie 0.13 · geen gegevens verstuurd · enkel uurroosters.",
 "nav.jour":"Dag","nav.mois":"Maand","nav.recap":"Overzicht","nav.reg":"Instellingen",
 
 "s.s":"Dienst","s.r":"Oproep","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Verlof","y.z":"Z","y.ex":"EX",
@@ -1147,14 +1147,14 @@ $("lockBtn").onclick=function(){
   setTimeout(function(){ if(b.isConnected&&b.dataset.armed){ delete b.dataset.armed; b.textContent=t("lock.unlock"); } },3000);
 };
 $("bStart").onclick=function(){
-  cur=today(); if(blocked(key(cur))){render();return} var x=day(key(cur),true);
+  if(blocked(key(cur))){render();return} var x=day(key(cur),true);
   if(x.segs.some(function(s){return s.a&&!s.b})){toast(t("t.running"));return}
   var empty=x.segs.filter(function(s){return s.t!=="d"&&!s.a});
   if(empty.length) empty[0].a=nowHM(); else x.segs.push({t:"s",a:nowHM(),b:null});
   save(); render(); toast(t("t.begin",nowHM()));
 };
 $("bEnd").onclick=function(){
-  cur=today(); var k=key(cur); if(blocked(k)){render();return} var x=day(k,true);
+  var k=key(cur); if(blocked(k)){render();return} var x=day(k,true);
   var open=x.segs.filter(function(s){return s.a&&!s.b});
   if(!open.length){
     var y=new Date(cur);y.setDate(y.getDate()-1);var xy=day(key(y));
