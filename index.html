@@ -332,6 +332,7 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:10p
         <div><div class="small" data-i18n="r.to"></div><button class="tbtn" id="sDB"></button></div>
         <div><div class="small" data-i18n="r.pause"></div><input type="number" id="sDP" step="5" min="0" max="120" style="width:100%"></div>
       </div>
+      <div class="row between" style="margin-top:10px"><span class="small" data-i18n="r.dstart"></span><div class="chips" id="sDChips"><button data-h="07:00">7 h</button><button data-h="08:00">8 h</button><button data-h="09:00">9 h</button></div></div>
       <div class="note" id="sDNote"></div>
     </div>
     <div class="card">
@@ -401,6 +402,17 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:10p
   <button data-v="recap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg><span data-i18n="nav.recap"></span></button>
   <button data-v="reg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span data-i18n="nav.reg"></span></button>
 </nav>
+<div class="tp hidden" id="tyPick">
+  <div class="tpbox">
+    <div class="tptitle" data-i18n="tk.title"></div>
+    <div style="display:grid;gap:8px;margin:14px 0">
+      <button class="ty dispo k-dispo on" data-pick="dispo" data-i18n="ty.dispo"></button>
+      <button class="ty prep k-prep on" data-pick="prep" data-i18n="ty.prep"></button>
+      <button class="ty ops k-ops on" data-pick="ops" data-i18n="ty.ops"></button>
+    </div>
+    <button class="btn alt" id="tyNo" style="width:100%" data-i18n="tp.cancel"></button>
+  </div>
+</div>
 <div class="tp hidden" id="tp">
   <div class="tpbox">
     <div class="tptitle" id="tpTitle"></div>
@@ -451,7 +463,7 @@ fr:{
 "r.bktxt":"Tes données restent uniquement sur ce téléphone. Enregistre régulièrement une sauvegarde : un fichier que tu ranges dans Fichiers (iCloud Drive), ton Drive ou que tu t'envoies par mail.",
 "r.bkfile":"Enregistrer une sauvegarde","r.bkopen":"Restaurer depuis un fichier","r.bkother":"Autre méthode : copier / coller",
 "r.bkcopy":"Copier la sauvegarde","r.bkpaste":"Colle ici une sauvegarde","r.bkload":"Restaurer cette sauvegarde",
-"r.version":"Version 0.20 · aucune donnée envoyée · rien d'autre que des horaires.",
+"r.version":"Version 0.21 · aucune donnée envoyée · rien d'autre que des horaires.",
 "nav.jour":"Jour","nav.mois":"Mois","nav.recap":"Récap","nav.reg":"Réglages",
 
 "s.s":"Service","s.r":"Rappel","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Congé","y.z":"Z","y.ex":"EX",
@@ -534,6 +546,7 @@ fr:{
 "fe.nouvelan":"Nouvel An","fe.paques":"Lundi de Pâques","fe.travail":"Fête du Travail","fe.ascension":"Ascension","fe.pentecote":"Lundi de Pentecôte","fe.nationale":"Fête nationale","fe.assomption":"Assomption","fe.toussaint":"Toussaint","fe.armistice":"Armistice","fe.noel":"Noël",
 "fe.defunts":"Jour des défunts","fe.roi":"Fête du Roi","fe.lendemain":"Lendemain de Noël",
 "cl.report":"Report congé année précédente","cl.pentecote":"Congé supplémentaire (lundi de Pentecôte travaillé)","cl.cg":"Jours CG","cl.feries":"Fériés au choix (15/11 et 26/12)","cl.vacances":"Congé annuel de vacances","cl.new":"Nouveau crédit",
+"tk.title":"Quel type de journée ?","r.dstart":"Heure de début","d.dstart":function(a,b){return "Dispo à partir de "+a+" (jusqu'à "+b+")"},"r.dset":function(a,b){return "Dispo gradé : "+a+" – "+b},
 "ty.prep":"Préparation","y.prep":"Prépa","t.prep":"Préparations","p.which":"Préparation :","p.none":"Ajoute tes préparations dans Réglages",
 "mi.btn":"Mission tombée à…","mi.title":"Heure de départ en mission",
 "mi.am":function(x){return "Mission à "+x+" : service continu, sans pause"},"mi.pm":function(x){return "Mission à "+x+" : dispo, puis opération"},
@@ -583,7 +596,7 @@ nl:{
 "r.bktxt":"Je gegevens blijven enkel op deze telefoon. Maak regelmatig een back-up: een bestand dat je bewaart in Bestanden (iCloud Drive), in je Drive of dat je naar jezelf mailt.",
 "r.bkfile":"Back-up opslaan","r.bkopen":"Herstellen vanuit een bestand","r.bkother":"Andere methode: kopiëren / plakken",
 "r.bkcopy":"Back-up kopiëren","r.bkpaste":"Plak hier een back-up","r.bkload":"Deze back-up herstellen",
-"r.version":"Versie 0.20 · geen gegevens verstuurd · enkel uurroosters.",
+"r.version":"Versie 0.21 · geen gegevens verstuurd · enkel uurroosters.",
 "nav.jour":"Dag","nav.mois":"Maand","nav.recap":"Overzicht","nav.reg":"Instellingen",
 
 "s.s":"Dienst","s.r":"Oproep","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Verlof","y.z":"Z","y.ex":"EX",
@@ -666,6 +679,7 @@ nl:{
 "fe.nouvelan":"Nieuwjaar","fe.paques":"Paasmaandag","fe.travail":"Dag van de Arbeid","fe.ascension":"O.L.H. Hemelvaart","fe.pentecote":"Pinkstermaandag","fe.nationale":"Nationale feestdag","fe.assomption":"O.L.V. Hemelvaart","fe.toussaint":"Allerheiligen","fe.armistice":"Wapenstilstand","fe.noel":"Kerstmis",
 "fe.defunts":"Allerzielen","fe.roi":"Koningsdag","fe.lendemain":"Tweede kerstdag",
 "cl.report":"Overdracht verlof vorig jaar","cl.pentecote":"Bijkomend verlof (Pinkstermaandag gewerkt)","cl.cg":"CG-dagen","cl.feries":"Feestdagen naar keuze (15/11 en 26/12)","cl.vacances":"Jaarlijks vakantieverlof","cl.new":"Nieuw tegoed",
+"tk.title":"Welk soort dag?","r.dstart":"Beginuur","d.dstart":function(a,b){return "Dispo vanaf "+a+" (tot "+b+")"},"r.dset":function(a,b){return "Dispo gegradeerde: "+a+" – "+b},
 "ty.prep":"Voorbereiding","y.prep":"Voorb.","t.prep":"Voorbereidingen","p.which":"Voorbereiding:","p.none":"Voeg je voorbereidingen toe in Instellingen",
 "mi.btn":"Opdracht binnen om…","mi.title":"Vertrekuur opdracht",
 "mi.am":function(x){return "Opdracht om "+x+": doorlopende dienst, zonder pauze"},"mi.pm":function(x){return "Opdracht om "+x+": dispo, daarna operatie"},
@@ -1234,6 +1248,7 @@ function renderReg(){
   fl.innerHTML=h||'<div class="small">'+esc(t("r.nofe"))+'</div>';
   $("prepList").innerHTML=S.preps.length?S.preps.map(function(n,i){return '<div class="fe"><b>'+esc(n)+'</b><button class="x" data-pdel="'+i+'">×</button></div>'}).join(""):'<div class="small">'+esc(t("r.noprep"))+'</div>';
   $("sSport").classList.toggle("on",!!S.sport);
+  document.querySelectorAll("#sDChips button").forEach(function(b){b.classList.toggle("on",b.dataset.h===S.dispoA)});
 }
 
 var BK_DAYS=7;
@@ -1324,9 +1339,9 @@ $("clrDay").onclick=function(){
 $("bStart").onclick=function(){
   if(blocked(key(cur))){render();return} var x=day(key(cur),true);
   if(x.segs.some(function(s){return s.a&&!s.b})){toast(t("t.running"));return}
-  var empty=x.segs.filter(function(s){return s.t!=="d"&&!s.a});
-  if(empty.length) empty[0].a=nowHM(); else x.segs.push({t:"s",a:nowHM(),b:null});
-  save(); render(); toast(t("t.begin",nowHM()));
+  /* aucun type choisi : on demande d'abord le type de journée */
+  if(!x.type){ $("tyPick").classList.remove("hidden"); return; }
+  startNow(x);
 };
 $("bEnd").onclick=function(){
   var k=key(cur); if(blocked(k)){render();return} var x=day(k,true);
@@ -1386,9 +1401,13 @@ $("tHalf").onclick=function(){if(blocked(key(cur)))return;var x=day(key(cur),tru
 function clearMix(x){ if(x.mix) x.segs=x.segs.filter(function(s){return s.t!=="d"}); delete x.mix; delete x.brk; delete x.from; delete x.mt; }
 $("types").addEventListener("click",function(e){
   var b=e.target.closest(".ty"); if(!b) return; if(blocked(key(cur))) return;
-  var x=day(key(cur),true), ty=b.dataset.type, S=data.settings;
+  var x=day(key(cur),true), ty=b.dataset.type;
   clearMix(x);
   if(x.type===ty){ x.type=null; x.half=false; x.rest=false; if(dispoLike(ty)) x.segs=x.segs.filter(function(s){return s.t!=="d"}); save(); render(); return; }
+  setType(x,ty);
+});
+function setType(x,ty){
+  var S=data.settings;
   var wasD=dispoLike(x.type);
   if(wasD) x.segs=x.segs.filter(function(s){return s.t!=="d"});
   x.type=ty; x.half=false; if(!dispoLike(ty)&&ty!=="ops") x.rest=false;
@@ -1397,6 +1416,33 @@ $("types").addEventListener("click",function(e){
   if(ty==="ops" && !x.segs.some(function(s){return s.t==="s"})){ x.segs.push({t:"s",a:"",b:""}); toast(t("t.enc")); }
   save(); render();
   if(ty==="z"){ var k=key(cur); if(counted(k)) warnHS(); else { var h=hsNow()-NORM(); if(h< -600) toast(t("t.afterz",fmt(h,true)),3500); } }
+}
+/* durée standard du dispo (fin − début) */
+function dispoLen(){var S=data.settings, d=toMin(S.dispoB)-toMin(S.dispoA); if(d<=0) d+=1440; return d}
+function addMin(hm,m){var v=(toMin(hm)+m)%1440; return pad(Math.floor(v/60))+":"+pad(v%60)}
+/* Début : note l'heure dans la bonne ligne selon le type du jour */
+function startNow(x){
+  var now=nowHM();
+  if(dispoLike(x.type)){
+    var ds=x.segs.filter(function(s){return s.t==="d"})[0];
+    if(!ds){ ds={t:"d",p:data.settings.dispoP}; x.segs.unshift(ds); }
+    ds.a=now; ds.b=addMin(now,dispoLen());
+    save(); render(); toast(t("d.dstart",ds.a,ds.b),2600); return;
+  }
+  var empty=x.segs.filter(function(s){return s.t!=="d"&&!s.a});
+  if(empty.length) empty[0].a=now; else x.segs.push({t:"s",a:now,b:null});
+  save(); render(); toast(t("t.begin",now));
+}
+$("tyPick").addEventListener("click",function(e){
+  var b=e.target.closest("[data-pick]"); if(!b) return;
+  $("tyPick").classList.add("hidden");
+  var x=day(key(cur),true); setType(x,b.dataset.pick); startNow(x);
+});
+$("tyNo").onclick=function(){ $("tyPick").classList.add("hidden"); };
+$("sDChips").addEventListener("click",function(e){
+  var b=e.target.closest("[data-h]"); if(!b) return;
+  var S=data.settings, len=dispoLen(); S.dispoA=b.dataset.h; S.dispoB=addMin(S.dispoA,len);
+  save(); render(); toast(t("r.dset",S.dispoA,S.dispoB));
 });
 /* préparation : choix de l'étiquette */
 $("prepChips").addEventListener("click",function(e){
