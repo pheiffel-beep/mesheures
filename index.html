@@ -54,6 +54,8 @@ button{font:inherit;border:0;border-radius:12px;padding:12px 14px;cursor:pointer
 .locked .types,.locked #segs,.locked .grid2,.locked #halfRow,.locked .toggle,.locked #addS,.locked #addR{opacity:.45}
 .lk{color:var(--muted);flex:none}
 .bkwarn{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fdf0d8;border:1px solid #f0d49a;color:#7a4e0c;border-radius:12px;padding:10px 12px;font-size:14px;margin-bottom:12px}
+.confirm{background:#f3ecf5;border:1px solid #e2d3e8;border-radius:12px;padding:12px;margin-top:10px;font-size:14px}
+.confirm .row{margin-top:10px}
 .bkwarn button{padding:8px 10px;font-size:13px;flex:none}
 .tag.g{background:#e3efe7;color:var(--pos)}
 .tag.d{background:var(--c-dispo-bg);color:var(--c-dispo)}
@@ -160,7 +162,7 @@ textarea{width:100%;min-height:140px;font:16px/1.4 ui-monospace,Menlo,monospace;
 </header>
 <main>
   <!-- JOUR -->
-  <div class="bkwarn hidden" id="bkWarn"><span id="bkWarnTxt"></span><button class="btn" id="bkNow">Copier</button></div>
+  <div class="bkwarn hidden" id="bkWarn"><span id="bkWarnTxt"></span><button class="btn" id="bkNow">Sauvegarder</button></div>
   <section id="v-jour">
     <div class="navd">
       <button id="dPrev" aria-label="Jour précédent">‹</button>
@@ -302,18 +304,20 @@ textarea{width:100%;min-height:140px;font:16px/1.4 ui-monospace,Menlo,monospace;
     </div>
     <div class="card">
       <strong>Sauvegarde</strong>
-      <p class="small" style="margin:6px 0 10px">Tes données restent sur ce téléphone, dans ce navigateur. Copie régulièrement la sauvegarde et garde-la en lieu sûr.</p>
-      <div class="grid2">
-        <button class="btn alt" id="bkCopy">Copier la sauvegarde</button>
-        <button class="btn alt" id="bkShow">Restaurer…</button>
-      </div>
+      <p class="small" style="margin:6px 0 10px">Tes données restent uniquement sur ce téléphone. Enregistre régulièrement une sauvegarde : un fichier que tu ranges dans Fichiers (iCloud Drive), ton Drive ou que tu t'envoies par mail.</p>
+      <button class="btn" id="bkFile" style="width:100%">Enregistrer une sauvegarde</button>
+      <button class="btn alt" id="bkOpen" style="width:100%;margin-top:8px">Restaurer depuis un fichier</button>
+      <input type="file" id="bkInput" accept=".json,application/json,text/plain" class="hidden">
       <div class="note" id="bkLast"></div>
+      <div class="confirm hidden" id="bkConfirm"></div>
+      <button class="btn ghost sm" id="bkShow" style="margin-top:6px">Autre méthode : copier / coller</button>
       <div id="bkBox" class="hidden" style="margin-top:10px">
+        <button class="btn alt sm" id="bkCopy" style="width:100%;margin-bottom:8px">Copier la sauvegarde</button>
         <textarea id="bkText" placeholder="Colle ici une sauvegarde"></textarea>
         <button class="btn" id="bkLoad" style="width:100%;margin-top:8px">Restaurer cette sauvegarde</button>
       </div>
     </div>
-    <div class="card small">Version 0.8 · aucune donnée envoyée · rien d'autre que des horaires.</div>
+    <div class="card small">Version 0.9 · aucune donnée envoyée · rien d'autre que des horaires.</div>
   </section>
 </main>
 
@@ -772,10 +776,41 @@ function renderBk(){
   $("bkWarnTxt").textContent=a===null?"Aucune sauvegarde de tes heures pour l'instant.":"Dernière sauvegarde il y a "+a+" jours.";
   $("bkLast").textContent=a===null?"Pas encore de sauvegarde.":"Dernière sauvegarde : "+(a===0?"aujourd'hui":a===1?"hier":"il y a "+a+" jours")+". Un rappel s'affiche après "+BK_DAYS+" jours.";
 }
+function markBackup(msg){ data.lastBackup=Date.now(); save(); renderBk(); toast(msg); }
 function doBackup(){
-  data.lastBackup=Date.now(); save();
+  data.lastBackup=Date.now();
   copy(JSON.stringify(data),"Sauvegarde copiée : colle-la dans Notes");
-  renderBk();
+  save(); renderBk();
+}
+/* sauvegarde en fichier : feuille de partage (Fichiers, Drive, Mail…) ou téléchargement */
+function backupFile(){
+  var d=today(), name="mes-heures-"+key(d)+".json";
+  var snap=JSON.parse(JSON.stringify(data)); snap.lastBackup=Date.now();
+  var json=JSON.stringify(snap,null,1), file=null;
+  try{ file=new File([json],name,{type:"application/json"}) }catch(e){}
+  function download(){
+    try{
+      var a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([json],{type:"application/json"}));
+      a.download=name; document.body.appendChild(a); a.click(); a.remove();
+      markBackup("Sauvegarde enregistrée : "+name);
+    }catch(e){ toast("Impossible d'enregistrer : utilise copier / coller"); }
+  }
+  if(file&&navigator.canShare&&navigator.canShare({files:[file]})){
+    navigator.share({files:[file],title:"Sauvegarde Mes heures"}).then(function(){ markBackup("Sauvegarde enregistrée"); },
+      function(e){ if(e&&e.name==="AbortError") toast("Sauvegarde annulée"); else download(); });
+  } else download();
+}
+var pending=null;
+function askRestore(txt){
+  var d; try{ d=JSON.parse(txt); if(!d||!d.days) throw 0; }catch(e){ toast("Fichier de sauvegarde illisible"); return; }
+  pending=d;
+  var n=Object.keys(d.days).length, when=d.lastBackup?new Date(d.lastBackup):null;
+  var c=$("bkConfirm");
+  c.innerHTML='<b>Restaurer cette sauvegarde ?</b><br>'+(when?'Faite le '+when.getDate()+' '+MOIS[when.getMonth()]+' '+when.getFullYear()+' · ':'')+n+' jour'+(n>1?'s':'')+' encodé'+(n>1?'s':'')+'.<br><span class="small">Tes données actuelles seront remplacées.</span>'+
+    '<div class="row"><button class="btn" id="bkYes">Restaurer</button><button class="btn alt" id="bkNo">Annuler</button></div>';
+  c.classList.remove("hidden");
+  $("bkYes").onclick=function(){ data=pending; pending=null; migrate(); save(); c.classList.add("hidden"); render(); toast("Sauvegarde restaurée"); };
+  $("bkNo").onclick=function(){ pending=null; c.classList.add("hidden"); };
 }
 function render(){
   psMemo={};
@@ -935,11 +970,16 @@ function copy(text,msg){
   try{navigator.clipboard.writeText(text).then(function(){toast(msg)},fallback)}catch(e){fallback()}
 }
 $("bkCopy").onclick=doBackup;
-$("bkNow").onclick=doBackup;
+$("bkNow").onclick=backupFile;
+$("bkFile").onclick=backupFile;
+$("bkOpen").onclick=function(){ $("bkInput").value=""; $("bkInput").click(); };
+$("bkInput").onchange=function(){
+  var f=this.files&&this.files[0]; if(!f) return;
+  var r=new FileReader(); r.onload=function(){ askRestore(String(r.result)); }; r.onerror=function(){ toast("Lecture impossible"); }; r.readAsText(f);
+};
 $("bkShow").onclick=function(){$("bkBox").classList.toggle("hidden")};
 $("bkLoad").onclick=function(){
-  try{var d=JSON.parse($("bkText").value); if(!d.days) throw 0; data=d; migrate(); save(); render(); toast("Sauvegarde restaurée"); $("bkBox").classList.add("hidden")}
-  catch(e){toast("Sauvegarde illisible")}
+  askRestore($("bkText").value); $("bkBox").classList.add("hidden");
 };
 function updateLive(){
   if(view!=="jour") return;
