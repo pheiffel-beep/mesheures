@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Mes heures">
-<title>Mes heures</title>
+<meta name="apple-mobile-web-app-title" content="Heurêka">
+<title>Heurêka · Mes heures / Mijn uren</title>
 <style>
 :root{
   --bg:#f6f1e9; --card:#fffdf9; --ink:#2b2230; --muted:#7a6f7f; --line:#e7dfd3;
@@ -153,89 +153,94 @@ textarea{width:100%;min-height:140px;font:16px/1.4 ui-monospace,Menlo,monospace;
 .act td.z{color:#c9c0cc}
 .act tr.tot td{font-weight:700;border-top:2px solid var(--ink)}
 .totals .n{font-size:24px;font-weight:700}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.langbtn{background:#efe6f2;color:var(--accent);font-weight:700;font-size:13px;padding:6px 12px;border-radius:999px;margin-top:2px;box-shadow:none}
 </style>
 </head>
 <body>
 <header>
-  <h1 id="title">Mes heures</h1>
-  <div class="sub" id="subtitle"></div>
+  <div>
+    <h1 id="title">Heurêka</h1>
+    <div class="sub" id="subtitle"></div>
+  </div>
+  <button class="langbtn" id="langBtn" aria-label="Langue / Taal"></button>
 </header>
 <main>
   <!-- JOUR -->
-  <div class="bkwarn hidden" id="bkWarn"><span id="bkWarnTxt"></span><button class="btn" id="bkNow">Sauvegarder</button></div>
+  <div class="bkwarn hidden" id="bkWarn"><span id="bkWarnTxt"></span><button class="btn" id="bkNow" data-i18n="bk.now"></button></div>
   <section id="v-jour">
     <div class="navd">
-      <button id="dPrev" aria-label="Jour précédent">‹</button>
+      <button id="dPrev" data-aria="a.dprev">‹</button>
       <div style="text-align:center"><div class="mid" id="dLabel"></div><div class="small" id="dKind"></div></div>
-      <button id="dNext" aria-label="Jour suivant">›</button>
+      <button id="dNext" data-aria="a.dnext">›</button>
     </div>
     <div class="lockbar hidden" id="lockBar"><span id="lockTxt"></span><button class="btn alt" id="lockBtn"></button></div>
     <div class="types" id="types">
-      <button data-type="dispo" class="ty dispo k-dispo">Dispo gradé</button>
-      <button data-type="ops" class="ty ops k-ops">Opération</button>
-      <button data-type="conge" class="ty conge k-conge">Congé</button>
-      <button data-type="z" class="ty z k-z">Z (repos)</button>
-      <button data-type="ex" class="ty ex k-ex">EX (exempt)</button>
+      <button data-type="dispo" class="ty dispo k-dispo" data-i18n="ty.dispo"></button>
+      <button data-type="ops" class="ty ops k-ops" data-i18n="ty.ops"></button>
+      <button data-type="conge" class="ty conge k-conge" data-i18n="ty.conge"></button>
+      <button data-type="z" class="ty z k-z" data-i18n="ty.z"></button>
+      <button data-type="ex" class="ty ex k-ex" data-i18n="ty.ex"></button>
     </div>
-    <div class="halfrow hidden" id="halfRow"><span id="halfLab">Demi-journée</span><div class="sw" id="tHalf"></div></div>
+    <div class="halfrow hidden" id="halfRow"><span id="halfLab"></span><div class="sw" id="tHalf"></div></div>
     <div class="card daycard" id="dayCard">
       <div class="row between">
-        <div><div class="small">Compté ce jour</div><div class="big" id="dTotal">0 h 00</div></div>
-        <div style="text-align:right"><div class="small">Norme du jour</div><div class="mid" id="dNorm"></div></div>
+        <div><div class="small" data-i18n="d.counted"></div><div class="big" id="dTotal">0</div></div>
+        <div style="text-align:right"><div class="small" data-i18n="d.norm"></div><div class="mid" id="dNorm"></div></div>
       </div>
       <div class="live hidden" id="dLive"></div>
       <div class="small" id="dExplain" style="margin-top:6px"></div>
       <div class="info hidden" id="dFw"></div>
     </div>
     <div class="grid2" style="margin-bottom:12px">
-      <button class="btn" id="bStart">Début</button>
-      <button class="btn alt" id="bEnd">Fin</button>
+      <button class="btn" id="bStart" data-i18n="d.start"></button>
+      <button class="btn alt" id="bEnd" data-i18n="d.end"></button>
     </div>
     <div class="card">
       <div class="row between" style="margin-bottom:4px">
-        <strong>Prestations</strong>
+        <strong data-i18n="d.prest"></strong>
         <div class="row">
-          <button class="btn ghost" id="addS">+ Service</button>
-          <button class="btn ghost" id="addR">+ Rappel</button>
+          <button class="btn ghost" id="addS" data-i18n="d.addS"></button>
+          <button class="btn ghost" id="addR" data-i18n="d.addR"></button>
         </div>
       </div>
       <div id="segs"></div>
-      <div class="note">Une fin plus tôt que le début compte comme le lendemain (service de nuit).</div>
+      <div class="note" data-i18n="d.night"></div>
     </div>
     <div class="card">
-      <div class="toggle"><span>Rôle de garde (R)</span><div class="sw" id="tGarde"></div></div>
+      <div class="toggle"><span data-i18n="d.garde"></span><div class="sw" id="tGarde"></div></div>
     </div>
   </section>
 
   <!-- MOIS -->
   <section id="v-mois" class="hidden">
     <div class="navd">
-      <button id="mPrev" aria-label="Mois précédent">‹</button>
+      <button id="mPrev" data-aria="a.mprev">‹</button>
       <div class="mid" id="mLabel"></div>
-      <button id="mNext" aria-label="Mois suivant">›</button>
+      <button id="mNext" data-aria="a.mnext">›</button>
     </div>
     <div class="card">
-      <div class="small">Heures sup à ce jour</div>
+      <div class="small" data-i18n="m.hs"></div>
       <div class="big" id="mHS"></div>
       <div class="small" id="mHSTxt"></div>
       <div class="warnbox hidden" id="mWarn"></div>
       <div style="margin-top:14px;font-size:16px" id="mLine"></div>
       <div class="bar"><i id="mBar" style="width:0"></i></div>
-      <div class="small" style="margin-top:6px">Congés, fériés et EX comptent 7 h 36.</div>
+      <div class="small" style="margin-top:6px" id="mNote"></div>
     </div>
     <div class="legend">
-      <span class="k-dispo">Dispo gradé</span><span class="k-ops">Opération</span><span class="k-conge">Congé</span><span class="k-z">Z</span><span class="k-ex">EX</span><span class="k-sam">Samedi</span><span class="k-dim">Dimanche / férié</span><span class="diag k-fw k-ops">Férié travaillé</span><span class="diag k-wsam k-ops">Samedi travaillé</span>
+      <span class="k-dispo" data-i18n="ty.dispo"></span><span class="k-ops" data-i18n="ty.ops"></span><span class="k-conge" data-i18n="ty.conge"></span><span class="k-z" data-i18n="lg.z"></span><span class="k-ex" data-i18n="lg.ex"></span><span class="k-sam" data-i18n="lg.sam"></span><span class="k-dim" data-i18n="lg.dim"></span><span class="diag k-fw k-ops" data-i18n="lg.fw"></span><span class="diag k-wsam k-ops" data-i18n="lg.wsam"></span>
     </div>
     <div class="card days" id="mDays"></div>
-    <button class="btn alt" id="mLock" style="width:100%;margin-bottom:12px">Figer tous les jours passés du mois</button>
+    <button class="btn alt" id="mLock" style="width:100%;margin-bottom:12px" data-i18n="m.lockall"></button>
     <div class="card">
-      <strong>Totaux du mois</strong>
+      <strong data-i18n="m.totals"></strong>
       <div class="totals" style="margin-top:10px">
-        <div><div class="n" id="tOps">0</div><div class="small">Opérations</div></div>
-        <div><div class="n" id="tDispo">0</div><div class="small">Dispo gradés</div></div>
-        <div><div class="n" id="tRap">0</div><div class="small">Rappels</div></div>
-        <div><div class="n" id="tEx">0</div><div class="small">Exemptions</div></div>
-        <div><div class="n" id="tRapp">0</div><div class="small">Rappelables (R)</div></div>
+        <div><div class="n" id="tOps">0</div><div class="small" data-i18n="t.ops"></div></div>
+        <div><div class="n" id="tDispo">0</div><div class="small" data-i18n="t.dispo"></div></div>
+        <div><div class="n" id="tRap">0</div><div class="small" data-i18n="t.rap"></div></div>
+        <div><div class="n" id="tEx">0</div><div class="small" data-i18n="t.ex"></div></div>
+        <div><div class="n" id="tRapp">0</div><div class="small" data-i18n="t.rapp"></div></div>
       </div>
       <div class="small" id="tOther" style="margin-top:10px;text-align:center"></div>
     </div>
@@ -244,9 +249,9 @@ textarea{width:100%;min-height:140px;font:16px/1.4 ui-monospace,Menlo,monospace;
   <!-- RECAP -->
   <section id="v-recap" class="hidden">
     <div class="navd">
-      <button id="yPrev" aria-label="Année précédente">‹</button>
+      <button id="yPrev" data-aria="a.yprev">‹</button>
       <div class="mid" id="yLabel"></div>
-      <button id="yNext" aria-label="Année suivante">›</button>
+      <button id="yNext" data-aria="a.ynext">›</button>
     </div>
 
     <div class="card" id="cConge"></div>
@@ -257,81 +262,339 @@ textarea{width:100%;min-height:140px;font:16px/1.4 ui-monospace,Menlo,monospace;
   <!-- REGLAGES -->
   <section id="v-reg" class="hidden">
     <div class="card">
-      <strong>Régime horaire</strong>
+      <strong data-i18n="r.lang"></strong>
       <div class="row between" style="margin-top:10px">
-        <span>Heures par semaine</span>
+        <span data-i18n="r.langlab"></span>
+        <select id="sLang"><option value="fr">Français</option><option value="nl">Nederlands</option></select>
+      </div>
+    </div>
+    <div class="card">
+      <strong data-i18n="r.regime"></strong>
+      <div class="row between" style="margin-top:10px">
+        <span data-i18n="r.week"></span>
         <input type="number" id="sWeek" step="0.5" min="1" max="60">
       </div>
       <div class="note" id="sDayNote"></div>
     </div>
     <div class="card">
-      <strong>Horaire « Dispo gradé »</strong>
+      <strong data-i18n="r.dispo"></strong>
       <div class="grid3" style="margin-top:10px">
-        <div><div class="small">Début</div><input type="time" id="sDA"></div>
-        <div><div class="small">Fin</div><input type="time" id="sDB"></div>
-        <div><div class="small">Pause (min)</div><input type="number" id="sDP" step="5" min="0" max="120" style="width:100%"></div>
+        <div><div class="small" data-i18n="r.from"></div><input type="time" id="sDA"></div>
+        <div><div class="small" data-i18n="r.to"></div><input type="time" id="sDB"></div>
+        <div><div class="small" data-i18n="r.pause"></div><input type="number" id="sDP" step="5" min="0" max="120" style="width:100%"></div>
       </div>
       <div class="note" id="sDNote"></div>
     </div>
     <div class="card">
-      <strong>Rappels</strong>
+      <strong data-i18n="r.rappels"></strong>
       <div class="row between" style="margin-top:10px">
-        <span>Temps accordé avant et après</span>
-        <select id="sPad"><option value="0">Aucun</option><option value="30">30 min</option><option value="60">1 h</option></select>
+        <span data-i18n="r.pad"></span>
+        <select id="sPad"><option value="0" data-i18n="r.none"></option><option value="30">30 min</option><option value="60" data-i18n="r.1h"></option></select>
       </div>
-      <div class="note">Selon le domicile. Ce temps est ajouté avant ET après chaque rappel.</div>
+      <div class="note" data-i18n="r.padnote"></div>
     </div>
     <div class="card">
-      <strong>Heures sup : point de départ</strong>
+      <strong data-i18n="r.start"></strong>
       <div class="grid2" style="margin-top:10px">
-        <div><div class="small">Suivi depuis le</div><input type="date" id="sTS"></div>
-        <div><div class="small">Solde à cette date (h:mm)</div><input type="text" id="sHS" inputmode="text" placeholder="22:03"></div>
+        <div><div class="small" data-i18n="r.since"></div><input type="date" id="sTS"></div>
+        <div><div class="small" data-i18n="r.bal"></div><input type="text" id="sHS" inputmode="text" placeholder="22:03"></div>
       </div>
-      <div class="note">Les jours avant cette date ne sont pas comptés. Les congés pris avant se notent dans le Récap (« déjà consommé avant l'app »).</div>
+      <div class="note" data-i18n="r.startnote"></div>
     </div>
     <div class="card">
-      <strong>Jours fériés du service</strong>
-      <p class="small" style="margin:6px 0 8px">En plus des 10 fériés légaux belges (calculés automatiquement). Ajoute ici les ponts et congés prévus au calendrier de la police.</p>
+      <strong data-i18n="r.fer"></strong>
+      <p class="small" style="margin:6px 0 8px" data-i18n="r.fertxt"></p>
       <div id="feList"></div>
       <div class="grid2" style="margin-top:10px">
         <input type="date" id="feD">
-        <input type="text" class="left" id="feN" placeholder="Nom (ex. Pont)">
+        <input type="text" class="left" id="feN" data-ph="r.fername">
       </div>
       <div class="row between" style="margin-top:8px">
-        <span class="small">Chaque année</span><div class="sw" id="feRec"></div>
+        <span class="small" data-i18n="r.everyyear"></span><div class="sw" id="feRec"></div>
       </div>
-      <button class="btn alt" id="feAdd" style="width:100%;margin-top:8px">Ajouter ce jour</button>
+      <button class="btn alt" id="feAdd" style="width:100%;margin-top:8px" data-i18n="r.feradd"></button>
     </div>
     <div class="card">
-      <strong>Sauvegarde</strong>
-      <p class="small" style="margin:6px 0 10px">Tes données restent uniquement sur ce téléphone. Enregistre régulièrement une sauvegarde : un fichier que tu ranges dans Fichiers (iCloud Drive), ton Drive ou que tu t'envoies par mail.</p>
-      <button class="btn" id="bkFile" style="width:100%">Enregistrer une sauvegarde</button>
-      <button class="btn alt" id="bkOpen" style="width:100%;margin-top:8px">Restaurer depuis un fichier</button>
+      <strong data-i18n="r.bk"></strong>
+      <p class="small" style="margin:6px 0 10px" data-i18n="r.bktxt"></p>
+      <button class="btn" id="bkFile" style="width:100%" data-i18n="r.bkfile"></button>
+      <button class="btn alt" id="bkOpen" style="width:100%;margin-top:8px" data-i18n="r.bkopen"></button>
       <input type="file" id="bkInput" accept=".json,application/json,text/plain" class="hidden">
       <div class="note" id="bkLast"></div>
       <div class="confirm hidden" id="bkConfirm"></div>
-      <button class="btn ghost sm" id="bkShow" style="margin-top:6px">Autre méthode : copier / coller</button>
+      <button class="btn ghost sm" id="bkShow" style="margin-top:6px" data-i18n="r.bkother"></button>
       <div id="bkBox" class="hidden" style="margin-top:10px">
-        <button class="btn alt sm" id="bkCopy" style="width:100%;margin-bottom:8px">Copier la sauvegarde</button>
-        <textarea id="bkText" placeholder="Colle ici une sauvegarde"></textarea>
-        <button class="btn" id="bkLoad" style="width:100%;margin-top:8px">Restaurer cette sauvegarde</button>
+        <button class="btn alt sm" id="bkCopy" style="width:100%;margin-bottom:8px" data-i18n="r.bkcopy"></button>
+        <textarea id="bkText" data-ph="r.bkpaste"></textarea>
+        <button class="btn" id="bkLoad" style="width:100%;margin-top:8px" data-i18n="r.bkload"></button>
       </div>
     </div>
-    <div class="card small">Version 0.9 · aucune donnée envoyée · rien d'autre que des horaires.</div>
+    <div class="card small" data-i18n="r.version"></div>
   </section>
 </main>
 
 <nav>
-  <button data-v="jour" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Jour</button>
-  <button data-v="mois"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Mois</button>
-  <button data-v="recap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Récap</button>
-  <button data-v="reg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Réglages</button>
+  <button data-v="jour" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span data-i18n="nav.jour"></span></button>
+  <button data-v="mois"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span data-i18n="nav.mois"></span></button>
+  <button data-v="recap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg><span data-i18n="nav.recap"></span></button>
+  <button data-v="reg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span data-i18n="nav.reg"></span></button>
 </nav>
 <div class="toast" id="toast"></div>
 
 <script>
 (function(){
 "use strict";
+
+/* ================= TEXTES FR / NL ================= */
+var T={
+fr:{
+"app.sub":"Mes heures",
+"jours":["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"],
+"jc":["dim","lun","mar","mer","jeu","ven","sam"],
+"mois":["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"],
+"mc":["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."],
+"pern":["Janvier – février","Mars – avril","Mai – juin","Juillet – août","Septembre – octobre","Novembre – décembre"],
+"u.h":"h","u.d":"j",
+"a.dprev":"Jour précédent","a.dnext":"Jour suivant","a.mprev":"Mois précédent","a.mnext":"Mois suivant","a.yprev":"Année précédente","a.ynext":"Année suivante",
+"a.begin":"Début","a.end":"Fin","a.del":"Supprimer",
+"bk.now":"Sauvegarder",
+"ty.dispo":"Dispo gradé","ty.ops":"Opération","ty.conge":"Congé","ty.z":"Z (repos)","ty.ex":"EX (exempt)",
+"d.counted":"Compté ce jour","d.norm":"Norme du jour","d.start":"Début","d.end":"Fin",
+"d.prest":"Prestations","d.addS":"+ Service","d.addR":"+ Rappel",
+"d.night":"Une fin plus tôt que le début compte comme le lendemain (service de nuit).",
+"d.garde":"Rôle de garde (R)",
+"m.hs":"Heures sup à ce jour",
+"lg.z":"Z","lg.ex":"EX","lg.sam":"Samedi","lg.dim":"Dimanche / férié","lg.fw":"Férié travaillé","lg.wsam":"Samedi travaillé",
+"m.lockall":"Figer tous les jours passés du mois","m.totals":"Totaux du mois",
+"t.ops":"Opérations","t.dispo":"Dispo gradés","t.rap":"Rappels","t.ex":"Exemptions","t.rapp":"Rappelables (R)",
+"r.lang":"Langue / Taal","r.langlab":"Langue de l'app",
+"r.regime":"Régime horaire","r.week":"Heures par semaine",
+"r.dispo":"Horaire « Dispo gradé »","r.from":"Début","r.to":"Fin","r.pause":"Pause (min)",
+"r.rappels":"Rappels","r.pad":"Temps accordé avant et après","r.none":"Aucun","r.1h":"1 h",
+"r.padnote":"Selon le domicile. Ce temps est ajouté avant ET après chaque rappel.",
+"r.start":"Heures sup : point de départ","r.since":"Suivi depuis le","r.bal":"Solde à cette date (h:mm)",
+"r.startnote":"Les jours avant cette date ne sont pas comptés. Les congés pris avant se notent dans le Récap (« déjà consommé avant l'app »).",
+"r.fer":"Jours fériés du service",
+"r.fertxt":"En plus des 10 fériés légaux belges (calculés automatiquement). Ajoute ici les ponts et congés prévus au calendrier de la police.",
+"r.fername":"Nom (ex. Pont)","r.everyyear":"Chaque année","r.feradd":"Ajouter ce jour",
+"r.bk":"Sauvegarde",
+"r.bktxt":"Tes données restent uniquement sur ce téléphone. Enregistre régulièrement une sauvegarde : un fichier que tu ranges dans Fichiers (iCloud Drive), ton Drive ou que tu t'envoies par mail.",
+"r.bkfile":"Enregistrer une sauvegarde","r.bkopen":"Restaurer depuis un fichier","r.bkother":"Autre méthode : copier / coller",
+"r.bkcopy":"Copier la sauvegarde","r.bkpaste":"Colle ici une sauvegarde","r.bkload":"Restaurer cette sauvegarde",
+"r.version":"Version 0.10 · aucune donnée envoyée · rien d'autre que des horaires.",
+"nav.jour":"Jour","nav.mois":"Mois","nav.recap":"Récap","nav.reg":"Réglages",
+
+"s.s":"Service","s.r":"Rappel","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Congé","y.z":"Z","y.ex":"EX",
+"today":"Aujourd'hui",
+"d.ferie":function(f){return "Férié : "+f},
+"d.weekend":"Week-end",
+"half.z":function(x){return "Demi-journée de Z ("+x+")"},
+"half.conge":function(x){return "Demi-journée de congé ("+x+")"},
+"ex.z":function(x){return x+" retirées des heures sup."},
+"ex.conge1":"1 jour retiré du quota de congés.","ex.congeh":"½ jour retiré du quota de congés.",
+"ex.ex":function(x){return "Exempt : compte "+x+"."},
+"ex.untracked":"Avant le début du suivi : ce jour n'est pas compté.",
+"fw.info":"Férié travaillé : +1 jour de congé, et les heures prestées vont en heures sup.",
+"live":function(x){return "En cours depuis "+x},
+"segs.empty":"Rien d'encodé. Appuie sur « Début » quand tu commences.",
+"lock.on":"Jour figé","lock.ask":"Encodage terminé ?","lock.unlock":"Déverrouiller","lock.lock":"Figer ce jour","lock.sure":"Sûr ? Touche encore",
+"lock.blocked":"Jour figé : déverrouille-le d'abord","lock.t1":"Jour figé","lock.t2":"Jour déverrouillé",
+"n.figes":function(n){return n+" jour"+(n>1?"s":"")+" figé"+(n>1?"s":"")},"n.nofig":"Rien de plus à figer",
+"t.running":"Un service est déjà en cours",
+"t.begin":function(x){return "Début noté à "+x},"t.endat":function(x){return "Fin notée à "+x},
+"t.endyest":"Fin notée (service commencé hier)","t.norun":"Aucun service en cours",
+"t.delask":"Suppr. ?","t.deleted":"Supprimé",
+"t.dispo":function(x){return "Dispo gradé : "+x},"t.enc":"Encode l'heure de début",
+"t.afterz":function(x){return "Attention : après ce Z, heures sup à "+x},
+"t.warn":function(x){return "Attention : heures sup à "+x},
+"m.period":function(a,b){return "Période "+a+" – "+b},
+"m.warn":"Attention : tu es sous − 10 h d'heures sup.",
+"m.line":function(a,b){return "Ce mois : <b>"+a+"</b> sur <b>"+b+"</b> à prester"},
+"m.note":function(x){return "Congés, fériés et EX comptent "+x+"."},
+"m.rappel":"Rappel",
+"m.conge":function(x){return "Congés : "+x+" j"},"m.z":function(x){return "Z : "+x+" j"},"m.fw":function(x){return "Fériés travaillés : "+x},
+"c.title":function(y){return "Congés "+y},
+"c.noquota":function(y){return "Pas encore de quota pour "+y+"."},
+"c.carry":function(py,x,y){return "Le solde restant de "+py+" ("+x+") sera repris en « Report ». Tu ajusteras ensuite les crédits de "+y+"."},
+"c.create":function(y){return "Créer l'année "+y},
+"c.edit":"Modifier","c.done":"Terminé","c.rest":"Crédit restant","c.total":"Crédit attribué",
+"c.fer":"dont fériés travaillés","c.conv":"dont heures sup converties","c.used":"Crédit consommé",
+"c.credits":"Crédits","c.until":function(d){return "valable jusqu'au "+d},
+"c.worked":function(a,b){return "A travaillé le "+a+" ("+b+")"},
+"c.convp":function(p){return "Heures sup converties ("+p+")"},
+"c.consum":"Consommation","c.before":"Déjà consommé avant l'app","c.none":"Aucun congé encodé.",
+"c.editlab":"Crédits (libellé, jours, valable jusqu'au)","c.add":"+ Ajouter un crédit",
+"c.beforej":"Déjà consommé avant l'app (jours)",
+"c.editnote":"Une demi-journée = 0,5. Ce chiffre vient de ta fiche de contrôle, à la date du début du suivi.",
+"c.created":function(y){return "Année "+y+" créée : vérifie les crédits"},
+"h.title":"Heures sup","h.bal":"Solde à ce jour",
+"h.warn":function(x){return "Attention : tu es à "+x+" d'heures sup (avertissement à partir de − 10 h)."},
+"h.cur":"en cours","h.closed":"terminée","h.in":"Report reçu","h.delta":"Prestées dans la période","h.paid":"Payées",
+"h.convl":function(n){return "Converties en congé ("+n+" j)"},
+"h.out":"Reporté à la période suivante","h.solde":"Solde",
+"h.paidin":"Payées (h:mm)","h.convin":"Converties (jours)","h.payall":"Tout payer","h.repall":"Tout reporter",
+"h.empty":function(y,d){return "Rien à afficher pour "+y+" (suivi depuis le "+d+")."},
+"h.note":function(x){return "Périodes de 2 mois à partir de janvier. Ce qui n'est ni payé ni converti passe automatiquement à la période suivante. 1 jour converti = "+x+"."},
+"h.fmt":"Format : 12:30",
+"h.convt":function(n){return n+" j ajouté"+(n>1?"s":"")+" au quota de congés"},
+"h.paidt":function(x){return "Tout payé : "+x},"h.reportt":"Tout est reporté",
+"a.title":function(y){return "Activité "+y},"a.rap":"Rap.","a.month":"Mois","a.total":"Total",
+"a.note":"Compte uniquement ce qui est encodé dans l'app.",
+"r.dnote":function(x){return "Compte "+x+" par jour de dispo gradé."},
+"r.daynote":function(x){return "Soit "+x+" par jour ouvrable (lundi à vendredi)."},
+"r.feyear":function(d,m){return "chaque année le "+d+" "+m},"r.nofe":"Aucun.",
+"r.padt":function(n){return n?"Rappels : "+n+" min avant et après":"Rappels : sans temps de trajet"},
+"r.pickdate":"Choisis une date","r.feadded":"Jour férié ajouté",
+"r.fmt2":"Format : 22:03","r.startbal":function(x){return "Solde de départ : "+x},
+"b.none":"Aucune sauvegarde de tes heures pour l'instant.",
+"b.ago":function(n){return "Dernière sauvegarde il y a "+n+" jours."},
+"b.nolast":"Pas encore de sauvegarde.",
+"b.last":function(when,n){return "Dernière sauvegarde : "+when+". Un rappel s'affiche après "+n+" jours."},
+"b.today":"aujourd'hui","b.yest":"hier","b.daysago":function(n){return "il y a "+n+" jours"},
+"b.copied":"Sauvegarde copiée : colle-la dans Notes",
+"b.saved":function(x){return "Sauvegarde enregistrée : "+x},"b.saved2":"Sauvegarde enregistrée",
+"b.fail":"Impossible d'enregistrer : utilise copier / coller","b.cancel":"Sauvegarde annulée",
+"b.title":"Sauvegarde Heurêka","b.bad":"Fichier de sauvegarde illisible",
+"b.ask":"Restaurer cette sauvegarde ?","b.madeon":function(d){return "Faite le "+d+" · "},
+"b.days":function(n){return n+" jour"+(n>1?"s":"")+" encodé"+(n>1?"s":"")+"."},
+"b.replace":"Tes données actuelles seront remplacées.","b.yes":"Restaurer","b.no":"Annuler",
+"b.restored":"Sauvegarde restaurée","b.read":"Lecture impossible","b.select":"Sélectionne le texte et copie-le",
+"fe.service":"Férié du service","fe.generic":"Férié",
+"fe.nouvelan":"Nouvel An","fe.paques":"Lundi de Pâques","fe.travail":"Fête du Travail","fe.ascension":"Ascension","fe.pentecote":"Lundi de Pentecôte","fe.nationale":"Fête nationale","fe.assomption":"Assomption","fe.toussaint":"Toussaint","fe.armistice":"Armistice","fe.noel":"Noël",
+"fe.defunts":"Jour des défunts","fe.roi":"Fête du Roi","fe.lendemain":"Lendemain de Noël",
+"cl.report":"Report congé année précédente","cl.pentecote":"Congé supplémentaire (lundi de Pentecôte travaillé)","cl.cg":"Jours CG","cl.feries":"Fériés au choix (15/11 et 26/12)","cl.vacances":"Congé annuel de vacances","cl.new":"Nouveau crédit"
+},
+nl:{
+"app.sub":"Mijn uren",
+"jours":["zondag","maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag"],
+"jc":["zo","ma","di","wo","do","vr","za"],
+"mois":["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"],
+"mc":["jan.","feb.","mrt.","apr.","mei","jun.","jul.","aug.","sep.","okt.","nov.","dec."],
+"pern":["Januari – februari","Maart – april","Mei – juni","Juli – augustus","September – oktober","November – december"],
+"u.h":"u","u.d":"d",
+"a.dprev":"Vorige dag","a.dnext":"Volgende dag","a.mprev":"Vorige maand","a.mnext":"Volgende maand","a.yprev":"Vorig jaar","a.ynext":"Volgend jaar",
+"a.begin":"Begin","a.end":"Einde","a.del":"Verwijderen",
+"bk.now":"Back-up",
+"ty.dispo":"Dispo gegradeerde","ty.ops":"Operatie","ty.conge":"Verlof","ty.z":"Z (rust)","ty.ex":"EX (vrijgesteld)",
+"d.counted":"Geteld deze dag","d.norm":"Dagnorm","d.start":"Begin","d.end":"Einde",
+"d.prest":"Prestaties","d.addS":"+ Dienst","d.addR":"+ Oproep",
+"d.night":"Een einde vroeger dan het begin telt als de volgende dag (nachtdienst).",
+"d.garde":"Wachtrol (R)",
+"m.hs":"Overuren tot vandaag",
+"lg.z":"Z","lg.ex":"EX","lg.sam":"Zaterdag","lg.dim":"Zondag / feestdag","lg.fw":"Gewerkte feestdag","lg.wsam":"Gewerkte zaterdag",
+"m.lockall":"Alle voorbije dagen van de maand vastzetten","m.totals":"Maandtotalen",
+"t.ops":"Operaties","t.dispo":"Dispo gegradeerden","t.rap":"Oproepen","t.ex":"Vrijstellingen","t.rapp":"Oproepbaar (R)",
+"r.lang":"Langue / Taal","r.langlab":"Taal van de app",
+"r.regime":"Uurrooster","r.week":"Uren per week",
+"r.dispo":"Uurrooster « Dispo gegradeerde »","r.from":"Begin","r.to":"Einde","r.pause":"Pauze (min)",
+"r.rappels":"Oproepen","r.pad":"Toegekende tijd ervoor en erna","r.none":"Geen","r.1h":"1 u",
+"r.padnote":"Afhankelijk van de woonplaats. Deze tijd wordt vóór EN na elke oproep toegevoegd.",
+"r.start":"Overuren: startpunt","r.since":"Opvolging sinds","r.bal":"Saldo op die datum (u:mm)",
+"r.startnote":"De dagen vóór deze datum worden niet geteld. Verlof dat voordien werd genomen, noteer je in het Overzicht (« reeds opgenomen vóór de app »).",
+"r.fer":"Feestdagen van de dienst",
+"r.fertxt":"Naast de 10 Belgische wettelijke feestdagen (automatisch berekend). Voeg hier de brugdagen en verlofdagen toe die op de kalender van de politie staan.",
+"r.fername":"Naam (bv. Brugdag)","r.everyyear":"Elk jaar","r.feradd":"Deze dag toevoegen",
+"r.bk":"Back-up",
+"r.bktxt":"Je gegevens blijven enkel op deze telefoon. Maak regelmatig een back-up: een bestand dat je bewaart in Bestanden (iCloud Drive), in je Drive of dat je naar jezelf mailt.",
+"r.bkfile":"Back-up opslaan","r.bkopen":"Herstellen vanuit een bestand","r.bkother":"Andere methode: kopiëren / plakken",
+"r.bkcopy":"Back-up kopiëren","r.bkpaste":"Plak hier een back-up","r.bkload":"Deze back-up herstellen",
+"r.version":"Versie 0.10 · geen gegevens verstuurd · enkel uurroosters.",
+"nav.jour":"Dag","nav.mois":"Maand","nav.recap":"Overzicht","nav.reg":"Instellingen",
+
+"s.s":"Dienst","s.r":"Oproep","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Verlof","y.z":"Z","y.ex":"EX",
+"today":"Vandaag",
+"d.ferie":function(f){return "Feestdag: "+f},
+"d.weekend":"Weekend",
+"half.z":function(x){return "Halve dag Z ("+x+")"},
+"half.conge":function(x){return "Halve dag verlof ("+x+")"},
+"ex.z":function(x){return x+" afgetrokken van de overuren."},
+"ex.conge1":"1 dag afgetrokken van het verloftegoed.","ex.congeh":"½ dag afgetrokken van het verloftegoed.",
+"ex.ex":function(x){return "Vrijgesteld: telt als "+x+"."},
+"ex.untracked":"Vóór de start van de opvolging: deze dag wordt niet geteld.",
+"fw.info":"Gewerkte feestdag: +1 verlofdag, en de gepresteerde uren gaan naar de overuren.",
+"live":function(x){return "Bezig sinds "+x},
+"segs.empty":"Niets ingevoerd. Druk op « Begin » wanneer je start.",
+"lock.on":"Dag vastgezet","lock.ask":"Invoer klaar?","lock.unlock":"Ontgrendelen","lock.lock":"Deze dag vastzetten","lock.sure":"Zeker? Tik nogmaals",
+"lock.blocked":"Dag vastgezet: ontgrendel hem eerst","lock.t1":"Dag vastgezet","lock.t2":"Dag ontgrendeld",
+"n.figes":function(n){return n+" dag"+(n>1?"en":"")+" vastgezet"},"n.nofig":"Niets meer vast te zetten",
+"t.running":"Er loopt al een dienst",
+"t.begin":function(x){return "Begin genoteerd om "+x},"t.endat":function(x){return "Einde genoteerd om "+x},
+"t.endyest":"Einde genoteerd (dienst begonnen gisteren)","t.norun":"Geen lopende dienst",
+"t.delask":"Verw.?","t.deleted":"Verwijderd",
+"t.dispo":function(x){return "Dispo gegradeerde: "+x},"t.enc":"Voer het beginuur in",
+"t.afterz":function(x){return "Opgelet: na dit Z staan de overuren op "+x},
+"t.warn":function(x){return "Opgelet: overuren op "+x},
+"m.period":function(a,b){return "Periode "+a+" – "+b},
+"m.warn":"Opgelet: je zit onder − 10 u overuren.",
+"m.line":function(a,b){return "Deze maand: <b>"+a+"</b> op <b>"+b+"</b> te presteren"},
+"m.note":function(x){return "Verlof, feestdagen en EX tellen voor "+x+"."},
+"m.rappel":"Oproep",
+"m.conge":function(x){return "Verlof: "+x+" d"},"m.z":function(x){return "Z: "+x+" d"},"m.fw":function(x){return "Gewerkte feestdagen: "+x},
+"c.title":function(y){return "Verlof "+y},
+"c.noquota":function(y){return "Nog geen tegoed voor "+y+"."},
+"c.carry":function(py,x,y){return "Het resterende saldo van "+py+" ("+x+") wordt overgenomen als « Overdracht ». Daarna pas je de tegoeden van "+y+" aan."},
+"c.create":function(y){return "Jaar "+y+" aanmaken"},
+"c.edit":"Wijzigen","c.done":"Klaar","c.rest":"Resterend tegoed","c.total":"Toegekend tegoed",
+"c.fer":"waarvan gewerkte feestdagen","c.conv":"waarvan omgezette overuren","c.used":"Verbruikt tegoed",
+"c.credits":"Tegoeden","c.until":function(d){return "geldig tot "+d},
+"c.worked":function(a,b){return "Gewerkt op "+a+" ("+b+")"},
+"c.convp":function(p){return "Omgezette overuren ("+p+")"},
+"c.consum":"Verbruik","c.before":"Reeds opgenomen vóór de app","c.none":"Geen verlof ingevoerd.",
+"c.editlab":"Tegoeden (omschrijving, dagen, geldig tot)","c.add":"+ Tegoed toevoegen",
+"c.beforej":"Reeds opgenomen vóór de app (dagen)",
+"c.editnote":"Een halve dag = 0,5. Dit cijfer komt van je controlefiche, op de datum van de start van de opvolging.",
+"c.created":function(y){return "Jaar "+y+" aangemaakt: controleer de tegoeden"},
+"h.title":"Overuren","h.bal":"Saldo tot vandaag",
+"h.warn":function(x){return "Opgelet: je staat op "+x+" overuren (waarschuwing vanaf − 10 u)."},
+"h.cur":"lopend","h.closed":"afgesloten","h.in":"Ontvangen overdracht","h.delta":"Gepresteerd in de periode","h.paid":"Uitbetaald",
+"h.convl":function(n){return "Omgezet in verlof ("+n+" d)"},
+"h.out":"Overgedragen naar de volgende periode","h.solde":"Saldo",
+"h.paidin":"Uitbetaald (u:mm)","h.convin":"Omgezet (dagen)","h.payall":"Alles uitbetalen","h.repall":"Alles overdragen",
+"h.empty":function(y,d){return "Niets te tonen voor "+y+" (opvolging sinds "+d+")."},
+"h.note":function(x){return "Periodes van 2 maanden vanaf januari. Wat niet is uitbetaald of omgezet, gaat automatisch naar de volgende periode. 1 omgezette dag = "+x+"."},
+"h.fmt":"Formaat: 12:30",
+"h.convt":function(n){return n+" d toegevoegd aan het verloftegoed"},
+"h.paidt":function(x){return "Alles uitbetaald: "+x},"h.reportt":"Alles overgedragen",
+"a.title":function(y){return "Activiteit "+y},"a.rap":"Opr.","a.month":"Maand","a.total":"Totaal",
+"a.note":"Telt enkel wat in de app is ingevoerd.",
+"r.dnote":function(x){return "Telt "+x+" per dag dispo gegradeerde."},
+"r.daynote":function(x){return "Of "+x+" per werkdag (maandag tot vrijdag)."},
+"r.feyear":function(d,m){return "elk jaar op "+d+" "+m},"r.nofe":"Geen.",
+"r.padt":function(n){return n?"Oproepen: "+n+" min ervoor en erna":"Oproepen: zonder verplaatsingstijd"},
+"r.pickdate":"Kies een datum","r.feadded":"Feestdag toegevoegd",
+"r.fmt2":"Formaat: 22:03","r.startbal":function(x){return "Startsaldo: "+x},
+"b.none":"Nog geen back-up van je uren.",
+"b.ago":function(n){return "Laatste back-up "+n+" dagen geleden."},
+"b.nolast":"Nog geen back-up.",
+"b.last":function(when,n){return "Laatste back-up: "+when+". Na "+n+" dagen verschijnt een herinnering."},
+"b.today":"vandaag","b.yest":"gisteren","b.daysago":function(n){return n+" dagen geleden"},
+"b.copied":"Back-up gekopieerd: plak ze in Notities",
+"b.saved":function(x){return "Back-up opgeslagen: "+x},"b.saved2":"Back-up opgeslagen",
+"b.fail":"Opslaan lukt niet: gebruik kopiëren / plakken","b.cancel":"Back-up geannuleerd",
+"b.title":"Back-up Heurêka","b.bad":"Back-upbestand onleesbaar",
+"b.ask":"Deze back-up herstellen?","b.madeon":function(d){return "Gemaakt op "+d+" · "},
+"b.days":function(n){return n+" dag"+(n>1?"en":"")+" ingevoerd."},
+"b.replace":"Je huidige gegevens worden vervangen.","b.yes":"Herstellen","b.no":"Annuleren",
+"b.restored":"Back-up hersteld","b.read":"Lezen onmogelijk","b.select":"Selecteer de tekst en kopieer hem",
+"fe.service":"Feestdag van de dienst","fe.generic":"Feestdag",
+"fe.nouvelan":"Nieuwjaar","fe.paques":"Paasmaandag","fe.travail":"Dag van de Arbeid","fe.ascension":"O.L.H. Hemelvaart","fe.pentecote":"Pinkstermaandag","fe.nationale":"Nationale feestdag","fe.assomption":"O.L.V. Hemelvaart","fe.toussaint":"Allerheiligen","fe.armistice":"Wapenstilstand","fe.noel":"Kerstmis",
+"fe.defunts":"Allerzielen","fe.roi":"Koningsdag","fe.lendemain":"Tweede kerstdag",
+"cl.report":"Overdracht verlof vorig jaar","cl.pentecote":"Bijkomend verlof (Pinkstermaandag gewerkt)","cl.cg":"CG-dagen","cl.feries":"Feestdagen naar keuze (15/11 en 26/12)","cl.vacances":"Jaarlijks vakantieverlof","cl.new":"Nieuw tegoed"
+}
+};
+function lang(){
+  var l=data&&data.settings&&data.settings.lang; if(l==="fr"||l==="nl") return l;
+  var n=((navigator.language||"fr")+"").toLowerCase(); return n.indexOf("nl")===0?"nl":"fr";
+}
+function L(k){var D=T[lang()]; return D[k]!=null?D[k]:T.fr[k]}
+function t(k){
+  var v=L(k); if(v==null) return k;
+  if(typeof v==="function") return v.apply(null,Array.prototype.slice.call(arguments,1));
+  return v;
+}
+/* retrouve la clé d'un texte français enregistré par l'ancienne version (fériés, crédits) */
+function frKey(prefix,txt){var D=T.fr;for(var k in D){if(k.indexOf(prefix)===0&&D[k]===txt)return k}return null}
+
 var KEY="mesheures.v1";
 var mem=null;
 function load(){
@@ -357,28 +620,39 @@ function migrate(){
   if(!data.track.v){ if(data.track.start==="2026-11-24"&&data.track.hs===22*60+3) data.track.start="2026-11-25"; data.track.v=2; }
   if(!data.periods) data.periods={};
   if(!data.extraFer) data.extraFer=[
-    {d:"11-02",n:"Jour des défunts"},
-    {d:"11-15",n:"Fête du Roi"},
-    {d:"12-26",n:"Lendemain de Noël"}
+    {d:"11-02",k:"fe.defunts"},
+    {d:"11-15",k:"fe.roi"},
+    {d:"12-26",k:"fe.lendemain"}
   ];
   if(!data.years) data.years={
     "2026":{before:38.5,credits:[
-      {l:"Report congé année précédente",j:7,u:"2026-05-31"},
-      {l:"Congé supplémentaire (lundi de Pentecôte travaillé)",j:1,u:"2026-12-31"},
-      {l:"Jours CG",j:2,u:"2026-12-31"},
-      {l:"Fériés au choix (15/11 et 26/12)",j:2,u:"2026-12-31"},
-      {l:"Congé annuel de vacances",j:36,u:"2026-12-31"}
+      {k:"cl.report",j:7,u:"2026-05-31"},
+      {k:"cl.pentecote",j:1,u:"2026-12-31"},
+      {k:"cl.cg",j:2,u:"2026-12-31"},
+      {k:"cl.feries",j:2,u:"2026-12-31"},
+      {k:"cl.vacances",j:36,u:"2026-12-31"}
     ]}
   };
+  /* anciennes données (textes français enregistrés) : on les relie aux textes traduits */
+  data.extraFer.forEach(function(e){ if(!e.k&&e.n){var k=frKey("fe.",e.n); if(k) e.k=k;} });
+  Object.keys(data.years).forEach(function(y){ (data.years[y].credits||[]).forEach(function(c){ if(!c.k&&c.l){var k=frKey("cl.",c.l); if(k) c.k=k;} }); });
 }
 migrate();
 
 var $=function(id){return document.getElementById(id)};
-var JOURS=["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"];
-var JC=["dim","lun","mar","mer","jeu","ven","sam"];
-var MOIS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
-var MC=["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."];
-var PERN=["Janvier – février","Mars – avril","Mai – juin","Juillet – août","Septembre – octobre","Novembre – décembre"];
+var JOURS,JC,MOIS,MC,PERN,TLAB,TYN;
+function setLang(){
+  JOURS=L("jours");JC=L("jc");MOIS=L("mois");MC=L("mc");PERN=L("pern");
+  TLAB={s:t("s.s"),r:t("s.r"),d:t("s.d")};
+  TYN={dispo:t("y.dispo"),ops:t("y.ops"),conge:t("y.conge"),z:t("y.z"),ex:t("y.ex")};
+  document.documentElement.lang=lang();
+  document.querySelectorAll("[data-i18n]").forEach(function(e){e.textContent=t(e.dataset.i18n)});
+  document.querySelectorAll("[data-ph]").forEach(function(e){e.placeholder=t(e.dataset.ph)});
+  document.querySelectorAll("[data-aria]").forEach(function(e){e.setAttribute("aria-label",t(e.dataset.aria))});
+  $("langBtn").textContent=lang()==="fr"?"NL":"FR";
+}
+function ferName(e){ return e.k?t(e.k):(e.n||t("fe.service")); }
+function crLabel(c){ return c.k?t(c.k):(c.l||""); }
 
 function pad(n){return (n<10?"0":"")+n}
 function cap(s){return s.replace(/^./,function(c){return c.toUpperCase()})}
@@ -389,7 +663,7 @@ function nowHM(){var d=new Date();return pad(d.getHours())+":"+pad(d.getMinutes(
 function toMin(hm){if(!hm)return null;var p=hm.split(":");return (+p[0])*60+(+p[1])}
 function fmt(min,signed){
   var neg=min<0; var m=Math.round(Math.abs(min));
-  var s=Math.floor(m/60)+" h "+pad(m%60);
+  var s=Math.floor(m/60)+" "+t("u.h")+" "+pad(m%60);
   if(signed) return (neg?"− ":(m?"+ ":""))+s;
   return (neg?"− ":"")+s;
 }
@@ -398,7 +672,7 @@ function parseHM(s){
   if(s==null) return null; s=String(s).trim().replace(/\s/g,"").replace("−","-"); if(!s) return 0;
   var neg=s.charAt(0)==="-"; if(neg) s=s.slice(1);
   var v;
-  if(/[:h]/i.test(s)){var p=s.split(/[:h]/i); v=(parseInt(p[0]||"0",10))*60+(parseInt(p[1]||"0",10));}
+  if(/[:hu]/i.test(s)){var p=s.split(/[:hu]/i); v=(parseInt(p[0]||"0",10))*60+(parseInt(p[1]||"0",10));}
   else v=Math.round(parseFloat(s.replace(",","."))*60);
   if(isNaN(v)) return null;
   return neg?-v:v;
@@ -407,7 +681,7 @@ function NORM(){return Math.round(data.settings.weekMin/5)}
 /* jours de congé au format GALoP : 9 j 03:48 */
 function fmtJ(days){
   var neg=days<0, a=Math.abs(days), w=Math.floor(a+1e-9), rest=Math.round((a-w)*NORM());
-  var s=w+" j"+(rest?" "+pad(Math.floor(rest/60))+":"+pad(rest%60):"");
+  var s=w+" "+t("u.d")+(rest?" "+pad(Math.floor(rest/60))+":"+pad(rest%60):"");
   return (neg?"− ":"")+s;
 }
 function num(j){return (Math.round(j*100)/100).toString().replace(".",",")}
@@ -420,27 +694,28 @@ function easter(y){
   mo=Math.floor((h+l-7*m+114)/31),da=((h+l-7*m+114)%31)+1;
   return new Date(y,mo-1,da);
 }
+/* renvoie les clés de traduction : le nom s'affiche dans la langue choisie */
 function feries(y){
   if(ferCache[y]) return ferCache[y];
   var E=easter(y), r={};
   function add(d,n){r[key(d)]=n}
   function off(n){var d=new Date(E);d.setDate(d.getDate()+n);return d}
-  add(new Date(y,0,1),"Nouvel An");
-  add(off(1),"Lundi de Pâques");
-  add(new Date(y,4,1),"Fête du Travail");
-  add(off(39),"Ascension");
-  add(off(50),"Lundi de Pentecôte");
-  add(new Date(y,6,21),"Fête nationale");
-  add(new Date(y,7,15),"Assomption");
-  add(new Date(y,10,1),"Toussaint");
-  add(new Date(y,10,11),"Armistice");
-  add(new Date(y,11,25),"Noël");
+  add(new Date(y,0,1),"fe.nouvelan");
+  add(off(1),"fe.paques");
+  add(new Date(y,4,1),"fe.travail");
+  add(off(39),"fe.ascension");
+  add(off(50),"fe.pentecote");
+  add(new Date(y,6,21),"fe.nationale");
+  add(new Date(y,7,15),"fe.assomption");
+  add(new Date(y,10,1),"fe.toussaint");
+  add(new Date(y,10,11),"fe.armistice");
+  add(new Date(y,11,25),"fe.noel");
   return ferCache[y]=r;
 }
 function ferie(d){
-  var k=key(d), f=feries(d.getFullYear())[k]; if(f) return f;
+  var k=key(d), f=feries(d.getFullYear())[k]; if(f) return t(f);
   var md=k.slice(5);
-  for(var i=0;i<data.extraFer.length;i++){var e=data.extraFer[i]; if(e.d===k||e.d===md) return e.n||"Férié du service";}
+  for(var i=0;i<data.extraFer.length;i++){var e=data.extraFer[i]; if(e.d===k||e.d===md) return ferName(e);}
   return null;
 }
 function isWeekday(d){var w=d.getDay();return w>=1&&w<=5}
@@ -496,8 +771,6 @@ function kcls(d,x){
   if(d.getDay()===0) return "k-dim";
   return "";
 }
-var TLAB={s:"Service",r:"Rappel",d:"Dispo"};
-var TYN={dispo:"Dispo",ops:"Ops",conge:"Congé",z:"Z",ex:"EX"};
 
 /* ---------- mois ---------- */
 function monthStats(y,m){
@@ -566,96 +839,97 @@ var view="jour";
 var editCredits=false;
 
 function toast(t,ms){var e=$("toast");e.textContent=t;e.classList.add("show");clearTimeout(e._t);e._t=setTimeout(function(){e.classList.remove("show")},ms||1800)}
-function warnHS(){var h=hsNow(); if(h< -600) toast("Attention : heures sup à "+fmt(h,true),3500)}
+function warnHS(){var h=hsNow(); if(h< -600) toast(t("t.warn",fmt(h,true)),3500)}
 
 /* ---------- rendu JOUR ---------- */
 function renderJour(){
   var k=key(cur), x=day(k), f=ferie(cur), wd=isWeekday(cur);
   var isToday=k===key(today());
-  $("dLabel").textContent=(isToday?"Aujourd'hui":cap(JOURS[cur.getDay()]))+" "+cur.getDate()+" "+MOIS[cur.getMonth()];
+  $("dLabel").textContent=(isToday?t("today"):cap(JOURS[cur.getDay()]))+" "+cur.getDate()+" "+MOIS[cur.getMonth()];
   var kinds=[];
   if(!isToday) kinds.push(cur.getFullYear());
-  if(f) kinds.push("Férié : "+f);
-  if(!wd) kinds.push("Week-end");
+  if(f) kinds.push(t("d.ferie",f));
+  if(!wd) kinds.push(t("d.weekend"));
   $("dKind").textContent=kinds.join(" · ");
   $("dNorm").textContent=wd?fmt(NORM()):"—";
   $("dayCard").className="card daycard "+kcls(cur,x);
   document.querySelectorAll("#types .ty").forEach(function(b){b.classList.toggle("on",x.type===b.dataset.type)});
   var showHalf=x.type==="conge"||x.type==="z";
   $("halfRow").classList.toggle("hidden",!showHalf);
-  $("halfLab").textContent=x.type==="z"?"Demi-journée de Z (3 h 48)":"Demi-journée de congé (3 h 48)";
+  $("halfLab").textContent=x.type==="z"?t("half.z",fmt(NORM()/2)):t("half.conge",fmt(NORM()/2));
   $("tHalf").classList.toggle("on",isHalf(x));
   $("dTotal").textContent=fmt(credit(k,true));
   var ex="";
   if(wd&&!f){
-    if(x.type==="z") ex=(isHalf(x)?"3 h 48":"7 h 36")+" retirées des heures sup.";
-    if(x.type==="conge") ex=(isHalf(x)?"½ jour":"1 jour")+" retiré du quota de congés.";
-    if(x.type==="ex") ex="Exempt : compte 7 h 36.";
+    if(x.type==="z") ex=t("ex.z",fmt(isHalf(x)?NORM()/2:NORM()));
+    if(x.type==="conge") ex=isHalf(x)?t("ex.congeh"):t("ex.conge1");
+    if(x.type==="ex") ex=t("ex.ex",fmt(NORM()));
   }
-  if(!tracked(k)) ex="Avant le début du suivi : ce jour n'est pas compté.";
+  if(!tracked(k)) ex=t("ex.untracked");
   $("dExplain").textContent=ex;
   var fw=workedFerie(cur,x);
   $("dFw").classList.toggle("hidden",!fw);
-  if(fw) $("dFw").textContent="Férié travaillé : +1 jour de congé, et les heures prestées vont en heures sup.";
+  if(fw) $("dFw").textContent=t("fw.info");
   var open=x.segs.filter(function(s){return s.a&&!s.b});
   var live=$("dLive");
-  if(isToday&&open.length){live.classList.remove("hidden");live.textContent="En cours depuis "+open[open.length-1].a}
+  if(isToday&&open.length){live.classList.remove("hidden");live.textContent=t("live",open[open.length-1].a)}
   else live.classList.add("hidden");
   var box=$("segs"); box.innerHTML="";
-  if(!x.segs.length){box.innerHTML='<div class="small" style="padding:8px 0">Rien d\'encodé. Appuie sur « Début » quand tu commences.</div>'}
+  if(!x.segs.length){box.innerHTML='<div class="small" style="padding:8px 0">'+esc(t("segs.empty"))+'</div>'}
   var padR=data.settings.rappelPad||0;
   x.segs.forEach(function(s,i){
     var row=document.createElement("div"); row.className="seg";
     var sub=s.p?'<br><span class="pz">−'+s.p+' min</span>':(s.t==="r"&&padR?'<br><span class="pz">+'+(2*padR)+' min</span>':'');
     row.innerHTML='<span class="tag '+(s.t==="r"?"r":s.t==="d"?"d":(x.type==="ops"?"o":""))+'">'+(s.t==="s"&&x.type==="ops"?"Ops":TLAB[s.t])+sub+'</span>'+
-      '<input type="time" value="'+(s.a||"")+'" data-i="'+i+'" data-f="a" aria-label="Début">'+
+      '<input type="time" value="'+(s.a||"")+'" data-i="'+i+'" data-f="a" aria-label="'+esc(t("a.begin"))+'">'+
       '<span class="small">→</span>'+
-      '<input type="time" value="'+(s.b||"")+'" data-i="'+i+'" data-f="b" aria-label="Fin">'+
+      '<input type="time" value="'+(s.b||"")+'" data-i="'+i+'" data-f="b" aria-label="'+esc(t("a.end"))+'">'+
       '<span class="dur" id="dur'+i+'">'+(s.b?fmt(segMin(s)):"…")+'</span>'+
-      '<button class="x" data-del="'+i+'" aria-label="Supprimer">×</button>';
+      '<button class="x" data-del="'+i+'" aria-label="'+esc(t("a.del"))+'">×</button>';
     box.appendChild(row);
   });
   $("tGarde").classList.toggle("on",!!x.garde);
-  var L=!!x.lock, lb=$("lockBar");
-  $("v-jour").classList.toggle("locked",L);
-  document.querySelectorAll("#segs input").forEach(function(i){i.disabled=L});
-  lb.classList.toggle("hidden",!L&&!hasContent(x));
-  lb.className="lockbar "+(L?"on":"off")+(!L&&!hasContent(x)?" hidden":"");
-  $("lockTxt").innerHTML=L?'<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" style=\"vertical-align:-3px\"><rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"/><path d=\"M8 11V7a4 4 0 0 1 8 0v4\"/></svg> Jour figé':"Encodage terminé ?";
-  var bt=$("lockBtn"); delete bt.dataset.armed; bt.textContent=L?"Déverrouiller":"Figer ce jour";
+  var L_=!!x.lock, lb=$("lockBar");
+  $("v-jour").classList.toggle("locked",L_);
+  document.querySelectorAll("#segs input").forEach(function(i){i.disabled=L_});
+  lb.classList.toggle("hidden",!L_&&!hasContent(x));
+  lb.className="lockbar "+(L_?"on":"off")+(!L_&&!hasContent(x)?" hidden":"");
+  $("lockTxt").innerHTML=L_?'<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" style=\"vertical-align:-3px\"><rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"/><path d=\"M8 11V7a4 4 0 0 1 8 0v4\"/></svg> '+esc(t("lock.on")):esc(t("lock.ask"));
+  var bt=$("lockBtn"); delete bt.dataset.armed; bt.textContent=L_?t("lock.unlock"):t("lock.lock");
 }
 
 /* ---------- rendu MOIS ---------- */
 function renderMois(){
   var y=mCur.getFullYear(), m=mCur.getMonth(), st=monthStats(y,m);
   $("mLabel").textContent=cap(MOIS[m])+" "+y;
-  var t=today(), h=hsNow(), hs=$("mHS");
+  var t_=today(), h=hsNow(), hs=$("mHS");
   hs.textContent=fmt(h,true); hs.className="big "+(h<0?"neg":h>0?"pos":"");
-  var pi=Math.floor(t.getMonth()/2);
-  $("mHSTxt").textContent="Période "+MOIS[2*pi]+" – "+MOIS[2*pi+1];
+  var pi=Math.floor(t_.getMonth()/2);
+  $("mHSTxt").textContent=t("m.period",MOIS[2*pi],MOIS[2*pi+1]);
   $("mWarn").classList.toggle("hidden",!(h< -600));
-  $("mWarn").textContent="Attention : tu es sous − 10 h d'heures sup.";
-  $("mLine").innerHTML="Ce mois : <b>"+fmt(st.fullDone)+"</b> sur <b>"+fmt(st.fullObj)+"</b> à prester";
+  $("mWarn").textContent=t("m.warn");
+  $("mNote").textContent=t("m.note",fmt(NORM()));
+  $("mLine").innerHTML=t("m.line",fmt(st.fullDone),fmt(st.fullObj));
   $("mBar").style.width=Math.min(100,st.fullObj?st.fullDone/st.fullObj*100:0)+"%";
   var box=$("mDays"); box.innerHTML="";
   for(var i=1;i<=st.n;i++){
     var d=new Date(y,m,i), k=key(d), x=day(k), c=credit(k,true), f=ferie(d);
     var tags="";
-    if(workedFerie(d,x)) tags+='<span class="tag plus">+1 j</span>';
+    if(workedFerie(d,x)) tags+='<span class="tag plus">+1 '+t("u.d")+'</span>';
     if(x.garde) tags+='<span class="tag g">R</span>';
     if(x.lock) tags+='<span class="lk"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align:-3px"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>';
-    if(x.segs.some(function(s){return s.t==="r"&&s.a})) tags+='<span class="tag r">Rappel</span>';
+    if(x.segs.some(function(s){return s.t==="r"&&s.a})) tags+='<span class="tag r">'+esc(t("m.rappel"))+'</span>';
     var row=document.createElement("div"); row.className="d "+kcls(d,x); row.dataset.k=k;
     var lab=x.type?(TYN[x.type]+(isHalf(x)?" ½":"")):(f||"");
     if(x.type&&f) lab+=" · "+f;
-    row.innerHTML='<span class="dn '+(isWeekday(d)?"":"we")+'">'+JC[d.getDay()]+" "+i+'</span>'+(lab?'<span class="small">'+lab+'</span>':'')+tags+'<span class="dh '+(c?"":"small")+'">'+(c?fmt(c):"—")+'</span>';
+    row.innerHTML='<span class="dn '+(isWeekday(d)?"":"we")+'">'+JC[d.getDay()]+" "+i+'</span>'+(lab?'<span class="small">'+esc(lab)+'</span>':'')+tags+'<span class="dh '+(c?"":"small")+'">'+(c?fmt(c):"—")+'</span>';
     box.appendChild(row);
   }
   $("tOps").textContent=st.c.ops; $("tEx").textContent=st.c.ex; $("tRapp").textContent=st.c.garde; $("tDispo").textContent=st.c.dispo; $("tRap").textContent=st.c.rap;
   var o=[];
-  if(st.c.conge) o.push("Congés : "+num(st.c.conge)+" j");
-  if(st.c.z) o.push("Z : "+num(st.c.z)+" j");
-  if(st.c.fw) o.push("Fériés travaillés : "+st.c.fw);
+  if(st.c.conge) o.push(t("m.conge",num(st.c.conge)));
+  if(st.c.z) o.push(t("m.z",num(st.c.z)));
+  if(st.c.fw) o.push(t("m.fw",st.c.fw));
   $("tOther").textContent=o.join(" · ");
 }
 
@@ -667,45 +941,45 @@ function renderRecap(){
   /* congés */
   var cc=$("cConge"), cs=congeStats(Y), h="";
   if(!cs){
-    h='<strong>Congés '+Y+'</strong><p class="small">Pas encore de quota pour '+Y+'.</p>';
-    if(data.years[Y-1]) h+='<p class="small">Le solde restant de '+(Y-1)+' ('+fmtJ(congeStats(Y-1).rest)+') sera repris en « Report ». Tu ajusteras ensuite les crédits de '+Y+'.</p>';
-    h+='<button class="btn" id="yCreate" style="width:100%">Créer l\'année '+Y+'</button>';
+    h='<strong>'+esc(t("c.title",Y))+'</strong><p class="small">'+esc(t("c.noquota",Y))+'</p>';
+    if(data.years[Y-1]) h+='<p class="small">'+esc(t("c.carry",Y-1,fmtJ(congeStats(Y-1).rest),Y))+'</p>';
+    h+='<button class="btn" id="yCreate" style="width:100%">'+esc(t("c.create",Y))+'</button>';
     cc.innerHTML=h;
   } else {
-    h='<div class="row between"><strong>Congés '+Y+'</strong><button class="btn ghost sm" id="crEdit">'+(editCredits?"Terminé":"Modifier")+'</button></div>';
-    h+='<div class="small" style="margin-top:6px">Crédit restant</div><div class="big '+(cs.rest<0?"neg":"")+'">'+fmtJ(cs.rest)+'</div>';
+    h='<div class="row between"><strong>'+esc(t("c.title",Y))+'</strong><button class="btn ghost sm" id="crEdit">'+esc(editCredits?t("c.done"):t("c.edit"))+'</button></div>';
+    h+='<div class="small" style="margin-top:6px">'+esc(t("c.rest"))+'</div><div class="big '+(cs.rest<0?"neg":"")+'">'+fmtJ(cs.rest)+'</div>';
     h+='<div style="margin-top:8px">';
-    h+='<div class="kv"><span>Crédit attribué</span><b>'+fmtJ(cs.total)+'</b></div>';
-    if(cs.fer.length) h+='<div class="kv"><span>dont fériés travaillés</span><b>+ '+cs.fer.length+' j</b></div>';
-    if(cs.conv) h+='<div class="kv"><span>dont heures sup converties</span><b>+ '+cs.conv+' j</b></div>';
-    h+='<div class="kv"><span>Crédit consommé</span><b>'+fmtJ(cs.used)+'</b></div>';
+    h+='<div class="kv"><span>'+esc(t("c.total"))+'</span><b>'+fmtJ(cs.total)+'</b></div>';
+    if(cs.fer.length) h+='<div class="kv"><span>'+esc(t("c.fer"))+'</span><b>+ '+cs.fer.length+' '+t("u.d")+'</b></div>';
+    if(cs.conv) h+='<div class="kv"><span>'+esc(t("c.conv"))+'</span><b>+ '+cs.conv+' '+t("u.d")+'</b></div>';
+    h+='<div class="kv"><span>'+esc(t("c.used"))+'</span><b>'+fmtJ(cs.used)+'</b></div>';
     h+='</div>';
     if(!editCredits){
-      h+='<div class="small" style="margin:12px 0 4px">Crédits</div>';
-      data.years[Y].credits.forEach(function(c){h+='<div class="kv"><span>'+esc(c.l)+(c.u?'<br><span class="small">valable jusqu\'au '+esc(c.u.split("-").reverse().join("/"))+'</span>':'')+'</span><b>'+num(+c.j||0)+' j</b></div>'});
-      cs.fer.forEach(function(k){h+='<div class="kv"><span>A travaillé le '+dShort(k)+' ('+esc(ferie(parseKey(k)))+')</span><b>1 j</b></div>'});
-      for(var p=0;p<6;p++){var cv=(data.periods[Y+"-"+p]||{}).conv; if(cv) h+='<div class="kv"><span>Heures sup converties ('+PERN[p].toLowerCase()+')</span><b>'+cv+' j</b></div>'}
-      h+='<div class="small" style="margin:12px 0 4px">Consommation</div>';
-      if(cs.before) h+='<div class="kv"><span>Déjà consommé avant l\'app</span><b>'+fmtJ(cs.before)+'</b></div>';
-      cs.list.forEach(function(e){h+='<div class="kv"><span>'+dShort(e[0])+'</span><b>'+(e[1]===1?"1 j":"½ j")+'</b></div>'});
-      if(!cs.before&&!cs.list.length) h+='<div class="small">Aucun congé encodé.</div>';
+      h+='<div class="small" style="margin:12px 0 4px">'+esc(t("c.credits"))+'</div>';
+      data.years[Y].credits.forEach(function(c){h+='<div class="kv"><span>'+esc(crLabel(c))+(c.u?'<br><span class="small">'+esc(t("c.until",c.u.split("-").reverse().join("/")))+'</span>':'')+'</span><b>'+num(+c.j||0)+' '+t("u.d")+'</b></div>'});
+      cs.fer.forEach(function(k){h+='<div class="kv"><span>'+esc(t("c.worked",dShort(k),ferie(parseKey(k))))+'</span><b>1 '+t("u.d")+'</b></div>'});
+      for(var p=0;p<6;p++){var cv=(data.periods[Y+"-"+p]||{}).conv; if(cv) h+='<div class="kv"><span>'+esc(t("c.convp",PERN[p].toLowerCase()))+'</span><b>'+cv+' '+t("u.d")+'</b></div>'}
+      h+='<div class="small" style="margin:12px 0 4px">'+esc(t("c.consum"))+'</div>';
+      if(cs.before) h+='<div class="kv"><span>'+esc(t("c.before"))+'</span><b>'+fmtJ(cs.before)+'</b></div>';
+      cs.list.forEach(function(e){h+='<div class="kv"><span>'+dShort(e[0])+'</span><b>'+(e[1]===1?"1 "+t("u.d"):"½ "+t("u.d"))+'</b></div>'});
+      if(!cs.before&&!cs.list.length) h+='<div class="small">'+esc(t("c.none"))+'</div>';
     } else {
-      h+='<div class="small" style="margin:12px 0 4px">Crédits (libellé, jours, valable jusqu\'au)</div><div id="crList">';
+      h+='<div class="small" style="margin:12px 0 4px">'+esc(t("c.editlab"))+'</div><div id="crList">';
       data.years[Y].credits.forEach(function(c,i){
-        h+='<div class="cr"><input type="text" data-ci="'+i+'" data-cf="l" value="'+esc(c.l)+'"><input type="number" step="0.5" data-ci="'+i+'" data-cf="j" value="'+(+c.j||0)+'"><button class="x" data-cdel="'+i+'">×</button>'+
+        h+='<div class="cr"><input type="text" data-ci="'+i+'" data-cf="l" value="'+esc(crLabel(c))+'"><input type="number" step="0.5" data-ci="'+i+'" data-cf="j" value="'+(+c.j||0)+'"><button class="x" data-cdel="'+i+'">×</button>'+
            '<input class="u" type="date" data-ci="'+i+'" data-cf="u" value="'+esc(c.u||"")+'"></div>';
       });
-      h+='</div><button class="btn alt sm" id="crAdd" style="margin-top:8px">+ Ajouter un crédit</button>';
-      h+='<div class="row between" style="margin-top:12px"><span>Déjà consommé avant l\'app (jours)</span><input type="number" step="0.5" min="0" id="crBefore" value="'+cs.before+'"></div>';
-      h+='<div class="note">Une demi-journée = 0,5. Ce chiffre vient de ta fiche de contrôle, à la date du début du suivi.</div>';
+      h+='</div><button class="btn alt sm" id="crAdd" style="margin-top:8px">'+esc(t("c.add"))+'</button>';
+      h+='<div class="row between" style="margin-top:12px"><span>'+esc(t("c.beforej"))+'</span><input type="number" step="0.5" min="0" id="crBefore" value="'+cs.before+'"></div>';
+      h+='<div class="note">'+esc(t("c.editnote"))+'</div>';
     }
     cc.innerHTML=h;
   }
   /* heures sup */
-  var hc=$("cHS"), now=hsNow(), t=today();
-  h='<strong>Heures sup</strong>';
-  h+='<div class="small" style="margin-top:6px">Solde à ce jour</div><div class="big '+(now<0?"neg":now>0?"pos":"")+'">'+fmt(now,true)+'</div>';
-  if(now< -600) h+='<div class="warnbox">Attention : tu es à '+fmt(now,true)+' d\'heures sup (avertissement à partir de − 10 h).</div>';
+  var hc=$("cHS"), now=hsNow(), t_=today();
+  h='<strong>'+esc(t("h.title"))+'</strong>';
+  h+='<div class="small" style="margin-top:6px">'+esc(t("h.bal"))+'</div><div class="big '+(now<0?"neg":now>0?"pos":"")+'">'+fmt(now,true)+'</div>';
+  if(now< -600) h+='<div class="warnbox">'+esc(t("h.warn",fmt(now,true)))+'</div>';
   h+='<div style="margin-top:10px">';
   var any=false;
   for(var p2=0;p2<6;p2++){
@@ -713,58 +987,59 @@ function renderRecap(){
     if(!s.tracked||s.fut) continue;
     any=true;
     var gross=s.inBal+s.delta;
-    h+='<div class="per"><h4><span>'+PERN[p2]+'</span><span class="chip '+(s.closed?"done":"")+'">'+(s.cur?"en cours":"terminée")+'</span></h4>';
-    h+='<div class="ln"><span>Report reçu</span><b>'+fmt(s.inBal,true)+'</b></div>';
-    h+='<div class="ln"><span>Prestées dans la période</span><b>'+fmt(s.delta,true)+'</b></div>';
-    if(s.paid) h+='<div class="ln"><span>Payées</span><b>− '+fmt(s.paid)+'</b></div>';
-    if(s.conv) h+='<div class="ln"><span>Converties en congé ('+s.conv+' j)</span><b>− '+fmt(s.conv*NORM())+'</b></div>';
-    h+='<div class="ln"><span>'+(s.closed?"Reporté à la période suivante":"Solde")+'</span><b class="'+(s.out<0?"neg":"")+'">'+fmt(s.out,true)+'</b></div>';
-    h+='<div class="ed"><div><label>Payées (h:mm)</label><input type="text" data-pid="'+s.id+'" data-pf="paid" value="'+(s.paid?fmtHM(s.paid):"")+'" placeholder="0:00"></div>'+
-       '<div><label>Converties (jours)</label><input type="number" min="0" step="1" data-pid="'+s.id+'" data-pf="conv" value="'+(s.conv||"")+'" placeholder="0"></div></div>';
-    h+='<div class="row" style="margin-top:8px;gap:6px"><button class="btn alt sm" data-pall="'+s.id+'" data-v="'+Math.max(0,gross-s.conv*NORM())+'">Tout payer</button><button class="btn alt sm" data-prep="'+s.id+'">Tout reporter</button></div>';
+    h+='<div class="per"><h4><span>'+PERN[p2]+'</span><span class="chip '+(s.closed?"done":"")+'">'+esc(s.cur?t("h.cur"):t("h.closed"))+'</span></h4>';
+    h+='<div class="ln"><span>'+esc(t("h.in"))+'</span><b>'+fmt(s.inBal,true)+'</b></div>';
+    h+='<div class="ln"><span>'+esc(t("h.delta"))+'</span><b>'+fmt(s.delta,true)+'</b></div>';
+    if(s.paid) h+='<div class="ln"><span>'+esc(t("h.paid"))+'</span><b>− '+fmt(s.paid)+'</b></div>';
+    if(s.conv) h+='<div class="ln"><span>'+esc(t("h.convl",s.conv))+'</span><b>− '+fmt(s.conv*NORM())+'</b></div>';
+    h+='<div class="ln"><span>'+esc(s.closed?t("h.out"):t("h.solde"))+'</span><b class="'+(s.out<0?"neg":"")+'">'+fmt(s.out,true)+'</b></div>';
+    h+='<div class="ed"><div><label>'+esc(t("h.paidin"))+'</label><input type="text" data-pid="'+s.id+'" data-pf="paid" value="'+(s.paid?fmtHM(s.paid):"")+'" placeholder="0:00"></div>'+
+       '<div><label>'+esc(t("h.convin"))+'</label><input type="number" min="0" step="1" data-pid="'+s.id+'" data-pf="conv" value="'+(s.conv||"")+'" placeholder="0"></div></div>';
+    h+='<div class="row" style="margin-top:8px;gap:6px"><button class="btn alt sm" data-pall="'+s.id+'" data-v="'+Math.max(0,gross-s.conv*NORM())+'">'+esc(t("h.payall"))+'</button><button class="btn alt sm" data-prep="'+s.id+'">'+esc(t("h.repall"))+'</button></div>';
     h+='</div>';
   }
-  if(!any) h+='<div class="small">Rien à afficher pour '+Y+' (suivi depuis le '+data.track.start.split("-").reverse().join("/")+').</div>';
-  h+='</div><div class="note">Périodes de 2 mois à partir de janvier. Ce qui n\'est ni payé ni converti passe automatiquement à la période suivante. 1 jour converti = '+fmt(NORM())+'.</div>';
+  if(!any) h+='<div class="small">'+esc(t("h.empty",Y,data.track.start.split("-").reverse().join("/")))+'</div>';
+  h+='</div><div class="note">'+esc(t("h.note",fmt(NORM())))+'</div>';
   hc.innerHTML=h;
   renderAct(Y);
 }
 
 function renderAct(Y){
-  var F=[["ops","Ops"],["dispo","Dispo"],["rap","Rap."],["ex","EX"],["garde","R"]];
+  var F=[["ops","Ops"],["dispo","Dispo"],["rap",t("a.rap")],["ex","EX"],["garde","R"]];
   var tot={ops:0,dispo:0,rap:0,ex:0,garde:0}, rows="";
   for(var m=0;m<12;m++){
     var c=monthStats(Y,m).c;
     rows+='<tr><td>'+cap(MC[m])+'</td>'+F.map(function(f){tot[f[0]]+=c[f[0]];return '<td class="'+(c[f[0]]?"":"z")+'">'+c[f[0]]+'</td>'}).join("")+'</tr>';
   }
-  var h='<strong>Activité '+Y+'</strong>';
+  var h='<strong>'+esc(t("a.title",Y))+'</strong>';
   h+='<div class="totals" style="margin-top:12px">'+
-    '<div><div class="n">'+tot.ops+'</div><div class="small">Opérations</div></div>'+
-    '<div><div class="n">'+tot.dispo+'</div><div class="small">Dispo gradés</div></div>'+
-    '<div><div class="n">'+tot.rap+'</div><div class="small">Rappels</div></div>'+
-    '<div><div class="n">'+tot.ex+'</div><div class="small">Exemptions</div></div>'+
-    '<div><div class="n">'+tot.garde+'</div><div class="small">Rappelables (R)</div></div></div>';
-  h+='<table class="act"><thead><tr><th>Mois</th>'+F.map(function(f){return '<th>'+f[1]+'</th>'}).join("")+'</tr></thead><tbody>'+rows+
-    '<tr class="tot"><td>Total</td>'+F.map(function(f){return '<td>'+tot[f[0]]+'</td>'}).join("")+'</tr></tbody></table>';
-  h+='<div class="note">Compte uniquement ce qui est encodé dans l\'app.</div>';
+    '<div><div class="n">'+tot.ops+'</div><div class="small">'+esc(t("t.ops"))+'</div></div>'+
+    '<div><div class="n">'+tot.dispo+'</div><div class="small">'+esc(t("t.dispo"))+'</div></div>'+
+    '<div><div class="n">'+tot.rap+'</div><div class="small">'+esc(t("t.rap"))+'</div></div>'+
+    '<div><div class="n">'+tot.ex+'</div><div class="small">'+esc(t("t.ex"))+'</div></div>'+
+    '<div><div class="n">'+tot.garde+'</div><div class="small">'+esc(t("t.rapp"))+'</div></div></div>';
+  h+='<table class="act"><thead><tr><th>'+esc(t("a.month"))+'</th>'+F.map(function(f){return '<th>'+esc(f[1])+'</th>'}).join("")+'</tr></thead><tbody>'+rows+
+    '<tr class="tot"><td>'+esc(t("a.total"))+'</td>'+F.map(function(f){return '<td>'+tot[f[0]]+'</td>'}).join("")+'</tr></tbody></table>';
+  h+='<div class="note">'+esc(t("a.note"))+'</div>';
   $("cAct").innerHTML=h;
 }
 
 /* ---------- rendu REGLAGES ---------- */
 function renderReg(){
   var S=data.settings;
+  $("sLang").value=lang();
   $("sWeek").value=(S.weekMin/60);
   $("sDA").value=S.dispoA; $("sDB").value=S.dispoB; $("sDP").value=S.dispoP;
-  $("sDNote").textContent="Compte "+fmt(segMin({t:"d",a:S.dispoA,b:S.dispoB,p:S.dispoP}))+" par jour de dispo gradé.";
-  $("sDayNote").textContent="Soit "+fmt(NORM())+" par jour ouvrable (lundi à vendredi).";
+  $("sDNote").textContent=t("r.dnote",fmt(segMin({t:"d",a:S.dispoA,b:S.dispoB,p:S.dispoP})));
+  $("sDayNote").textContent=t("r.daynote",fmt(NORM()));
   $("sPad").value=String(S.rappelPad||0);
   $("sTS").value=data.track.start; $("sHS").value=fmtHM(data.track.hs);
   var fl=$("feList"), h="";
   data.extraFer.forEach(function(e,i){
-    var lab=e.d.length===5?("chaque année le "+(+e.d.slice(3))+" "+MOIS[+e.d.slice(0,2)-1]):e.d.split("-").reverse().join("/");
-    h+='<div class="fe"><span><b>'+esc(e.n||"Férié")+'</b><br><span class="small">'+lab+'</span></span><button class="x" data-fdel="'+i+'">×</button></div>';
+    var lab=e.d.length===5?t("r.feyear",+e.d.slice(3),MOIS[+e.d.slice(0,2)-1]):e.d.split("-").reverse().join("/");
+    h+='<div class="fe"><span><b>'+esc(e.k||e.n?ferName(e):t("fe.generic"))+'</b><br><span class="small">'+esc(lab)+'</span></span><button class="x" data-fdel="'+i+'">×</button></div>';
   });
-  fl.innerHTML=h||'<div class="small">Aucun.</div>';
+  fl.innerHTML=h||'<div class="small">'+esc(t("r.nofe"))+'</div>';
 }
 
 var BK_DAYS=7;
@@ -773,18 +1048,18 @@ function renderBk(){
   var a=bkAge(), has=Object.keys(data.days).length>0;
   var show=has&&(a===null||a>=BK_DAYS)&&(view==="jour"||view==="mois");
   $("bkWarn").classList.toggle("hidden",!show);
-  $("bkWarnTxt").textContent=a===null?"Aucune sauvegarde de tes heures pour l'instant.":"Dernière sauvegarde il y a "+a+" jours.";
-  $("bkLast").textContent=a===null?"Pas encore de sauvegarde.":"Dernière sauvegarde : "+(a===0?"aujourd'hui":a===1?"hier":"il y a "+a+" jours")+". Un rappel s'affiche après "+BK_DAYS+" jours.";
+  $("bkWarnTxt").textContent=a===null?t("b.none"):t("b.ago",a);
+  $("bkLast").textContent=a===null?t("b.nolast"):t("b.last",(a===0?t("b.today"):a===1?t("b.yest"):t("b.daysago",a)),BK_DAYS);
 }
 function markBackup(msg){ data.lastBackup=Date.now(); save(); renderBk(); toast(msg); }
 function doBackup(){
   data.lastBackup=Date.now();
-  copy(JSON.stringify(data),"Sauvegarde copiée : colle-la dans Notes");
+  copy(JSON.stringify(data),t("b.copied"));
   save(); renderBk();
 }
 /* sauvegarde en fichier : feuille de partage (Fichiers, Drive, Mail…) ou téléchargement */
 function backupFile(){
-  var d=today(), name="mes-heures-"+key(d)+".json";
+  var d=today(), name="heureka-"+key(d)+".json";
   var snap=JSON.parse(JSON.stringify(data)); snap.lastBackup=Date.now();
   var json=JSON.stringify(snap,null,1), file=null;
   try{ file=new File([json],name,{type:"application/json"}) }catch(e){}
@@ -792,33 +1067,34 @@ function backupFile(){
     try{
       var a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([json],{type:"application/json"}));
       a.download=name; document.body.appendChild(a); a.click(); a.remove();
-      markBackup("Sauvegarde enregistrée : "+name);
-    }catch(e){ toast("Impossible d'enregistrer : utilise copier / coller"); }
+      markBackup(t("b.saved",name));
+    }catch(e){ toast(t("b.fail")); }
   }
   if(file&&navigator.canShare&&navigator.canShare({files:[file]})){
-    navigator.share({files:[file],title:"Sauvegarde Mes heures"}).then(function(){ markBackup("Sauvegarde enregistrée"); },
-      function(e){ if(e&&e.name==="AbortError") toast("Sauvegarde annulée"); else download(); });
+    navigator.share({files:[file],title:t("b.title")}).then(function(){ markBackup(t("b.saved2")); },
+      function(e){ if(e&&e.name==="AbortError") toast(t("b.cancel")); else download(); });
   } else download();
 }
 var pending=null;
 function askRestore(txt){
-  var d; try{ d=JSON.parse(txt); if(!d||!d.days) throw 0; }catch(e){ toast("Fichier de sauvegarde illisible"); return; }
+  var d; try{ d=JSON.parse(txt); if(!d||!d.days) throw 0; }catch(e){ toast(t("b.bad")); return; }
   pending=d;
   var n=Object.keys(d.days).length, when=d.lastBackup?new Date(d.lastBackup):null;
   var c=$("bkConfirm");
-  c.innerHTML='<b>Restaurer cette sauvegarde ?</b><br>'+(when?'Faite le '+when.getDate()+' '+MOIS[when.getMonth()]+' '+when.getFullYear()+' · ':'')+n+' jour'+(n>1?'s':'')+' encodé'+(n>1?'s':'')+'.<br><span class="small">Tes données actuelles seront remplacées.</span>'+
-    '<div class="row"><button class="btn" id="bkYes">Restaurer</button><button class="btn alt" id="bkNo">Annuler</button></div>';
+  c.innerHTML='<b>'+esc(t("b.ask"))+'</b><br>'+(when?esc(t("b.madeon",when.getDate()+" "+MOIS[when.getMonth()]+" "+when.getFullYear())):'')+esc(t("b.days",n))+'<br><span class="small">'+esc(t("b.replace"))+'</span>'+
+    '<div class="row"><button class="btn" id="bkYes">'+esc(t("b.yes"))+'</button><button class="btn alt" id="bkNo">'+esc(t("b.no"))+'</button></div>';
   c.classList.remove("hidden");
-  $("bkYes").onclick=function(){ data=pending; pending=null; migrate(); save(); c.classList.add("hidden"); render(); toast("Sauvegarde restaurée"); };
+  $("bkYes").onclick=function(){ data=pending; pending=null; migrate(); save(); c.classList.add("hidden"); render(); toast(t("b.restored")); };
   $("bkNo").onclick=function(){ pending=null; c.classList.add("hidden"); };
 }
 function render(){
   psMemo={};
+  setLang();
   renderBk();
   ["jour","mois","recap","reg"].forEach(function(v){$("v-"+v).classList.toggle("hidden",v!==view)});
   document.querySelectorAll("nav button").forEach(function(b){b.classList.toggle("on",b.dataset.v===view)});
-  var t=today();
-  $("subtitle").textContent=JOURS[t.getDay()]+" "+t.getDate()+" "+MOIS[t.getMonth()]+" "+t.getFullYear();
+  var t_=today();
+  $("subtitle").textContent=t("app.sub")+" · "+JOURS[t_.getDay()]+" "+t_.getDate()+" "+MOIS[t_.getMonth()]+" "+t_.getFullYear();
   if(view==="jour")renderJour();
   if(view==="mois")renderMois();
   if(view==="recap")renderRecap();
@@ -826,6 +1102,9 @@ function render(){
 }
 
 /* ---------- événements ---------- */
+function switchLang(l){ data.settings.lang=l; save(); render(); }
+$("langBtn").onclick=function(){ switchLang(lang()==="fr"?"nl":"fr"); };
+$("sLang").onchange=function(){ switchLang(this.value==="nl"?"nl":"fr"); };
 document.querySelectorAll("nav button").forEach(function(b){b.onclick=function(){view=b.dataset.v;editCredits=false;render();window.scrollTo(0,0)}});
 $("dPrev").onclick=function(){cur.setDate(cur.getDate()-1);render()};
 $("dNext").onclick=function(){cur.setDate(cur.getDate()+1);render()};
@@ -834,20 +1113,20 @@ $("mNext").onclick=function(){mCur.setMonth(mCur.getMonth()+1);render()};
 $("yPrev").onclick=function(){rYear--;editCredits=false;render()};
 $("yNext").onclick=function(){rYear++;editCredits=false;render()};
 
-function blocked(k){ if(day(k).lock){ toast("Jour figé : déverrouille-le d'abord"); return true } return false }
+function blocked(k){ if(day(k).lock){ toast(t("lock.blocked")); return true } return false }
 $("lockBtn").onclick=function(){
   var x=day(key(cur),true), b=this;
-  if(!x.lock){ x.lock=true; save(); render(); toast("Jour figé"); return; }
-  if(b.dataset.armed){ x.lock=false; save(); render(); toast("Jour déverrouillé"); return; }
-  b.dataset.armed="1"; b.textContent="Sûr ? Touche encore";
-  setTimeout(function(){ if(b.isConnected&&b.dataset.armed){ delete b.dataset.armed; b.textContent="Déverrouiller"; } },3000);
+  if(!x.lock){ x.lock=true; save(); render(); toast(t("lock.t1")); return; }
+  if(b.dataset.armed){ x.lock=false; save(); render(); toast(t("lock.t2")); return; }
+  b.dataset.armed="1"; b.textContent=t("lock.sure");
+  setTimeout(function(){ if(b.isConnected&&b.dataset.armed){ delete b.dataset.armed; b.textContent=t("lock.unlock"); } },3000);
 };
 $("bStart").onclick=function(){
   cur=today(); if(blocked(key(cur))){render();return} var x=day(key(cur),true);
-  if(x.segs.some(function(s){return s.a&&!s.b})){toast("Un service est déjà en cours");return}
+  if(x.segs.some(function(s){return s.a&&!s.b})){toast(t("t.running"));return}
   var empty=x.segs.filter(function(s){return s.t!=="d"&&!s.a});
   if(empty.length) empty[0].a=nowHM(); else x.segs.push({t:"s",a:nowHM(),b:null});
-  save(); render(); toast("Début noté à "+nowHM());
+  save(); render(); toast(t("t.begin",nowHM()));
 };
 $("bEnd").onclick=function(){
   cur=today(); var k=key(cur); if(blocked(k)){render();return} var x=day(k,true);
@@ -855,61 +1134,61 @@ $("bEnd").onclick=function(){
   if(!open.length){
     var y=new Date(cur);y.setDate(y.getDate()-1);var xy=day(key(y));
     var oy=xy.segs.filter(function(s){return s.a&&!s.b});
-    if(oy.length){oy[oy.length-1].b=nowHM();save();render();toast("Fin notée (service commencé hier)");return}
-    toast("Aucun service en cours");return;
+    if(oy.length){oy[oy.length-1].b=nowHM();save();render();toast(t("t.endyest"));return}
+    toast(t("t.norun"));return;
   }
-  open[open.length-1].b=nowHM(); save(); render(); toast("Fin notée à "+nowHM());
+  open[open.length-1].b=nowHM(); save(); render(); toast(t("t.endat",nowHM()));
 };
 $("addS").onclick=function(){if(blocked(key(cur)))return;day(key(cur),true).segs.push({t:"s",a:"",b:""});save();render()};
 $("addR").onclick=function(){if(blocked(key(cur)))return;day(key(cur),true).segs.push({t:"r",a:"",b:""});save();render()};
 $("segs").addEventListener("change",function(e){
-  var t=e.target; if(t.tagName!=="INPUT")return; if(blocked(key(cur))){render();return}
-  var x=day(key(cur),true), s=x.segs[+t.dataset.i]; if(!s)return;
-  s[t.dataset.f]=t.value||null; save();
+  var t_=e.target; if(t_.tagName!=="INPUT")return; if(blocked(key(cur))){render();return}
+  var x=day(key(cur),true), s=x.segs[+t_.dataset.i]; if(!s)return;
+  s[t_.dataset.f]=t_.value||null; save();
   render();
 });
 $("segs").addEventListener("click",function(e){
-  var t=e.target.closest("[data-del]"); if(!t)return; if(blocked(key(cur)))return;
-  var i=+t.dataset.del, b=t;
-  if(b.dataset.armed){day(key(cur),true).segs.splice(i,1);save();render();toast("Supprimé");return}
-  b.dataset.armed="1"; b.textContent="Suppr. ?"; b.style.color="var(--neg)";
+  var t_=e.target.closest("[data-del]"); if(!t_)return; if(blocked(key(cur)))return;
+  var i=+t_.dataset.del, b=t_;
+  if(b.dataset.armed){day(key(cur),true).segs.splice(i,1);save();render();toast(t("t.deleted"));return}
+  b.dataset.armed="1"; b.textContent=t("t.delask"); b.style.color="var(--neg)";
   setTimeout(function(){if(b.isConnected){delete b.dataset.armed;b.textContent="×";b.style.color=""}},2500);
 });
 $("tGarde").onclick=function(){if(blocked(key(cur)))return;var x=day(key(cur),true);x.garde=!x.garde;save();render()};
 $("tHalf").onclick=function(){if(blocked(key(cur)))return;var x=day(key(cur),true);x.half=!x.half;save();render();if(x.type==="z")warnHS()};
 $("types").addEventListener("click",function(e){
   var b=e.target.closest(".ty"); if(!b) return; if(blocked(key(cur))) return;
-  var x=day(key(cur),true), t=b.dataset.type, S=data.settings;
-  if(x.type===t){ x.type=null; x.half=false; if(t==="dispo") x.segs=x.segs.filter(function(s){return s.t!=="d"}); save(); render(); return; }
+  var x=day(key(cur),true), ty=b.dataset.type, S=data.settings;
+  if(x.type===ty){ x.type=null; x.half=false; if(ty==="dispo") x.segs=x.segs.filter(function(s){return s.t!=="d"}); save(); render(); return; }
   if(x.type==="dispo") x.segs=x.segs.filter(function(s){return s.t!=="d"});
-  x.type=t; if(t!=="conge"&&t!=="z") x.half=false;
-  if(t==="dispo"){ x.segs=x.segs.filter(function(s){return s.a}); x.segs.unshift({t:"d",a:S.dispoA,b:S.dispoB,p:S.dispoP}); toast("Dispo gradé : "+fmt(segMin(x.segs[0]))); }
-  if(t==="ops" && !x.segs.some(function(s){return s.t==="s"})){ x.segs.push({t:"s",a:"",b:""}); toast("Encode l'heure de début"); }
+  x.type=ty; if(ty!=="conge"&&ty!=="z") x.half=false;
+  if(ty==="dispo"){ x.segs=x.segs.filter(function(s){return s.a}); x.segs.unshift({t:"d",a:S.dispoA,b:S.dispoB,p:S.dispoP}); toast(t("t.dispo",fmt(segMin(x.segs[0])))); }
+  if(ty==="ops" && !x.segs.some(function(s){return s.t==="s"})){ x.segs.push({t:"s",a:"",b:""}); toast(t("t.enc")); }
   save(); render();
-  if(t==="z"){ var k=key(cur); if(counted(k)) warnHS(); else { var h=hsNow()-NORM(); if(h< -600) toast("Attention : après ce Z, heures sup à "+fmt(h,true),3500); } }
+  if(ty==="z"){ var k=key(cur); if(counted(k)) warnHS(); else { var h=hsNow()-NORM(); if(h< -600) toast(t("t.afterz",fmt(h,true)),3500); } }
 });
 $("mLock").onclick=function(){
   var y=mCur.getFullYear(), m=mCur.getMonth(), n=new Date(y,m+1,0).getDate(), tk=key(today()), c=0;
   for(var i=1;i<=n;i++){ var k=key(new Date(y,m,i)), x=data.days[k]; if(x&&k<tk&&hasContent(x)&&!x.lock){x.lock=true;c++} }
-  save(); render(); toast(c?c+" jour"+(c>1?"s":"")+" figé"+(c>1?"s":""):"Rien de plus à figer");
+  save(); render(); toast(c?t("n.figes",c):t("n.nofig"));
 };
 $("mDays").addEventListener("click",function(e){var r=e.target.closest(".d");if(!r)return;cur=parseKey(r.dataset.k);view="jour";render();window.scrollTo(0,0)});
 
 /* récap : congés */
 $("cConge").addEventListener("click",function(e){
-  var t=e.target;
-  if(t.id==="yCreate"){
+  var t_=e.target;
+  if(t_.id==="yCreate"){
     var Y=rYear, prev=data.years[Y-1]?congeStats(Y-1).rest:0;
     data.years[Y]={before:0,credits:[
-      {l:"Report congé année précédente",j:Math.max(0,Math.round(prev*2)/2),u:Y+"-05-31"},
-      {l:"Congé annuel de vacances",j:36,u:Y+"-12-31"}
+      {k:"cl.report",j:Math.max(0,Math.round(prev*2)/2),u:Y+"-05-31"},
+      {k:"cl.vacances",j:36,u:Y+"-12-31"}
     ]};
-    editCredits=true; save(); render(); toast("Année "+Y+" créée : vérifie les crédits");
+    editCredits=true; save(); render(); toast(t("c.created",Y));
     return;
   }
-  if(t.id==="crEdit"){editCredits=!editCredits;render();return}
-  if(t.id==="crAdd"){data.years[rYear].credits.push({l:"Nouveau crédit",j:1,u:rYear+"-12-31"});save();render();return}
-  var del=t.closest("[data-cdel]");
+  if(t_.id==="crEdit"){editCredits=!editCredits;render();return}
+  if(t_.id==="crAdd"){data.years[rYear].credits.push({l:t("cl.new"),j:1,u:rYear+"-12-31"});save();render();return}
+  var del=t_.closest("[data-cdel]");
   if(del){
     if(del.dataset.armed){data.years[rYear].credits.splice(+del.dataset.cdel,1);save();render();return}
     del.dataset.armed="1";del.textContent="?";del.style.color="var(--neg)";
@@ -917,29 +1196,30 @@ $("cConge").addEventListener("click",function(e){
   }
 });
 $("cConge").addEventListener("change",function(e){
-  var t=e.target, yd=data.years[rYear]; if(!yd) return;
-  if(t.id==="crBefore"){var v=parseFloat(String(t.value).replace(",","."));yd.before=isNaN(v)?0:v;save();render();return}
-  if(t.dataset.ci!=null){
-    var c=yd.credits[+t.dataset.ci]; if(!c) return;
-    if(t.dataset.cf==="j"){var j=parseFloat(String(t.value).replace(",","."));c.j=isNaN(j)?0:j}
-    else c[t.dataset.cf]=t.value;
+  var t_=e.target, yd=data.years[rYear]; if(!yd) return;
+  if(t_.id==="crBefore"){var v=parseFloat(String(t_.value).replace(",","."));yd.before=isNaN(v)?0:v;save();render();return}
+  if(t_.dataset.ci!=null){
+    var c=yd.credits[+t_.dataset.ci]; if(!c) return;
+    if(t_.dataset.cf==="j"){var j=parseFloat(String(t_.value).replace(",","."));c.j=isNaN(j)?0:j}
+    else if(t_.dataset.cf==="l"){ if(t_.value!==crLabel(c)){c.l=t_.value; delete c.k;} }
+    else c[t_.dataset.cf]=t_.value;
     save(); render();
   }
 });
 /* récap : heures sup */
 $("cHS").addEventListener("change",function(e){
-  var t=e.target, id=t.dataset.pid; if(!id) return;
+  var t_=e.target, id=t_.dataset.pid; if(!id) return;
   var pe=data.periods[id]||(data.periods[id]={});
-  if(t.dataset.pf==="paid"){var v=parseHM(t.value); if(v==null||v<0){toast("Format : 12:30");return} pe.paid=v}
-  if(t.dataset.pf==="conv"){var n=parseInt(t.value,10); pe.conv=isNaN(n)||n<0?0:n}
+  if(t_.dataset.pf==="paid"){var v=parseHM(t_.value); if(v==null||v<0){toast(t("h.fmt"));return} pe.paid=v}
+  if(t_.dataset.pf==="conv"){var n=parseInt(t_.value,10); pe.conv=isNaN(n)||n<0?0:n}
   save(); render();
-  if(t.dataset.pf==="conv"&&pe.conv) toast(pe.conv+" j ajouté"+(pe.conv>1?"s":"")+" au quota de congés");
+  if(t_.dataset.pf==="conv"&&pe.conv) toast(t("h.convt",pe.conv));
   warnHS();
 });
 $("cHS").addEventListener("click",function(e){
   var a=e.target.closest("[data-pall]"), r=e.target.closest("[data-prep]");
-  if(a){var pe=data.periods[a.dataset.pall]||(data.periods[a.dataset.pall]={}); pe.paid=Math.round(+a.dataset.v); save(); render(); toast("Tout payé : "+fmt(pe.paid))}
-  if(r){var pr=data.periods[r.dataset.prep]||(data.periods[r.dataset.prep]={}); pr.paid=0; pr.conv=0; save(); render(); toast("Tout est reporté")}
+  if(a){var pe=data.periods[a.dataset.pall]||(data.periods[a.dataset.pall]={}); pe.paid=Math.round(+a.dataset.v); save(); render(); toast(t("h.paidt",fmt(pe.paid)))}
+  if(r){var pr=data.periods[r.dataset.prep]||(data.periods[r.dataset.prep]={}); pr.paid=0; pr.conv=0; save(); render(); toast(t("h.reportt"))}
 });
 
 /* réglages */
@@ -947,16 +1227,16 @@ $("sDA").onchange=function(){if(this.value){data.settings.dispoA=this.value;save
 $("sDB").onchange=function(){if(this.value){data.settings.dispoB=this.value;save();render()}};
 $("sDP").onchange=function(){var v=parseInt(this.value,10);if(v>=0){data.settings.dispoP=v;save();render()}};
 $("sWeek").onchange=function(){var v=parseFloat(this.value);if(v>0){data.settings.weekMin=Math.round(v*60);save();render()}};
-$("sPad").onchange=function(){data.settings.rappelPad=parseInt(this.value,10)||0;save();render();toast("Rappels : "+(data.settings.rappelPad?data.settings.rappelPad+" min avant et après":"sans temps de trajet"))};
+$("sPad").onchange=function(){data.settings.rappelPad=parseInt(this.value,10)||0;save();render();toast(t("r.padt",data.settings.rappelPad))};
 $("sTS").onchange=function(){if(this.value){data.track.start=this.value;save();render()}};
-$("sHS").onchange=function(){var v=parseHM(this.value);if(v==null){toast("Format : 22:03");return}data.track.hs=v;save();render();toast("Solde de départ : "+fmt(v,true))};
+$("sHS").onchange=function(){var v=parseHM(this.value);if(v==null){toast(t("r.fmt2"));return}data.track.hs=v;save();render();toast(t("r.startbal",fmt(v,true)))};
 $("feRec").onclick=function(){this.classList.toggle("on")};
 $("feAdd").onclick=function(){
-  var d=$("feD").value; if(!d){toast("Choisis une date");return}
+  var d=$("feD").value; if(!d){toast(t("r.pickdate"));return}
   var rec=$("feRec").classList.contains("on");
-  data.extraFer.push({d:rec?d.slice(5):d,n:$("feN").value.trim()||"Férié du service"});
+  data.extraFer.push({d:rec?d.slice(5):d,n:$("feN").value.trim()||t("fe.service")});
   $("feD").value="";$("feN").value="";$("feRec").classList.remove("on");
-  save(); render(); toast("Jour férié ajouté");
+  save(); render(); toast(t("r.feadded"));
 };
 $("feList").addEventListener("click",function(e){
   var b=e.target.closest("[data-fdel]"); if(!b) return;
@@ -966,7 +1246,7 @@ $("feList").addEventListener("click",function(e){
 });
 
 function copy(text,msg){
-  function fallback(){var ta=document.createElement("textarea");ta.value=text;ta.readOnly=true;ta.style.cssText="position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;font-size:16px";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");toast(msg)}catch(e){toast("Sélectionne le texte et copie-le")}ta.remove()}
+  function fallback(){var ta=document.createElement("textarea");ta.value=text;ta.readOnly=true;ta.style.cssText="position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;font-size:16px";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");toast(msg)}catch(e){toast(t("b.select"))}ta.remove()}
   try{navigator.clipboard.writeText(text).then(function(){toast(msg)},fallback)}catch(e){fallback()}
 }
 $("bkCopy").onclick=doBackup;
@@ -975,7 +1255,7 @@ $("bkFile").onclick=backupFile;
 $("bkOpen").onclick=function(){ $("bkInput").value=""; $("bkInput").click(); };
 $("bkInput").onchange=function(){
   var f=this.files&&this.files[0]; if(!f) return;
-  var r=new FileReader(); r.onload=function(){ askRestore(String(r.result)); }; r.onerror=function(){ toast("Lecture impossible"); }; r.readAsText(f);
+  var r=new FileReader(); r.onload=function(){ askRestore(String(r.result)); }; r.onerror=function(){ toast(t("b.read")); }; r.readAsText(f);
 };
 $("bkShow").onclick=function(){$("bkBox").classList.toggle("hidden")};
 $("bkLoad").onclick=function(){
@@ -991,7 +1271,7 @@ setInterval(updateLive,30000);
 render();
 
 /* exposé pour les tests */
-window.__mh={data:function(){return data},credit:credit,pState:pState,congeStats:congeStats,hsNow:hsNow,monthStats:monthStats,reset:function(d){data=d;migrate();psMemo={};render()},key:key};
+window.__mh={data:function(){return data},credit:credit,pState:pState,congeStats:congeStats,hsNow:hsNow,monthStats:monthStats,reset:function(d){data=d;migrate();psMemo={};render()},key:key,setLang:function(l){switchLang(l)},t:t};
 })();
 </script>
 </body>
