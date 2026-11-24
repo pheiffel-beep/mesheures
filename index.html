@@ -225,6 +225,7 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:10p
     <div class="card">
       <div class="toggle"><span data-i18n="d.garde"></span><div class="sw" id="tGarde"></div></div>
     </div>
+    <button class="btn alt hidden" id="clrDay" style="width:100%;margin-bottom:12px"></button>
   </section>
 
   <!-- MOIS -->
@@ -404,7 +405,7 @@ fr:{
 "r.bktxt":"Tes données restent uniquement sur ce téléphone. Enregistre régulièrement une sauvegarde : un fichier que tu ranges dans Fichiers (iCloud Drive), ton Drive ou que tu t'envoies par mail.",
 "r.bkfile":"Enregistrer une sauvegarde","r.bkopen":"Restaurer depuis un fichier","r.bkother":"Autre méthode : copier / coller",
 "r.bkcopy":"Copier la sauvegarde","r.bkpaste":"Colle ici une sauvegarde","r.bkload":"Restaurer cette sauvegarde",
-"r.version":"Version 0.16 · aucune donnée envoyée · rien d'autre que des horaires.",
+"r.version":"Version 0.17 · aucune donnée envoyée · rien d'autre que des horaires.",
 "nav.jour":"Jour","nav.mois":"Mois","nav.recap":"Récap","nav.reg":"Réglages",
 
 "s.s":"Service","s.r":"Rappel","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Congé","y.z":"Z","y.ex":"EX",
@@ -427,7 +428,7 @@ fr:{
 "t.running":"Un service est déjà en cours",
 "t.begin":function(x){return "Début noté à "+x},"t.endat":function(x){return "Fin notée à "+x},
 "t.endyest":"Fin notée (service commencé hier)","t.norun":"Aucun service en cours",
-"t.delask":"Suppr. ?","t.deleted":"Supprimé",
+"t.delask":"Suppr. ?","t.deleted":"Supprimé","clr.day":"Remettre ce jour à zéro","clr.sure":"Sûr ? Touche encore pour tout effacer","clr.done":"Jour remis à zéro",
 "tt.dispo":function(x){return "Dispo gradé : "+x},"t.enc":"Encode l'heure de début",
 "t.afterz":function(x){return "Attention : après ce Z, heures sup à "+x},
 "t.warn":function(x){return "Attention : heures sup à "+x},
@@ -523,7 +524,7 @@ nl:{
 "r.bktxt":"Je gegevens blijven enkel op deze telefoon. Maak regelmatig een back-up: een bestand dat je bewaart in Bestanden (iCloud Drive), in je Drive of dat je naar jezelf mailt.",
 "r.bkfile":"Back-up opslaan","r.bkopen":"Herstellen vanuit een bestand","r.bkother":"Andere methode: kopiëren / plakken",
 "r.bkcopy":"Back-up kopiëren","r.bkpaste":"Plak hier een back-up","r.bkload":"Deze back-up herstellen",
-"r.version":"Versie 0.16 · geen gegevens verstuurd · enkel uurroosters.",
+"r.version":"Versie 0.17 · geen gegevens verstuurd · enkel uurroosters.",
 "nav.jour":"Dag","nav.mois":"Maand","nav.recap":"Overzicht","nav.reg":"Instellingen",
 
 "s.s":"Dienst","s.r":"Oproep","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Verlof","y.z":"Z","y.ex":"EX",
@@ -546,7 +547,7 @@ nl:{
 "t.running":"Er loopt al een dienst",
 "t.begin":function(x){return "Begin genoteerd om "+x},"t.endat":function(x){return "Einde genoteerd om "+x},
 "t.endyest":"Einde genoteerd (dienst begonnen gisteren)","t.norun":"Geen lopende dienst",
-"t.delask":"Verw.?","t.deleted":"Verwijderd",
+"t.delask":"Verw.?","t.deleted":"Verwijderd","clr.day":"Deze dag leegmaken","clr.sure":"Zeker? Tik nogmaals om alles te wissen","clr.done":"Dag leeggemaakt",
 "tt.dispo":function(x){return "Dispo gegradeerde: "+x},"t.enc":"Voer het beginuur in",
 "t.afterz":function(x){return "Opgelet: na dit Z staan de overuren op "+x},
 "t.warn":function(x){return "Opgelet: overuren op "+x},
@@ -940,6 +941,7 @@ function renderJour(keepSegs){
   lb.classList.toggle("hidden",!L_&&!hasContent(x));
   lb.className="lockbar "+(L_?"on":"off")+(!L_&&!hasContent(x)?" hidden":"");
   $("lockTxt").innerHTML=L_?'<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" style=\"vertical-align:-3px\"><rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"/><path d=\"M8 11V7a4 4 0 0 1 8 0v4\"/></svg> '+esc(t("lock.on")):esc(t("lock.ask"));
+  var cd=$("clrDay"); delete cd.dataset.armed; cd.textContent=t("clr.day"); cd.classList.toggle("hidden",L_||!hasContent(x)&&!x.garde);
   var bt=$("lockBtn"); delete bt.dataset.armed; bt.textContent=L_?t("lock.unlock"):t("lock.lock");
 }
 
@@ -1165,6 +1167,12 @@ $("lockBtn").onclick=function(){
   if(b.dataset.armed){ x.lock=false; save(); render(); toast(t("lock.t2")); return; }
   b.dataset.armed="1"; b.textContent=t("lock.sure");
   setTimeout(function(){ if(b.isConnected&&b.dataset.armed){ delete b.dataset.armed; b.textContent=t("lock.unlock"); } },3000);
+};
+$("clrDay").onclick=function(){
+  var k=key(cur), b=this; if(blocked(k)) return;
+  if(b.dataset.armed){ delete data.days[k]; save(); render(); toast(t("clr.done")); return; }
+  b.dataset.armed="1"; b.textContent=t("clr.sure");
+  setTimeout(function(){ if(b.isConnected&&b.dataset.armed){ delete b.dataset.armed; b.textContent=t("clr.day"); } },3000);
 };
 $("bStart").onclick=function(){
   if(blocked(key(cur))){render();return} var x=day(key(cur),true);
