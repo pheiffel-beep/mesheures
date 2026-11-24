@@ -161,8 +161,13 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:10p
 .tpbox{background:var(--card);border-radius:18px;padding:18px;width:min(330px,92vw);box-shadow:0 10px 30px rgba(0,0,0,.25)}
 .tptitle{font-weight:700;text-align:center}
 .tprow{display:flex;align-items:center;justify-content:center;gap:10px;margin:16px 0}
-.tprow select{font-size:30px;height:64px;width:104px;text-align:center;text-align-last:center}
-.tprow b{font-size:30px}
+.tprow{position:relative;margin:12px 0}
+.tprow b{font-size:30px;position:relative;z-index:1}
+.wband{position:absolute;left:0;right:0;top:88px;height:44px;background:#efe6f2;border-radius:12px;pointer-events:none}
+.wcol{position:relative;z-index:1;height:220px;width:100px;overflow-y:scroll;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:88px 0;box-sizing:border-box;overscroll-behavior:contain;touch-action:pan-y}
+.wcol::-webkit-scrollbar{display:none}
+.wcol div{height:44px;line-height:44px;text-align:center;font-size:24px;color:#a99db3;scroll-snap-align:center;cursor:pointer}
+.wcol div.on{color:var(--text,#2b2230);font-size:30px;font-weight:700}
 .tpbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .tpbtns button{padding:12px 4px}
 </style>
@@ -352,7 +357,7 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:10p
 <div class="tp hidden" id="tp">
   <div class="tpbox">
     <div class="tptitle" id="tpTitle"></div>
-    <div class="tprow"><select id="tpH" aria-label="h"></select><b>:</b><select id="tpM" aria-label="min"></select></div>
+    <div class="tprow"><div class="wband"></div><div class="wcol" id="tpH" aria-label="h"></div><b>:</b><div class="wcol" id="tpM" aria-label="min"></div></div>
     <div class="tpbtns"><button class="btn alt" id="tpClr" data-i18n="tp.clear"></button><button class="btn alt" id="tpNo" data-i18n="tp.cancel"></button><button class="btn" id="tpOk" data-i18n="tp.ok"></button></div>
   </div>
 </div>
@@ -399,7 +404,7 @@ fr:{
 "r.bktxt":"Tes données restent uniquement sur ce téléphone. Enregistre régulièrement une sauvegarde : un fichier que tu ranges dans Fichiers (iCloud Drive), ton Drive ou que tu t'envoies par mail.",
 "r.bkfile":"Enregistrer une sauvegarde","r.bkopen":"Restaurer depuis un fichier","r.bkother":"Autre méthode : copier / coller",
 "r.bkcopy":"Copier la sauvegarde","r.bkpaste":"Colle ici une sauvegarde","r.bkload":"Restaurer cette sauvegarde",
-"r.version":"Version 0.13 · aucune donnée envoyée · rien d'autre que des horaires.",
+"r.version":"Version 0.14 · aucune donnée envoyée · rien d'autre que des horaires.",
 "nav.jour":"Jour","nav.mois":"Mois","nav.recap":"Récap","nav.reg":"Réglages",
 
 "s.s":"Service","s.r":"Rappel","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Congé","y.z":"Z","y.ex":"EX",
@@ -517,7 +522,7 @@ nl:{
 "r.bktxt":"Je gegevens blijven enkel op deze telefoon. Maak regelmatig een back-up: een bestand dat je bewaart in Bestanden (iCloud Drive), in je Drive of dat je naar jezelf mailt.",
 "r.bkfile":"Back-up opslaan","r.bkopen":"Herstellen vanuit een bestand","r.bkother":"Andere methode: kopiëren / plakken",
 "r.bkcopy":"Back-up kopiëren","r.bkpaste":"Plak hier een back-up","r.bkload":"Deze back-up herstellen",
-"r.version":"Versie 0.13 · geen gegevens verstuurd · enkel uurroosters.",
+"r.version":"Versie 0.14 · geen gegevens verstuurd · enkel uurroosters.",
 "nav.jour":"Dag","nav.mois":"Maand","nav.recap":"Overzicht","nav.reg":"Instellingen",
 
 "s.s":"Dienst","s.r":"Oproep","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Verlof","y.z":"Z","y.ex":"EX",
@@ -1167,15 +1172,25 @@ $("bEnd").onclick=function(){
 $("addS").onclick=function(){if(blocked(key(cur)))return;day(key(cur),true).segs.push({t:"s",a:"",b:""});save();render()};
 $("addR").onclick=function(){if(blocked(key(cur)))return;day(key(cur),true).segs.push({t:"r",a:"",b:""});save();render()};
 var tpCb=null;
+function wMark(c){ var i=Math.round(c.scrollTop/44), k=c.children; for(var j=0;j<k.length;j++) k[j].classList.toggle("on",j===i); }
+function wGet(c){ var i=Math.max(0,Math.min(c.children.length-1,Math.round(c.scrollTop/44))); return pad(i); }
+function wInit(c,n){
+  if(c.children.length) return;
+  for(var i=0;i<n;i++){ var d=document.createElement("div"); d.textContent=pad(i); d.dataset.i=i; c.appendChild(d); }
+  var tk=0; c.addEventListener("scroll",function(){ if(tk) return; tk=requestAnimationFrame(function(){ tk=0; wMark(c) }) });
+  c.addEventListener("click",function(e){ var d=e.target.closest("[data-i]"); if(d) c.scrollTo({top:d.dataset.i*44,behavior:"smooth"}) });
+}
 function openTP(title,val,canClear,cb){
-  var hs=$("tpH"), ms=$("tpM");
-  if(!hs.options.length){ for(var h=0;h<24;h++) hs.add(new Option(pad(h),pad(h))); for(var m=0;m<60;m++) ms.add(new Option(pad(m),pad(m))); }
-  var v=(val||nowHM()).split(":"); hs.value=v[0]; ms.value=v[1];
+  var hs=$("tpH"), ms=$("tpM"); wInit(hs,24); wInit(ms,60);
+  var v=(val||nowHM()).split(":");
   $("tpTitle").textContent=title; $("tpClr").classList.toggle("hidden",!canClear);
   tpCb=cb; $("tp").classList.remove("hidden");
+  hs.style.scrollSnapType=ms.style.scrollSnapType="none";
+  hs.scrollTop=(+v[0])*44; ms.scrollTop=(+v[1])*44; wMark(hs); wMark(ms);
+  setTimeout(function(){ hs.style.scrollSnapType=ms.style.scrollSnapType=""; },50);
 }
 function closeTP(v){ var cb=tpCb; tpCb=null; $("tp").classList.add("hidden"); if(cb) cb(v); }
-$("tpOk").onclick=function(){ closeTP($("tpH").value+":"+$("tpM").value); };
+$("tpOk").onclick=function(){ closeTP(wGet($("tpH"))+":"+wGet($("tpM"))); };
 $("tpClr").onclick=function(){ closeTP(null); };
 $("tpNo").onclick=function(){ tpCb=null; $("tp").classList.add("hidden"); };
 $("segs").addEventListener("click",function(e){
