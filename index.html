@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Mes heures">
 <title>Mes heures</title>
@@ -22,7 +22,7 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
-body{padding:env(safe-area-inset-top) 0 calc(76px + env(safe-area-inset-bottom))}
+body{overflow-x:hidden;padding:env(safe-area-inset-top) 0 calc(76px + env(safe-area-inset-bottom))}
 header{padding:16px 18px 6px}
 h1{font-size:22px;margin:0}
 .sub{color:var(--muted);font-size:14px}
@@ -39,8 +39,8 @@ button{font:inherit;border:0;border-radius:12px;padding:12px 14px;cursor:pointer
 .btn.alt{background:#efe6f2;color:var(--accent);box-shadow:none}
 .btn.ghost{background:transparent;color:var(--accent);padding:8px}
 .btn.sm{padding:7px 10px;font-size:13px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .navd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .navd button{background:#efe6f2;color:var(--accent);width:44px;padding:10px 0;font-size:18px}
 .seg{display:flex;align-items:center;gap:6px;padding:10px 0;border-top:1px solid var(--line)}
@@ -51,9 +51,11 @@ button{font:inherit;border:0;border-radius:12px;padding:12px 14px;cursor:pointer
 .tag.d{background:var(--c-dispo-bg);color:var(--c-dispo)}
 .tag.o{background:var(--c-ops-bg);color:var(--c-ops)}
 .tag.plus{background:var(--c-fer);color:#fff}
-input[type=time],input[type=date],input[type=text]{font:inherit;border:1px solid var(--line);border-radius:10px;padding:6px 6px;background:#fff;color:var(--ink);min-width:0;width:100%}
-input[type=number]{font:inherit;border:1px solid var(--line);border-radius:10px;padding:8px;width:90px;background:#fff;color:var(--ink)}
-select{font:inherit;border:1px solid var(--line);border-radius:10px;padding:8px;background:#fff;color:var(--ink)}
+input[type=time],input[type=date],input[type=text],input[type=number]{font:inherit;font-size:16px;-webkit-appearance:none;appearance:none;display:block;box-sizing:border-box;height:46px;margin:0;border:1px solid var(--line);border-radius:10px;padding:0 8px;background:#fff;color:var(--ink);min-width:0;width:100%;text-align:center;line-height:46px}
+input::-webkit-date-and-time-value{text-align:center;margin:0}
+.row input[type=number]{width:110px;flex:none}
+input.left,.cr input[type=text]{text-align:left}
+select{font:inherit;font-size:16px;height:46px;border:1px solid var(--line);border-radius:10px;padding:8px;background:#fff;color:var(--ink)}
 .seg .dur{min-width:58px;text-align:right;font-weight:600}
 .x{background:transparent;color:var(--muted);padding:6px 8px;font-size:18px}
 .toggle{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line)}
@@ -67,7 +69,7 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(255,253,249,.96);back
 nav button{flex:1;background:transparent;color:var(--muted);padding:8px 0;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:2px}
 nav button svg{width:22px;height:22px}
 nav button.on{color:var(--accent);font-weight:700}
-textarea{width:100%;min-height:140px;font:13px/1.4 ui-monospace,Menlo,monospace;border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;color:var(--ink)}
+textarea{width:100%;min-height:140px;font:16px/1.4 ui-monospace,Menlo,monospace;border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;color:var(--ink)}
 .toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:9;max-width:90vw;text-align:center}
 .toast.show{opacity:1}
 .hidden{display:none!important}
@@ -94,7 +96,9 @@ textarea{width:100%;min-height:140px;font:13px/1.4 ui-monospace,Menlo,monospace;
 .daycard{border-left:6px solid var(--line)}
 .daycard[class*="k-"]{border-left-color:var(--k);background:linear-gradient(90deg,var(--kb),var(--card) 75%)}
 .daycard.k-conge,.daycard.k-ex{border-left-color:var(--kb)}
-.daycard.k-fw{border-left-color:var(--c-fer);background:linear-gradient(135deg,var(--c-fer-bg) 0 50%,var(--kb) 50% 100%)}
+.k-fw,.k-wdim{--kd:var(--c-fer-bg);--kdk:var(--c-fer)}
+.k-wsam{--kd:var(--c-sam-bg);--kdk:var(--c-sam)}
+.daycard.diag{border-left-color:var(--kdk);background:linear-gradient(135deg,var(--kd) 0 50%,var(--kb) 50% 100%)}
 
 .days .d{display:flex;align-items:center;gap:8px;padding:9px 8px;cursor:pointer;border-radius:8px;margin:3px 0;border-left:4px solid transparent;border-top:1px solid var(--line)}
 .days .d:first-child{border-top:0}
@@ -102,14 +106,14 @@ textarea{width:100%;min-height:140px;font:13px/1.4 ui-monospace,Menlo,monospace;
 .days .d[class*="k-"]+.d{border-top:0}
 .days .d.k-conge,.days .d.k-ex{color:#fff;border-left-color:rgba(0,0,0,.25)}
 .days .d.k-conge .small,.days .d.k-ex .small,.days .d.k-conge .we,.days .d.k-ex .we{color:rgba(255,255,255,.85)}
-.days .d.k-fw{background:linear-gradient(135deg,var(--c-fer-bg) 0 50%,var(--kb) 50% 100%);border-left-color:var(--c-fer);color:var(--ink)}
+.days .d.diag{background:linear-gradient(135deg,var(--kd) 0 50%,var(--kb) 50% 100%);border-left-color:var(--kdk);color:var(--ink)}
 .days .dn{width:62px;font-weight:600;flex:none}
 .days .we{color:var(--muted)}
 .days .dh{margin-left:auto;font-weight:600;white-space:nowrap}
 
 .legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
 .legend span{font-size:12px;padding:3px 8px;border-radius:999px;background:var(--kb);color:var(--k);font-weight:600}
-.legend .k-fw{background:linear-gradient(135deg,var(--c-fer-bg) 0 50%,var(--c-ops-bg) 50% 100%);color:var(--c-fer)}
+.legend .diag{background:linear-gradient(135deg,var(--kd) 0 50%,var(--kb) 50% 100%);color:var(--kdk)}
 .pz{font-size:11px;color:var(--muted);white-space:nowrap}
 
 /* récap */
@@ -120,7 +124,7 @@ textarea{width:100%;min-height:140px;font:13px/1.4 ui-monospace,Menlo,monospace;
 .per:first-child{border-top:0}
 .per h4{margin:0 0 4px;font-size:15px;display:flex;justify-content:space-between;align-items:center}
 .per .ln{display:flex;justify-content:space-between;font-size:14px;padding:2px 0}
-.per .ed{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.per .ed{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}
 .per .ed label{font-size:12px;color:var(--muted)}
 .per .ed input{width:100%}
 .chip{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:#efe6f2;color:var(--accent)}
@@ -193,19 +197,16 @@ textarea{width:100%;min-height:140px;font:13px/1.4 ui-monospace,Menlo,monospace;
       <button id="mNext" aria-label="Mois suivant">›</button>
     </div>
     <div class="card">
-      <div class="small">Solde du mois</div>
-      <div class="big" id="mSolde"></div>
-      <div class="small" id="mSoldeTxt"></div>
+      <div class="small">Heures sup à ce jour</div>
+      <div class="big" id="mHS"></div>
+      <div class="small" id="mHSTxt"></div>
+      <div class="warnbox hidden" id="mWarn"></div>
+      <div style="margin-top:14px;font-size:16px" id="mLine"></div>
       <div class="bar"><i id="mBar" style="width:0"></i></div>
-      <div class="grid3" style="margin-top:12px">
-        <div><div class="small">Compté</div><div class="mid" id="mDone"></div></div>
-        <div><div class="small">Objectif</div><div class="mid" id="mObj"></div></div>
-        <div><div class="small">À ce jour</div><div class="mid" id="mToDate"></div></div>
-      </div>
-      <div class="kv" style="margin-top:10px;border-top:1px solid var(--line)"><span>Heures sup (période en cours)</span><b id="mHS"></b></div>
+      <div class="small" style="margin-top:6px">Congés, fériés et EX comptent 7 h 36.</div>
     </div>
     <div class="legend">
-      <span class="k-dispo">Dispo gradé</span><span class="k-ops">Opération</span><span class="k-conge">Congé</span><span class="k-z">Z</span><span class="k-ex">EX</span><span class="k-sam">Samedi</span><span class="k-dim">Dimanche / férié</span><span class="k-fw">Férié travaillé</span>
+      <span class="k-dispo">Dispo gradé</span><span class="k-ops">Opération</span><span class="k-conge">Congé</span><span class="k-z">Z</span><span class="k-ex">EX</span><span class="k-sam">Samedi</span><span class="k-dim">Dimanche / férié</span><span class="diag k-fw k-ops">Férié travaillé</span><span class="diag k-wsam k-ops">Samedi travaillé</span>
     </div>
     <div class="card days" id="mDays"></div>
     <div class="card">
@@ -272,7 +273,7 @@ textarea{width:100%;min-height:140px;font:13px/1.4 ui-monospace,Menlo,monospace;
       <div id="feList"></div>
       <div class="grid2" style="margin-top:10px">
         <input type="date" id="feD">
-        <input type="text" id="feN" placeholder="Nom (ex. Pont)">
+        <input type="text" class="left" id="feN" placeholder="Nom (ex. Pont)">
       </div>
       <div class="row between" style="margin-top:8px">
         <span class="small">Chaque année</span><div class="sw" id="feRec"></div>
@@ -291,7 +292,7 @@ textarea{width:100%;min-height:140px;font:13px/1.4 ui-monospace,Menlo,monospace;
         <button class="btn" id="bkLoad" style="width:100%;margin-top:8px">Restaurer cette sauvegarde</button>
       </div>
     </div>
-    <div class="card small">Version 0.4 · aucune donnée envoyée · rien d'autre que des horaires.</div>
+    <div class="card small">Version 0.5 · aucune donnée envoyée · rien d'autre que des horaires.</div>
   </section>
 </main>
 
@@ -327,7 +328,8 @@ function migrate(){
   if(!S.dispoA){S.dispoA="07:00";S.dispoB="15:06";S.dispoP=30;}
   if(S.rappelPad==null) S.rappelPad=0;
   Object.keys(data.days).forEach(function(k){var x=data.days[k]; if(x.conge&&!x.type){x.type="conge"} delete x.conge;});
-  if(!data.track) data.track={start:"2026-11-24",hs:22*60+3};
+  if(!data.track) data.track={start:"2026-11-25",hs:22*60+3,v:2};
+  if(!data.track.v){ if(data.track.start==="2026-11-24"&&data.track.hs===22*60+3) data.track.start="2026-11-25"; data.track.v=2; }
   if(!data.periods) data.periods={};
   if(!data.extraFer) data.extraFer=[
     {d:"11-02",n:"Jour des défunts"},
@@ -459,7 +461,10 @@ function tracked(k){return k>=data.track.start}
 
 function kcls(d,x){
   var t=x.type;
-  if(workedFerie(d,x)) return "k-fw k-"+(t==="dispo"?"dispo":"ops");
+  var tc="k-"+(t==="dispo"?"dispo":"ops");
+  if(workedFerie(d,x)) return "diag k-fw "+tc;
+  if(!isWeekday(d)&&(!t||t==="dispo"||t==="ops")&&(t||x.segs.some(function(s){return s.a&&s.b})))
+    return "diag "+(d.getDay()===6&&!ferie(d)?"k-wsam":"k-wdim")+" "+tc;
   if(t) return "k-"+t;
   if(ferie(d)) return "k-fer";
   if(d.getDay()===6) return "k-sam";
@@ -471,7 +476,7 @@ var TYN={dispo:"Dispo",ops:"Ops",conge:"Congé",z:"Z",ex:"EX"};
 
 /* ---------- mois ---------- */
 function monthStats(y,m){
-  var n=new Date(y,m+1,0).getDate(), obj=0, done=0, objToDate=0, doneToDate=0;
+  var n=new Date(y,m+1,0).getDate(), obj=0, done=0, objToDate=0, doneToDate=0, fullDone=0, fullObj=0;
   var c={ops:0,dispo:0,rap:0,conge:0,z:0,ex:0,fw:0};
   for(var i=1;i<=n;i++){
     var d=new Date(y,m,i), k=key(d), x=day(k);
@@ -482,13 +487,14 @@ function monthStats(y,m){
     if(x.type==="z"&&isWeekday(d)) c.z+=isHalf(x)?0.5:1;
     if(x.type==="ex") c.ex++;
     if(workedFerie(d,x)) c.fw++;
-    if(!tracked(k)) continue;
     var cr=credit(k,true);
+    fullDone+=cr; if(isWeekday(d)) fullObj+=NORM();
+    if(!tracked(k)) continue;
     if(isWeekday(d)) obj+=NORM();
     done+=cr;
     if(counted(k)){ doneToDate+=cr; if(isWeekday(d)) objToDate+=NORM(); }
   }
-  return {obj:obj,done:done,objToDate:objToDate,doneToDate:doneToDate,n:n,c:c};
+  return {obj:obj,done:done,objToDate:objToDate,doneToDate:doneToDate,fullDone:fullDone,fullObj:fullObj,n:n,c:c};
 }
 
 /* ---------- heures sup par période de 2 mois ---------- */
@@ -590,16 +596,14 @@ function renderJour(){
 function renderMois(){
   var y=mCur.getFullYear(), m=mCur.getMonth(), st=monthStats(y,m);
   $("mLabel").textContent=cap(MOIS[m])+" "+y;
-  var t=today(), isCur=(y===t.getFullYear()&&m===t.getMonth()), fut=new Date(y,m,1)>t;
-  var solde=st.doneToDate-st.objToDate;
-  var e=$("mSolde"); e.textContent=fut?"—":fmt(solde,true);
-  e.className="big "+(fut?"":solde>0?"pos":solde<0?"neg":"");
-  $("mSoldeTxt").textContent=isCur?"par rapport à l'objectif à ce jour":(fut?"mois à venir":"mois terminé");
-  $("mDone").textContent=fmt(st.done);
-  $("mObj").textContent=fmt(st.obj);
-  $("mToDate").textContent=isCur?fmt(st.objToDate):"—";
-  $("mBar").style.width=Math.min(100,st.obj?st.done/st.obj*100:0)+"%";
-  var h=hsNow(), hs=$("mHS"); hs.textContent=fmt(h,true); hs.className=h< -600?"neg":(h>0?"pos":"");
+  var t=today(), h=hsNow(), hs=$("mHS");
+  hs.textContent=fmt(h,true); hs.className="big "+(h<0?"neg":h>0?"pos":"");
+  var pi=Math.floor(t.getMonth()/2);
+  $("mHSTxt").textContent="Période "+MOIS[2*pi]+" – "+MOIS[2*pi+1];
+  $("mWarn").classList.toggle("hidden",!(h< -600));
+  $("mWarn").textContent="Attention : tu es sous − 10 h d'heures sup.";
+  $("mLine").innerHTML="Ce mois : <b>"+fmt(st.fullDone)+"</b> sur <b>"+fmt(st.fullObj)+"</b> à prester";
+  $("mBar").style.width=Math.min(100,st.fullObj?st.fullDone/st.fullObj*100:0)+"%";
   var box=$("mDays"); box.innerHTML="";
   for(var i=1;i<=st.n;i++){
     var d=new Date(y,m,i), k=key(d), x=day(k), c=credit(k,true), f=ferie(d);
@@ -849,7 +853,7 @@ $("feList").addEventListener("click",function(e){
 });
 
 function copy(text,msg){
-  function fallback(){var ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");toast(msg)}catch(e){toast("Sélectionne le texte et copie-le")}ta.remove()}
+  function fallback(){var ta=document.createElement("textarea");ta.value=text;ta.readOnly=true;ta.style.cssText="position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;font-size:16px";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");toast(msg)}catch(e){toast("Sélectionne le texte et copie-le")}ta.remove()}
   try{navigator.clipboard.writeText(text).then(function(){toast(msg)},fallback)}catch(e){fallback()}
 }
 $("bkCopy").onclick=function(){copy(JSON.stringify(data),"Sauvegarde copiée")};
