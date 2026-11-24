@@ -143,7 +143,13 @@ textarea{width:100%;min-height:140px;font:16px/1.4 ui-monospace,Menlo,monospace;
 .cr .u{grid-column:1 / span 2}
 .fe{display:grid;grid-template-columns:1fr 30px;gap:6px;align-items:center;padding:6px 0;border-top:1px solid var(--line);font-size:14px}
 .fe:first-child{border-top:0}
-.totals{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.totals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 8px;text-align:center}
+.act{width:100%;border-collapse:collapse;font-size:14px;margin-top:12px}
+.act th{font-size:11px;font-weight:600;color:var(--muted);text-align:right;padding:4px 2px}
+.act th:first-child,.act td:first-child{text-align:left}
+.act td{text-align:right;padding:6px 2px;border-top:1px solid var(--line);font-variant-numeric:tabular-nums}
+.act td.z{color:#c9c0cc}
+.act tr.tot td{font-weight:700;border-top:2px solid var(--ink)}
 .totals .n{font-size:24px;font-weight:700}
 </style>
 </head>
@@ -226,6 +232,8 @@ textarea{width:100%;min-height:140px;font:16px/1.4 ui-monospace,Menlo,monospace;
         <div><div class="n" id="tOps">0</div><div class="small">Opérations</div></div>
         <div><div class="n" id="tDispo">0</div><div class="small">Dispo gradés</div></div>
         <div><div class="n" id="tRap">0</div><div class="small">Rappels</div></div>
+        <div><div class="n" id="tEx">0</div><div class="small">Exemptions</div></div>
+        <div><div class="n" id="tRapp">0</div><div class="small">Rappelables (R)</div></div>
       </div>
       <div class="small" id="tOther" style="margin-top:10px;text-align:center"></div>
     </div>
@@ -241,6 +249,7 @@ textarea{width:100%;min-height:140px;font:16px/1.4 ui-monospace,Menlo,monospace;
 
     <div class="card" id="cConge"></div>
     <div class="card" id="cHS"></div>
+    <div class="card" id="cAct"></div>
   </section>
 
   <!-- REGLAGES -->
@@ -304,7 +313,7 @@ textarea{width:100%;min-height:140px;font:16px/1.4 ui-monospace,Menlo,monospace;
         <button class="btn" id="bkLoad" style="width:100%;margin-top:8px">Restaurer cette sauvegarde</button>
       </div>
     </div>
-    <div class="card small">Version 0.7 · aucune donnée envoyée · rien d'autre que des horaires.</div>
+    <div class="card small">Version 0.8 · aucune donnée envoyée · rien d'autre que des horaires.</div>
   </section>
 </main>
 
@@ -489,7 +498,7 @@ var TYN={dispo:"Dispo",ops:"Ops",conge:"Congé",z:"Z",ex:"EX"};
 /* ---------- mois ---------- */
 function monthStats(y,m){
   var n=new Date(y,m+1,0).getDate(), obj=0, done=0, objToDate=0, doneToDate=0, fullDone=0, fullObj=0;
-  var c={ops:0,dispo:0,rap:0,conge:0,z:0,ex:0,fw:0};
+  var c={ops:0,dispo:0,rap:0,conge:0,z:0,ex:0,fw:0,garde:0};
   for(var i=1;i<=n;i++){
     var d=new Date(y,m,i), k=key(d), x=day(k);
     if(x.type==="ops") c.ops++;
@@ -498,6 +507,7 @@ function monthStats(y,m){
     c.conge+=congeUsed(d,x);
     if(x.type==="z"&&isWeekday(d)) c.z+=isHalf(x)?0.5:1;
     if(x.type==="ex") c.ex++;
+    if(x.garde) c.garde++;
     if(workedFerie(d,x)) c.fw++;
     var cr=credit(k,true);
     fullDone+=cr; if(isWeekday(d)) fullObj+=NORM();
@@ -637,11 +647,10 @@ function renderMois(){
     row.innerHTML='<span class="dn '+(isWeekday(d)?"":"we")+'">'+JC[d.getDay()]+" "+i+'</span>'+(lab?'<span class="small">'+lab+'</span>':'')+tags+'<span class="dh '+(c?"":"small")+'">'+(c?fmt(c):"—")+'</span>';
     box.appendChild(row);
   }
-  $("tOps").textContent=st.c.ops; $("tDispo").textContent=st.c.dispo; $("tRap").textContent=st.c.rap;
+  $("tOps").textContent=st.c.ops; $("tEx").textContent=st.c.ex; $("tRapp").textContent=st.c.garde; $("tDispo").textContent=st.c.dispo; $("tRap").textContent=st.c.rap;
   var o=[];
   if(st.c.conge) o.push("Congés : "+num(st.c.conge)+" j");
   if(st.c.z) o.push("Z : "+num(st.c.z)+" j");
-  if(st.c.ex) o.push("EX : "+st.c.ex+" j");
   if(st.c.fw) o.push("Fériés travaillés : "+st.c.fw);
   $("tOther").textContent=o.join(" · ");
 }
@@ -714,6 +723,27 @@ function renderRecap(){
   if(!any) h+='<div class="small">Rien à afficher pour '+Y+' (suivi depuis le '+data.track.start.split("-").reverse().join("/")+').</div>';
   h+='</div><div class="note">Périodes de 2 mois à partir de janvier. Ce qui n\'est ni payé ni converti passe automatiquement à la période suivante. 1 jour converti = '+fmt(NORM())+'.</div>';
   hc.innerHTML=h;
+  renderAct(Y);
+}
+
+function renderAct(Y){
+  var F=[["ops","Ops"],["dispo","Dispo"],["rap","Rap."],["ex","EX"],["garde","R"]];
+  var tot={ops:0,dispo:0,rap:0,ex:0,garde:0}, rows="";
+  for(var m=0;m<12;m++){
+    var c=monthStats(Y,m).c;
+    rows+='<tr><td>'+cap(MC[m])+'</td>'+F.map(function(f){tot[f[0]]+=c[f[0]];return '<td class="'+(c[f[0]]?"":"z")+'">'+c[f[0]]+'</td>'}).join("")+'</tr>';
+  }
+  var h='<strong>Activité '+Y+'</strong>';
+  h+='<div class="totals" style="margin-top:12px">'+
+    '<div><div class="n">'+tot.ops+'</div><div class="small">Opérations</div></div>'+
+    '<div><div class="n">'+tot.dispo+'</div><div class="small">Dispo gradés</div></div>'+
+    '<div><div class="n">'+tot.rap+'</div><div class="small">Rappels</div></div>'+
+    '<div><div class="n">'+tot.ex+'</div><div class="small">Exemptions</div></div>'+
+    '<div><div class="n">'+tot.garde+'</div><div class="small">Rappelables (R)</div></div></div>';
+  h+='<table class="act"><thead><tr><th>Mois</th>'+F.map(function(f){return '<th>'+f[1]+'</th>'}).join("")+'</tr></thead><tbody>'+rows+
+    '<tr class="tot"><td>Total</td>'+F.map(function(f){return '<td>'+tot[f[0]]+'</td>'}).join("")+'</tr></tbody></table>';
+  h+='<div class="note">Compte uniquement ce qui est encodé dans l\'app.</div>';
+  $("cAct").innerHTML=h;
 }
 
 /* ---------- rendu REGLAGES ---------- */
