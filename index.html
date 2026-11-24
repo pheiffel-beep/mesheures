@@ -842,7 +842,7 @@ function toast(t,ms){var e=$("toast");e.textContent=t;e.classList.add("show");cl
 function warnHS(){var h=hsNow(); if(h< -600) toast(t("t.warn",fmt(h,true)),3500)}
 
 /* ---------- rendu JOUR ---------- */
-function renderJour(){
+function renderJour(keepSegs){
   var k=key(cur), x=day(k), f=ferie(cur), wd=isWeekday(cur);
   var isToday=k===key(today());
   $("dLabel").textContent=(isToday?t("today"):cap(JOURS[cur.getDay()]))+" "+cur.getDate()+" "+MOIS[cur.getMonth()];
@@ -874,7 +874,12 @@ function renderJour(){
   var live=$("dLive");
   if(isToday&&open.length){live.classList.remove("hidden");live.textContent=t("live",open[open.length-1].a)}
   else live.classList.add("hidden");
-  var box=$("segs"); box.innerHTML="";
+  var box=$("segs");
+  if(keepSegs){
+    /* on ne redessine pas les champs d'heure : sinon le sélecteur d'heure se ferme aussitôt */
+    x.segs.forEach(function(s,i){var e=$("dur"+i); if(e) e.textContent=s.b?fmt(segMin(s)):"…";});
+  } else {
+  box.innerHTML="";
   if(!x.segs.length){box.innerHTML='<div class="small" style="padding:8px 0">'+esc(t("segs.empty"))+'</div>'}
   var padR=data.settings.rappelPad||0;
   x.segs.forEach(function(s,i){
@@ -888,6 +893,7 @@ function renderJour(){
       '<button class="x" data-del="'+i+'" aria-label="'+esc(t("a.del"))+'">×</button>';
     box.appendChild(row);
   });
+  }
   $("tGarde").classList.toggle("on",!!x.garde);
   var L_=!!x.lock, lb=$("lockBar");
   $("v-jour").classList.toggle("locked",L_);
@@ -1087,7 +1093,7 @@ function askRestore(txt){
   $("bkYes").onclick=function(){ data=pending; pending=null; migrate(); save(); c.classList.add("hidden"); render(); toast(t("b.restored")); };
   $("bkNo").onclick=function(){ pending=null; c.classList.add("hidden"); };
 }
-function render(){
+function render(keepSegs){
   psMemo={};
   setLang();
   renderBk();
@@ -1095,7 +1101,7 @@ function render(){
   document.querySelectorAll("nav button").forEach(function(b){b.classList.toggle("on",b.dataset.v===view)});
   var t_=today();
   $("subtitle").textContent=t("app.sub")+" · "+JOURS[t_.getDay()]+" "+t_.getDate()+" "+MOIS[t_.getMonth()]+" "+t_.getFullYear();
-  if(view==="jour")renderJour();
+  if(view==="jour")renderJour(keepSegs);
   if(view==="mois")renderMois();
   if(view==="recap")renderRecap();
   if(view==="reg")renderReg();
@@ -1145,7 +1151,7 @@ $("segs").addEventListener("change",function(e){
   var t_=e.target; if(t_.tagName!=="INPUT")return; if(blocked(key(cur))){render();return}
   var x=day(key(cur),true), s=x.segs[+t_.dataset.i]; if(!s)return;
   s[t_.dataset.f]=t_.value||null; save();
-  render();
+  render(true);
 });
 $("segs").addEventListener("click",function(e){
   var t_=e.target.closest("[data-del]"); if(!t_)return; if(blocked(key(cur)))return;
