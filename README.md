@@ -10,4 +10,4 @@ Compteur d'heures personnel, bilingue FR/NL : fichier unique index.html, donnée
 - Quota de congés par année, avec archive
 - Sauvegarde / restauration par fichier
 
-Version 0.11 : sélecteur d'heure stable ; version 0.10 : nom Heurêka, structure bilingue FR/NL. Traductions néerlandaises à relire par un collègue néerlandophone.
+Version 0.12 : sélecteur d'heure intégré à l'app (plus de sélecteur natif iPhone) ; version 0.10 : nom Heurêka, structure bilingue FR/NL. Traductions néerlandaises à relire par un collègue néerlandophone.

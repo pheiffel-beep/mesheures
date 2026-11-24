@@ -155,6 +155,16 @@ textarea{width:100%;min-height:140px;font:16px/1.4 ui-monospace,Menlo,monospace;
 .totals .n{font-size:24px;font-weight:700}
 header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
 .langbtn{background:#efe6f2;color:var(--accent);font-weight:700;font-size:13px;padding:6px 12px;border-radius:999px;margin-top:2px;box-shadow:none}
+.tbtn{display:block;width:100%;height:46px;min-width:0;margin:0;padding:0 4px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font:inherit;font-size:16px;text-align:center}
+.tbtn:disabled{opacity:.5}
+.tp{position:fixed;inset:0;background:rgba(43,34,48,.45);display:flex;align-items:center;justify-content:center;z-index:30}
+.tpbox{background:var(--card);border-radius:18px;padding:18px;width:min(330px,92vw);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.tptitle{font-weight:700;text-align:center}
+.tprow{display:flex;align-items:center;justify-content:center;gap:10px;margin:16px 0}
+.tprow select{font-size:30px;height:64px;width:104px;text-align:center;text-align-last:center}
+.tprow b{font-size:30px}
+.tpbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tpbtns button{padding:12px 4px}
 </style>
 </head>
 <body>
@@ -279,8 +289,8 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:10p
     <div class="card">
       <strong data-i18n="r.dispo"></strong>
       <div class="grid3" style="margin-top:10px">
-        <div><div class="small" data-i18n="r.from"></div><input type="time" id="sDA"></div>
-        <div><div class="small" data-i18n="r.to"></div><input type="time" id="sDB"></div>
+        <div><div class="small" data-i18n="r.from"></div><button class="tbtn" id="sDA"></button></div>
+        <div><div class="small" data-i18n="r.to"></div><button class="tbtn" id="sDB"></button></div>
         <div><div class="small" data-i18n="r.pause"></div><input type="number" id="sDP" step="5" min="0" max="120" style="width:100%"></div>
       </div>
       <div class="note" id="sDNote"></div>
@@ -339,6 +349,13 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:10p
   <button data-v="recap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg><span data-i18n="nav.recap"></span></button>
   <button data-v="reg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span data-i18n="nav.reg"></span></button>
 </nav>
+<div class="tp hidden" id="tp">
+  <div class="tpbox">
+    <div class="tptitle" id="tpTitle"></div>
+    <div class="tprow"><select id="tpH" aria-label="h"></select><b>:</b><select id="tpM" aria-label="min"></select></div>
+    <div class="tpbtns"><button class="btn alt" id="tpClr" data-i18n="tp.clear"></button><button class="btn alt" id="tpNo" data-i18n="tp.cancel"></button><button class="btn" id="tpOk" data-i18n="tp.ok"></button></div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -357,6 +374,7 @@ fr:{
 "u.h":"h","u.d":"j",
 "a.dprev":"Jour précédent","a.dnext":"Jour suivant","a.mprev":"Mois précédent","a.mnext":"Mois suivant","a.yprev":"Année précédente","a.ynext":"Année suivante",
 "a.begin":"Début","a.end":"Fin","a.del":"Supprimer",
+"tp.begin":"Heure de début","tp.end":"Heure de fin","tp.ok":"OK","tp.cancel":"Annuler","tp.clear":"Effacer",
 "bk.now":"Sauvegarder",
 "ty.dispo":"Dispo gradé","ty.ops":"Opération","ty.conge":"Congé","ty.z":"Z (repos)","ty.ex":"EX (exempt)",
 "d.counted":"Compté ce jour","d.norm":"Norme du jour","d.start":"Début","d.end":"Fin",
@@ -381,7 +399,7 @@ fr:{
 "r.bktxt":"Tes données restent uniquement sur ce téléphone. Enregistre régulièrement une sauvegarde : un fichier que tu ranges dans Fichiers (iCloud Drive), ton Drive ou que tu t'envoies par mail.",
 "r.bkfile":"Enregistrer une sauvegarde","r.bkopen":"Restaurer depuis un fichier","r.bkother":"Autre méthode : copier / coller",
 "r.bkcopy":"Copier la sauvegarde","r.bkpaste":"Colle ici une sauvegarde","r.bkload":"Restaurer cette sauvegarde",
-"r.version":"Version 0.11 · aucune donnée envoyée · rien d'autre que des horaires.",
+"r.version":"Version 0.12 · aucune donnée envoyée · rien d'autre que des horaires.",
 "nav.jour":"Jour","nav.mois":"Mois","nav.recap":"Récap","nav.reg":"Réglages",
 
 "s.s":"Service","s.r":"Rappel","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Congé","y.z":"Z","y.ex":"EX",
@@ -474,6 +492,7 @@ nl:{
 "u.h":"u","u.d":"d",
 "a.dprev":"Vorige dag","a.dnext":"Volgende dag","a.mprev":"Vorige maand","a.mnext":"Volgende maand","a.yprev":"Vorig jaar","a.ynext":"Volgend jaar",
 "a.begin":"Begin","a.end":"Einde","a.del":"Verwijderen",
+"tp.begin":"Beginuur","tp.end":"Einduur","tp.ok":"OK","tp.cancel":"Annuleren","tp.clear":"Wissen",
 "bk.now":"Back-up",
 "ty.dispo":"Dispo gegradeerde","ty.ops":"Operatie","ty.conge":"Verlof","ty.z":"Z (rust)","ty.ex":"EX (vrijgesteld)",
 "d.counted":"Geteld deze dag","d.norm":"Dagnorm","d.start":"Begin","d.end":"Einde",
@@ -498,7 +517,7 @@ nl:{
 "r.bktxt":"Je gegevens blijven enkel op deze telefoon. Maak regelmatig een back-up: een bestand dat je bewaart in Bestanden (iCloud Drive), in je Drive of dat je naar jezelf mailt.",
 "r.bkfile":"Back-up opslaan","r.bkopen":"Herstellen vanuit een bestand","r.bkother":"Andere methode: kopiëren / plakken",
 "r.bkcopy":"Back-up kopiëren","r.bkpaste":"Plak hier een back-up","r.bkload":"Deze back-up herstellen",
-"r.version":"Versie 0.11 · geen gegevens verstuurd · enkel uurroosters.",
+"r.version":"Versie 0.12 · geen gegevens verstuurd · enkel uurroosters.",
 "nav.jour":"Dag","nav.mois":"Maand","nav.recap":"Overzicht","nav.reg":"Instellingen",
 
 "s.s":"Dienst","s.r":"Oproep","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Verlof","y.z":"Z","y.ex":"EX",
@@ -886,9 +905,9 @@ function renderJour(keepSegs){
     var row=document.createElement("div"); row.className="seg";
     var sub=s.p?'<br><span class="pz">−'+s.p+' min</span>':(s.t==="r"&&padR?'<br><span class="pz">+'+(2*padR)+' min</span>':'');
     row.innerHTML='<span class="tag '+(s.t==="r"?"r":s.t==="d"?"d":(x.type==="ops"?"o":""))+'">'+(s.t==="s"&&x.type==="ops"?"Ops":TLAB[s.t])+sub+'</span>'+
-      '<input type="time" value="'+(s.a||"")+'" data-i="'+i+'" data-f="a" aria-label="'+esc(t("a.begin"))+'">'+
+      '<button class="tbtn" data-i="'+i+'" data-f="a" aria-label="'+esc(t("a.begin"))+'">'+(s.a||"--:--")+'</button>'+
       '<span class="small">→</span>'+
-      '<input type="time" value="'+(s.b||"")+'" data-i="'+i+'" data-f="b" aria-label="'+esc(t("a.end"))+'">'+
+      '<button class="tbtn" data-i="'+i+'" data-f="b" aria-label="'+esc(t("a.end"))+'">'+(s.b||"--:--")+'</button>'+
       '<span class="dur" id="dur'+i+'">'+(s.b?fmt(segMin(s)):"…")+'</span>'+
       '<button class="x" data-del="'+i+'" aria-label="'+esc(t("a.del"))+'">×</button>';
     box.appendChild(row);
@@ -897,7 +916,7 @@ function renderJour(keepSegs){
   $("tGarde").classList.toggle("on",!!x.garde);
   var L_=!!x.lock, lb=$("lockBar");
   $("v-jour").classList.toggle("locked",L_);
-  document.querySelectorAll("#segs input").forEach(function(i){i.disabled=L_});
+  document.querySelectorAll("#segs .tbtn").forEach(function(i){i.disabled=L_});
   lb.classList.toggle("hidden",!L_&&!hasContent(x));
   lb.className="lockbar "+(L_?"on":"off")+(!L_&&!hasContent(x)?" hidden":"");
   $("lockTxt").innerHTML=L_?'<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" style=\"vertical-align:-3px\"><rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"/><path d=\"M8 11V7a4 4 0 0 1 8 0v4\"/></svg> '+esc(t("lock.on")):esc(t("lock.ask"));
@@ -1035,7 +1054,7 @@ function renderReg(){
   var S=data.settings;
   $("sLang").value=lang();
   $("sWeek").value=(S.weekMin/60);
-  $("sDA").value=S.dispoA; $("sDB").value=S.dispoB; $("sDP").value=S.dispoP;
+  $("sDA").textContent=S.dispoA; $("sDB").textContent=S.dispoB; $("sDP").value=S.dispoP;
   $("sDNote").textContent=t("r.dnote",fmt(segMin({t:"d",a:S.dispoA,b:S.dispoB,p:S.dispoP})));
   $("sDayNote").textContent=t("r.daynote",fmt(NORM()));
   $("sPad").value=String(S.rappelPad||0);
@@ -1147,22 +1166,30 @@ $("bEnd").onclick=function(){
 };
 $("addS").onclick=function(){if(blocked(key(cur)))return;day(key(cur),true).segs.push({t:"s",a:"",b:""});save();render()};
 $("addR").onclick=function(){if(blocked(key(cur)))return;day(key(cur),true).segs.push({t:"r",a:"",b:""});save();render()};
-var segDirty=false;
-$("segs").addEventListener("change",function(e){
-  var t_=e.target; if(t_.tagName!=="INPUT")return; if(blocked(key(cur))){render();return}
-  var x=day(key(cur),true), s=x.segs[+t_.dataset.i]; if(!s)return;
-  s[t_.dataset.f]=t_.value||null; save();
-  /* tant que le sélecteur d'heure est ouvert, on ne touche à rien d'autre que la durée et le total
-     (toute mise en page qui bouge le ferme sur iPhone) ; le reste est mis à jour à la fermeture */
-  segDirty=true;
-  x.segs.forEach(function(sg,i){var e=$("dur"+i); if(e) e.textContent=sg.b?fmt(segMin(sg)):"…";});
-  $("dTotal").textContent=fmt(credit(key(cur),true));
-});
-$("segs").addEventListener("focusout",function(){
-  if(!segDirty) return;
-  setTimeout(function(){ if(segDirty&&!(document.activeElement&&document.activeElement.type==="time")){ segDirty=false; render(true); } },250);
-});
+var tpCb=null;
+function openTP(title,val,canClear,cb){
+  var hs=$("tpH"), ms=$("tpM");
+  if(!hs.options.length){ for(var h=0;h<24;h++) hs.add(new Option(pad(h),pad(h))); for(var m=0;m<60;m++) ms.add(new Option(pad(m),pad(m))); }
+  var v=(val||nowHM()).split(":"); hs.value=v[0]; ms.value=v[1];
+  $("tpTitle").textContent=title; $("tpClr").classList.toggle("hidden",!canClear);
+  tpCb=cb; $("tp").classList.remove("hidden");
+}
+function closeTP(v){ var cb=tpCb; tpCb=null; $("tp").classList.add("hidden"); if(cb) cb(v); }
+$("tpOk").onclick=function(){ closeTP($("tpH").value+":"+$("tpM").value); };
+$("tpClr").onclick=function(){ closeTP(null); };
+$("tpNo").onclick=function(){ tpCb=null; $("tp").classList.add("hidden"); };
 $("segs").addEventListener("click",function(e){
+  var tb=e.target.closest(".tbtn");
+  if(tb){
+    if(blocked(key(cur))) return;
+    var s0=day(key(cur)).segs[+tb.dataset.i]; if(!s0) return;
+    var f=tb.dataset.f, i0=+tb.dataset.i, kk=key(cur);
+    openTP(t(f==="a"?"tp.begin":"tp.end"), s0[f]||(f==="b"&&s0.a)||"", true, function(v){
+      var s2=day(kk,true).segs[i0]; if(!s2) return;
+      s2[f]=v; save(); render();
+    });
+    return;
+  }
   var t_=e.target.closest("[data-del]"); if(!t_)return; if(blocked(key(cur)))return;
   var i=+t_.dataset.del, b=t_;
   if(b.dataset.armed){day(key(cur),true).segs.splice(i,1);save();render();toast(t("t.deleted"));return}
@@ -1238,8 +1265,8 @@ $("cHS").addEventListener("click",function(e){
 });
 
 /* réglages */
-$("sDA").onchange=function(){if(this.value){data.settings.dispoA=this.value;save();render()}};
-$("sDB").onchange=function(){if(this.value){data.settings.dispoB=this.value;save();render()}};
+$("sDA").onclick=function(){openTP(t("r.from"),data.settings.dispoA,false,function(v){data.settings.dispoA=v;save();render()})};
+$("sDB").onclick=function(){openTP(t("r.to"),data.settings.dispoB,false,function(v){data.settings.dispoB=v;save();render()})};
 $("sDP").onchange=function(){var v=parseInt(this.value,10);if(v>=0){data.settings.dispoP=v;save();render()}};
 $("sWeek").onchange=function(){var v=parseFloat(this.value);if(v>0){data.settings.weekMin=Math.round(v*60);save();render()}};
 $("sPad").onchange=function(){data.settings.rappelPad=parseInt(this.value,10)||0;save();render();toast(t("r.padt",data.settings.rappelPad))};
