@@ -404,7 +404,7 @@ fr:{
 "t.begin":function(x){return "Début noté à "+x},"t.endat":function(x){return "Fin notée à "+x},
 "t.endyest":"Fin notée (service commencé hier)","t.norun":"Aucun service en cours",
 "t.delask":"Suppr. ?","t.deleted":"Supprimé",
-"t.dispo":function(x){return "Dispo gradé : "+x},"t.enc":"Encode l'heure de début",
+"tt.dispo":function(x){return "Dispo gradé : "+x},"t.enc":"Encode l'heure de début",
 "t.afterz":function(x){return "Attention : après ce Z, heures sup à "+x},
 "t.warn":function(x){return "Attention : heures sup à "+x},
 "m.period":function(a,b){return "Période "+a+" – "+b},
@@ -521,7 +521,7 @@ nl:{
 "t.begin":function(x){return "Begin genoteerd om "+x},"t.endat":function(x){return "Einde genoteerd om "+x},
 "t.endyest":"Einde genoteerd (dienst begonnen gisteren)","t.norun":"Geen lopende dienst",
 "t.delask":"Verw.?","t.deleted":"Verwijderd",
-"t.dispo":function(x){return "Dispo gegradeerde: "+x},"t.enc":"Voer het beginuur in",
+"tt.dispo":function(x){return "Dispo gegradeerde: "+x},"t.enc":"Voer het beginuur in",
 "t.afterz":function(x){return "Opgelet: na dit Z staan de overuren op "+x},
 "t.warn":function(x){return "Opgelet: overuren op "+x},
 "m.period":function(a,b){return "Periode "+a+" – "+b},
@@ -1162,7 +1162,7 @@ $("types").addEventListener("click",function(e){
   if(x.type===ty){ x.type=null; x.half=false; if(ty==="dispo") x.segs=x.segs.filter(function(s){return s.t!=="d"}); save(); render(); return; }
   if(x.type==="dispo") x.segs=x.segs.filter(function(s){return s.t!=="d"});
   x.type=ty; if(ty!=="conge"&&ty!=="z") x.half=false;
-  if(ty==="dispo"){ x.segs=x.segs.filter(function(s){return s.a}); x.segs.unshift({t:"d",a:S.dispoA,b:S.dispoB,p:S.dispoP}); toast(t("t.dispo",fmt(segMin(x.segs[0])))); }
+  if(ty==="dispo"){ x.segs=x.segs.filter(function(s){return s.a}); x.segs.unshift({t:"d",a:S.dispoA,b:S.dispoB,p:S.dispoP}); toast(t("tt.dispo",fmt(segMin(x.segs[0])))); }
   if(ty==="ops" && !x.segs.some(function(s){return s.t==="s"})){ x.segs.push({t:"s",a:"",b:""}); toast(t("t.enc")); }
   save(); render();
   if(ty==="z"){ var k=key(cur); if(counted(k)) warnHS(); else { var h=hsNow()-NORM(); if(h< -600) toast(t("t.afterz",fmt(h,true)),3500); } }
