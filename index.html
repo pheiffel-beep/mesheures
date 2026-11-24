@@ -24,6 +24,7 @@
   --c-ex:#ffffff;     --c-ex-bg:#d0342c;      /* rouge */
   --c-z:#2c7363;      --c-z-bg:#d6efe8;       /* vert d'eau */
   --c-form:#4f5f17;   --c-form-bg:#dfe6bf;    /* vert olive */
+  --c-desc:#7d7d86;   --c-desc-bg:#f1f1f3;    /* gris très clair */
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
@@ -151,7 +152,7 @@ textarea{width:100%;min-height:140px;font:16px/1.4 ui-monospace,Menlo,monospace;
 .fe{display:grid;grid-template-columns:1fr 30px;gap:6px;align-items:center;padding:6px 0;border-top:1px solid var(--line);font-size:14px}
 .fe:first-child{border-top:0}
 .totals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 8px;text-align:center}
-.act{width:100%;border-collapse:collapse;font-size:14px;margin-top:12px}
+.act{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}
 .act th{font-size:11px;font-weight:600;color:var(--muted);text-align:right;padding:4px 2px}
 .act th:first-child,.act td:first-child{text-align:left}
 .act td{text-align:right;padding:6px 2px;border-top:1px solid var(--line);font-variant-numeric:tabular-nums}
@@ -178,6 +179,8 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:10p
 /* v0.20 : préparation, dispo puis opération, sport */
 .k-prep{--k:var(--c-dispo);--kb:var(--c-dispo-bg)}
 .k-form{--k:var(--c-form);--kb:var(--c-form-bg)}
+.k-desc{--k:var(--c-desc);--kb:var(--c-desc-bg)}
+.ty.desc.on{border-color:var(--k)}
 .ty.form.on{border-color:var(--k)}
 .tag.fo{background:var(--c-form-bg);color:var(--c-form)}
 .ty.prep.on{border-color:var(--k)}
@@ -221,6 +224,7 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:10p
       <button data-type="conge" class="ty conge k-conge" data-i18n="ty.conge"></button>
       <button data-type="z" class="ty z k-z" data-i18n="ty.z"></button>
       <button data-type="ex" class="ty ex k-ex" data-i18n="ty.ex"></button>
+      <button data-type="desc" class="ty desc k-desc" data-i18n="ty.desc"></button>
     </div>
     <div class="halfrow hidden" id="prepRow"><span data-i18n="p.which"></span><div class="chips" id="prepChips"></div></div>
     <div class="halfrow hidden" id="halfRow"><span id="halfLab"></span><div class="sw" id="tHalf"></div></div>
@@ -286,7 +290,7 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:10p
       <div class="small" style="margin-top:6px" id="mNote"></div>
     </div>
     <div class="legend">
-      <span class="k-dispo" data-i18n="ty.dispo"></span><span class="k-ops" data-i18n="ty.ops"></span><span class="k-form" data-i18n="ty.form"></span><span class="k-conge" data-i18n="ty.conge"></span><span class="k-z" data-i18n="lg.z"></span><span class="k-ex" data-i18n="lg.ex"></span><span class="k-sam" data-i18n="lg.sam"></span><span class="k-dim" data-i18n="lg.dim"></span><span class="diag k-fw k-ops" data-i18n="lg.fw"></span><span class="diag k-wsam k-ops" data-i18n="lg.wsam"></span><span class="diag k-mix k-ops" data-i18n="lg.mix"></span><span class="sp" data-i18n="sp.tag"></span>
+      <span class="k-dispo" data-i18n="ty.dispo"></span><span class="k-ops" data-i18n="ty.ops"></span><span class="k-form" data-i18n="ty.form"></span><span class="k-conge" data-i18n="ty.conge"></span><span class="k-z" data-i18n="lg.z"></span><span class="k-ex" data-i18n="lg.ex"></span><span class="k-desc" data-i18n="ty.desc"></span><span class="k-sam" data-i18n="lg.sam"></span><span class="k-dim" data-i18n="lg.dim"></span><span class="diag k-fw k-ops" data-i18n="lg.fw"></span><span class="diag k-wsam k-ops" data-i18n="lg.wsam"></span><span class="diag k-mix k-ops" data-i18n="lg.mix"></span><span class="sp" data-i18n="sp.tag"></span>
     </div>
     <div class="card days" id="mDays"></div>
     <button class="btn alt" id="mLock" style="width:100%;margin-bottom:12px" data-i18n="m.lockall"></button>
@@ -297,6 +301,7 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:10p
         <div><div class="n" id="tDispo">0</div><div class="small" data-i18n="t.dispo"></div></div>
         <div><div class="n" id="tPrep">0</div><div class="small" data-i18n="t.prep"></div></div>
         <div><div class="n" id="tForm">0</div><div class="small" data-i18n="t.form"></div></div>
+        <div><div class="n" id="tDesc">0</div><div class="small" data-i18n="t.desc"></div></div>
         <div><div class="n" id="tRap">0</div><div class="small" data-i18n="t.rap"></div></div>
         <div><div class="n" id="tEx">0</div><div class="small" data-i18n="t.ex"></div></div>
         <div><div class="n" id="tRapp">0</div><div class="small" data-i18n="t.rapp"></div></div>
@@ -413,6 +418,13 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:10p
   <button data-v="recap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg><span data-i18n="nav.recap"></span></button>
   <button data-v="reg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span data-i18n="nav.reg"></span></button>
 </nav>
+<div class="tp hidden" id="descAsk">
+  <div class="tpbox">
+    <div class="tptitle" data-i18n="ds.title"></div>
+    <p class="small" style="text-align:center;margin:10px 0 14px" id="descTxt"></p>
+    <div class="grid2"><button class="btn alt" id="descNo" data-i18n="ds.no"></button><button class="btn" id="descYes" data-i18n="ds.yes"></button></div>
+  </div>
+</div>
 <div class="tp hidden" id="tyPick">
   <div class="tpbox">
     <div class="tptitle" data-i18n="tk.title"></div>
@@ -475,7 +487,7 @@ fr:{
 "r.bktxt":"Tes données restent uniquement sur ce téléphone. Enregistre régulièrement une sauvegarde : un fichier que tu ranges dans Fichiers (iCloud Drive), ton Drive ou que tu t'envoies par mail.",
 "r.bkfile":"Enregistrer une sauvegarde","r.bkopen":"Restaurer depuis un fichier","r.bkother":"Autre méthode : copier / coller",
 "r.bkcopy":"Copier la sauvegarde","r.bkpaste":"Colle ici une sauvegarde","r.bkload":"Restaurer cette sauvegarde",
-"r.version":"Version 0.23 · aucune donnée envoyée · rien d'autre que des horaires.",
+"r.version":"Version 0.24 · aucune donnée envoyée · rien d'autre que des horaires.",
 "nav.jour":"Jour","nav.mois":"Mois","nav.recap":"Récap","nav.reg":"Réglages",
 
 "s.s":"Service","s.r":"Rappel","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Congé","y.z":"Z","y.ex":"EX",
@@ -558,7 +570,7 @@ fr:{
 "fe.nouvelan":"Nouvel An","fe.paques":"Lundi de Pâques","fe.travail":"Fête du Travail","fe.ascension":"Ascension","fe.pentecote":"Lundi de Pentecôte","fe.nationale":"Fête nationale","fe.assomption":"Assomption","fe.toussaint":"Toussaint","fe.armistice":"Armistice","fe.noel":"Noël",
 "fe.defunts":"Jour des défunts","fe.roi":"Fête du Roi","fe.lendemain":"Lendemain de Noël",
 "cl.report":"Report congé année précédente","cl.pentecote":"Congé supplémentaire (lundi de Pentecôte travaillé)","cl.cg":"Jours CG","cl.feries":"Fériés au choix (15/11 et 26/12)","cl.vacances":"Congé annuel de vacances","cl.new":"Nouveau crédit",
-"tk.title":"Quel type de journée ?","ty.form":"Formation","y.form":"Formation","t.form":"Formations","a.form":"Form.","fp.lab":"Pause","fp.dur":"Durée","fp.cut":function(x){return x+" de pause déduite"},"fp.wait":function(x){return x+" de pause seront déduites à la fin"},"fp.off":"Sans pause : rien n'est déduit.","fp.enc":"Formation : encode l'heure de début","r.dstart":"Heure de début","d.dstart":function(a,b){return "Dispo à partir de "+a+" (jusqu'à "+b+")"},"r.dset":function(a,b){return "Dispo gradé : "+a+" – "+b},
+"tk.title":"Quel type de journée ?","ty.desc":"Descendant","y.desc":"Descendant","t.desc":"Descendants","a.desc":"Desc.","ex.desc":"Descendant : norme de 0 h, rien n'est retiré des heures sup.","ds.title":"Service terminé après minuit","ds.ask":function(d){return "Mettre "+d+" en descendant ?"},"ds.yes":"Oui","ds.no":"Non","ds.done":function(d){return d+" : descendant"},"ty.form":"Formation","y.form":"Formation","t.form":"Formations","a.form":"Form.","fp.lab":"Pause","fp.dur":"Durée","fp.cut":function(x){return x+" de pause déduite"},"fp.wait":function(x){return x+" de pause seront déduites à la fin"},"fp.off":"Sans pause : rien n'est déduit.","fp.enc":"Formation : encode l'heure de début","r.dstart":"Heure de début","d.dstart":function(a,b){return "Dispo à partir de "+a+" (jusqu'à "+b+")"},"r.dset":function(a,b){return "Dispo gradé : "+a+" – "+b},
 "ty.prep":"Préparation","y.prep":"Prépa","t.prep":"Préparations","p.which":"Préparation :","p.none":"Ajoute tes préparations dans Réglages",
 "mi.btn":"Mission tombée à…","mi.title":"Heure de départ en mission",
 "mi.am":function(x){return "Mission à "+x+" : service continu, sans pause"},"mi.pm":function(x){return "Mission à "+x+" : dispo, puis opération"},
@@ -608,7 +620,7 @@ nl:{
 "r.bktxt":"Je gegevens blijven enkel op deze telefoon. Maak regelmatig een back-up: een bestand dat je bewaart in Bestanden (iCloud Drive), in je Drive of dat je naar jezelf mailt.",
 "r.bkfile":"Back-up opslaan","r.bkopen":"Herstellen vanuit een bestand","r.bkother":"Andere methode: kopiëren / plakken",
 "r.bkcopy":"Back-up kopiëren","r.bkpaste":"Plak hier een back-up","r.bkload":"Deze back-up herstellen",
-"r.version":"Versie 0.23 · geen gegevens verstuurd · enkel uurroosters.",
+"r.version":"Versie 0.24 · geen gegevens verstuurd · enkel uurroosters.",
 "nav.jour":"Dag","nav.mois":"Maand","nav.recap":"Overzicht","nav.reg":"Instellingen",
 
 "s.s":"Dienst","s.r":"Oproep","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Verlof","y.z":"Z","y.ex":"EX",
@@ -691,7 +703,7 @@ nl:{
 "fe.nouvelan":"Nieuwjaar","fe.paques":"Paasmaandag","fe.travail":"Dag van de Arbeid","fe.ascension":"O.L.H. Hemelvaart","fe.pentecote":"Pinkstermaandag","fe.nationale":"Nationale feestdag","fe.assomption":"O.L.V. Hemelvaart","fe.toussaint":"Allerheiligen","fe.armistice":"Wapenstilstand","fe.noel":"Kerstmis",
 "fe.defunts":"Allerzielen","fe.roi":"Koningsdag","fe.lendemain":"Tweede kerstdag",
 "cl.report":"Overdracht verlof vorig jaar","cl.pentecote":"Bijkomend verlof (Pinkstermaandag gewerkt)","cl.cg":"CG-dagen","cl.feries":"Feestdagen naar keuze (15/11 en 26/12)","cl.vacances":"Jaarlijks vakantieverlof","cl.new":"Nieuw tegoed",
-"tk.title":"Welk soort dag?","ty.form":"Opleiding","y.form":"Opleiding","t.form":"Opleidingen","a.form":"Opl.","fp.lab":"Pauze","fp.dur":"Duur","fp.cut":function(x){return x+" pauze afgetrokken"},"fp.wait":function(x){return x+" pauze wordt op het einde afgetrokken"},"fp.off":"Zonder pauze: er wordt niets afgetrokken.","fp.enc":"Opleiding: voer het beginuur in","r.dstart":"Beginuur","d.dstart":function(a,b){return "Dispo vanaf "+a+" (tot "+b+")"},"r.dset":function(a,b){return "Dispo gegradeerde: "+a+" – "+b},
+"tk.title":"Welk soort dag?","ty.desc":"Na nacht","y.desc":"Na nacht","t.desc":"Na nacht","a.desc":"N.n.","ex.desc":"Na nacht: dagnorm 0 u, er wordt niets van de overuren afgetrokken.","ds.title":"Dienst beëindigd na middernacht","ds.ask":function(d){return d+" als « na nacht » noteren?"},"ds.yes":"Ja","ds.no":"Nee","ds.done":function(d){return d+": na nacht"},"ty.form":"Opleiding","y.form":"Opleiding","t.form":"Opleidingen","a.form":"Opl.","fp.lab":"Pauze","fp.dur":"Duur","fp.cut":function(x){return x+" pauze afgetrokken"},"fp.wait":function(x){return x+" pauze wordt op het einde afgetrokken"},"fp.off":"Zonder pauze: er wordt niets afgetrokken.","fp.enc":"Opleiding: voer het beginuur in","r.dstart":"Beginuur","d.dstart":function(a,b){return "Dispo vanaf "+a+" (tot "+b+")"},"r.dset":function(a,b){return "Dispo gegradeerde: "+a+" – "+b},
 "ty.prep":"Voorbereiding","y.prep":"Voorb.","t.prep":"Voorbereidingen","p.which":"Voorbereiding:","p.none":"Voeg je voorbereidingen toe in Instellingen",
 "mi.btn":"Opdracht binnen om…","mi.title":"Vertrekuur opdracht",
 "mi.am":function(x){return "Opdracht om "+x+": doorlopende dienst, zonder pauze"},"mi.pm":function(x){return "Opdracht om "+x+": dispo, daarna operatie"},
@@ -771,7 +783,7 @@ var JOURS,JC,MOIS,MC,PERN,TLAB,TYN;
 function setLang(){
   JOURS=L("jours");JC=L("jc");MOIS=L("mois");MC=L("mc");PERN=L("pern");
   TLAB={s:t("s.s"),r:t("s.r"),d:t("s.d")};
-  TYN={dispo:t("y.dispo"),prep:t("y.prep"),form:t("y.form"),ops:t("y.ops"),conge:t("y.conge"),z:t("y.z"),ex:t("y.ex")};
+  TYN={dispo:t("y.dispo"),prep:t("y.prep"),form:t("y.form"),desc:t("y.desc"),ops:t("y.ops"),conge:t("y.conge"),z:t("y.z"),ex:t("y.ex")};
   document.documentElement.lang=lang();
   document.querySelectorAll("[data-i18n]").forEach(function(e){e.textContent=t(e.dataset.i18n)});
   document.querySelectorAll("[data-ph]").forEach(function(e){e.placeholder=t(e.dataset.ph)});
@@ -805,6 +817,8 @@ function parseHM(s){
   return neg?-v:v;
 }
 function NORM(){return Math.round(data.settings.weekMin/5)}
+/* norme d'un jour : 7 h 36 en semaine, 0 h le week-end et les jours « descendant » */
+function dayNorm(d){ if(!isWeekday(d)) return 0; var x=data.days[key(d)]; return x&&x.type==="desc"?0:NORM(); }
 /* jours de congé au format GALoP : 9 j 03:48 */
 function fmtJ(days){
   var neg=days<0, a=Math.abs(days), w=Math.floor(a+1e-9), rest=Math.round((a-w)*NORM());
@@ -906,7 +920,7 @@ function workedFerie(d,x){
 }
 function credit(k,live){
   var d=parseKey(k), x=day(k), w=worked(k,live), sp=sportMin(x);
-  if(!isWeekday(d)) return w+sp;
+  if(!isWeekday(d)||x.type==="desc") return w+sp;
   if(ferie(d)) return w+NORM()+sp;
   if(x.type==="conge") return w+(isHalf(x)?NORM()/2:NORM())+sp;
   if(x.type==="ex") return w+NORM()+sp;
@@ -939,12 +953,13 @@ function kcls(d,x){
 /* ---------- mois ---------- */
 function monthStats(y,m){
   var n=new Date(y,m+1,0).getDate(), obj=0, done=0, objToDate=0, doneToDate=0, fullDone=0, fullObj=0;
-  var c={ops:0,dispo:0,prep:0,form:0,prepBy:{},mix:0,sport:0,rap:0,conge:0,z:0,ex:0,fw:0,garde:0};
+  var c={ops:0,dispo:0,prep:0,form:0,desc:0,prepBy:{},mix:0,sport:0,rap:0,conge:0,z:0,ex:0,fw:0,garde:0};
   for(var i=1;i<=n;i++){
     var d=new Date(y,m,i), k=key(d), x=day(k);
     if(x.type==="ops") c.ops++;
     if(x.type==="dispo") c.dispo++;
     if(x.type==="form") c.form++;
+    if(x.type==="desc") c.desc++;
     if(x.type==="prep"){ c.prep++; var pl=x.prep||t("ty.prep"); c.prepBy[pl]=(c.prepBy[pl]||0)+1; }
     if(x.mix&&x.type==="ops") c.mix++;
     c.sport+=sportMin(x)/60;
@@ -955,11 +970,11 @@ function monthStats(y,m){
     if(x.garde) c.garde++;
     if(workedFerie(d,x)) c.fw++;
     var cr=credit(k,true);
-    fullDone+=cr; if(isWeekday(d)) fullObj+=NORM();
+    fullDone+=cr; fullObj+=dayNorm(d);
     if(!tracked(k)) continue;
-    if(isWeekday(d)) obj+=NORM();
+    obj+=dayNorm(d);
     done+=cr;
-    if(counted(k)){ doneToDate+=cr; if(isWeekday(d)) objToDate+=NORM(); }
+    if(counted(k)){ doneToDate+=cr; objToDate+=dayNorm(d); }
   }
   return {obj:obj,done:done,objToDate:objToDate,doneToDate:doneToDate,fullDone:fullDone,fullObj:fullObj,n:n,c:c};
 }
@@ -975,7 +990,7 @@ function pState(y,p){
   if(ts>=start) r.inBal=data.track.hs;
   else { var pp=p?pState(y,p-1):pState(y-1,5); r.inBal=pp.out; }
   var delta=0, d=new Date(Math.max(start.getTime(),ts.getTime())), lim=end<t?end:t;
-  while(d<=lim){var k=key(d); if(counted(k)) delta+=credit(k,true)-(isWeekday(d)?NORM():0); d.setDate(d.getDate()+1);}
+  while(d<=lim){var k=key(d); if(counted(k)) delta+=credit(k,true)-dayNorm(d); d.setDate(d.getDate()+1);}
   var pe=data.periods[id]||{};
   r.delta=delta; r.paid=pe.paid||0; r.conv=pe.conv||0;
   r.out=r.inBal+delta-r.paid-r.conv*NORM();
@@ -1019,7 +1034,7 @@ function renderJour(keepSegs){
   if(f) kinds.push(t("d.ferie",f));
   if(!wd) kinds.push(t("d.weekend"));
   $("dKind").textContent=kinds.join(" · ");
-  $("dNorm").textContent=wd?fmt(NORM()):"—";
+  $("dNorm").textContent=dayNorm(cur)?fmt(NORM()):(wd?fmt(0):"—");
   $("dayCard").className="card daycard "+kcls(cur,x);
   document.querySelectorAll("#types .ty").forEach(function(b){b.classList.toggle("on",x.type===b.dataset.type)});
   var showHalf=(dispoLike(x.type)||x.type==="ops"||x.type==="form")&&wd&&!f;
@@ -1063,6 +1078,7 @@ function renderJour(keepSegs){
     if(x.type==="ex") ex=t("ex.ex",fmt(NORM()));
   }
   if(x.mix&&x.mt) ex=t("ex.mix",x.from==="prep"?prepLab(x).toLowerCase():t("y.dispo").toLowerCase(),x.mt)+(ex?" "+ex:"");
+  if(x.type==="desc") ex=t("ex.desc");
   if(!tracked(k)) ex=t("ex.untracked");
   $("dExplain").textContent=ex;
   var fw=workedFerie(cur,x);
@@ -1146,7 +1162,7 @@ function renderMois(){
     row.innerHTML='<span class="dn '+(isWeekday(d)?"":"we")+'">'+JC[d.getDay()]+" "+i+'</span>'+(lab?'<span class="small">'+esc(lab)+'</span>':'')+tags+'<span class="dh '+(c?"":"small")+'">'+(c?fmt(c):"—")+'</span>';
     box.appendChild(row);
   }
-  $("tOps").textContent=st.c.ops; $("tEx").textContent=st.c.ex; $("tRapp").textContent=st.c.garde; $("tDispo").textContent=st.c.dispo; $("tPrep").textContent=st.c.prep; $("tForm").textContent=st.c.form; $("tRap").textContent=st.c.rap;
+  $("tOps").textContent=st.c.ops; $("tEx").textContent=st.c.ex; $("tRapp").textContent=st.c.garde; $("tDispo").textContent=st.c.dispo; $("tPrep").textContent=st.c.prep; $("tForm").textContent=st.c.form; $("tDesc").textContent=st.c.desc; $("tRap").textContent=st.c.rap;
   var o=[];
   if(st.c.conge) o.push(t("m.conge",num(st.c.conge)));
   if(st.c.z) o.push(t("m.z",num(st.c.z)));
@@ -1236,8 +1252,8 @@ function renderRecap(){
 }
 
 function renderAct(Y){
-  var F=[["ops","Ops"],["dispo","Dispo"],["prep",t("a.prep")],["form",t("a.form")],["rap",t("a.rap")],["ex","EX"],["garde","R"],["sport",t("a.sport")]];
-  var tot={ops:0,dispo:0,prep:0,form:0,rap:0,ex:0,garde:0,sport:0}, by={}, rows="";
+  var F=[["ops","Ops"],["dispo","Dispo"],["prep",t("a.prep")],["form",t("a.form")],["desc",t("a.desc")],["rap",t("a.rap")],["ex","EX"],["garde","R"],["sport",t("a.sport")]];
+  var tot={ops:0,dispo:0,prep:0,form:0,desc:0,rap:0,ex:0,garde:0,sport:0}, by={}, rows="";
   for(var m=0;m<12;m++){
     var c=monthStats(Y,m).c;
     Object.keys(c.prepBy).forEach(function(n){by[n]=(by[n]||0)+c.prepBy[n]});
@@ -1249,6 +1265,7 @@ function renderAct(Y){
     '<div><div class="n">'+tot.dispo+'</div><div class="small">'+esc(t("t.dispo"))+'</div></div>'+
     '<div><div class="n">'+tot.prep+'</div><div class="small">'+esc(t("t.prep"))+'</div></div>'+
     '<div><div class="n">'+tot.form+'</div><div class="small">'+esc(t("t.form"))+'</div></div>'+
+    '<div><div class="n">'+tot.desc+'</div><div class="small">'+esc(t("t.desc"))+'</div></div>'+
     '<div><div class="n">'+tot.rap+'</div><div class="small">'+esc(t("t.rap"))+'</div></div>'+
     '<div><div class="n">'+tot.ex+'</div><div class="small">'+esc(t("t.ex"))+'</div></div>'+
     '<div><div class="n">'+tot.garde+'</div><div class="small">'+esc(t("t.rapp"))+'</div></div>'+
@@ -1379,10 +1396,11 @@ $("bEnd").onclick=function(){
   if(!open.length){
     var y=new Date(cur);y.setDate(y.getDate()-1);var xy=day(key(y));
     var oy=xy.segs.filter(function(s){return s.a&&!s.b});
-    if(oy.length){oy[oy.length-1].b=nowHM();save();render();toast(t("t.endyest"));return}
+    if(oy.length){oy[oy.length-1].b=nowHM();save();render();toast(t("t.endyest"));askDesc(key(cur));return}
     toast(t("t.norun"));return;
   }
-  open[open.length-1].b=nowHM(); save(); render(); toast(t("t.endat",nowHM()));
+  var os=open[open.length-1]; os.b=nowHM(); save(); render(); toast(t("t.endat",nowHM()));
+  if(toMin(os.b)<toMin(os.a)) askDesc(key(addDay(cur,1)));
 };
 $("addS").onclick=function(){if(blocked(key(cur)))return;day(key(cur),true).segs.push({t:"s",a:"",b:""});save();render()};
 $("addR").onclick=function(){if(blocked(key(cur)))return;day(key(cur),true).segs.push({t:"r",a:"",b:""});save();render()};
@@ -1417,6 +1435,7 @@ $("segs").addEventListener("click",function(e){
     openTP(t(f==="a"?"tp.begin":"tp.end"), s0[f]||(f==="b"&&s0.a)||"", true, function(v){
       var s2=day(kk,true).segs[i0]; if(!s2) return;
       s2[f]=v; save(); render();
+      if(s2.t!=="r"&&s2.a&&s2.b&&toMin(s2.b)<toMin(s2.a)) askDesc(key(addDay(parseKey(kk),1)));
     });
     return;
   }
@@ -1451,6 +1470,19 @@ function setType(x,ty){
 /* durée standard du dispo (fin − début) */
 function dispoLen(){var S=data.settings, d=toMin(S.dispoB)-toMin(S.dispoA); if(d<=0) d+=1440; return d}
 function addMin(hm,m){var v=(toMin(hm)+m)%1440; return pad(Math.floor(v/60))+":"+pad(v%60)}
+/* descendant : proposé quand un service se termine après minuit */
+function addDay(d,n){var r=new Date(d); r.setDate(r.getDate()+n); return r}
+var descKey=null;
+function askDesc(k){
+  var x=data.days[k]; if(x&&(x.type||x.lock||x.segs.some(function(s){return s.a}))) return;
+  descKey=k; $("descTxt").textContent=t("ds.ask",dShort(k));
+  $("descAsk").classList.remove("hidden");
+}
+$("descYes").onclick=function(){
+  $("descAsk").classList.add("hidden"); if(!descKey) return;
+  var x=day(descKey,true); x.type="desc"; save(); render(); toast(t("ds.done",dShort(descKey))); descKey=null;
+};
+$("descNo").onclick=function(){ $("descAsk").classList.add("hidden"); descKey=null; };
 /* Début : note l'heure dans la bonne ligne selon le type du jour */
 function startNow(x){
   var now=nowHM();
