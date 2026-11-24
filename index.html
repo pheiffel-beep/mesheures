@@ -23,6 +23,7 @@
   --c-fer:#9b3f8f;    --c-fer-bg:#f3d6ee;     /* mauve (dimanche et férié) */
   --c-ex:#ffffff;     --c-ex-bg:#d0342c;      /* rouge */
   --c-z:#2c7363;      --c-z-bg:#d6efe8;       /* vert d'eau */
+  --c-form:#4f5f17;   --c-form-bg:#dfe6bf;    /* vert olive */
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
@@ -93,8 +94,8 @@ textarea{width:100%;min-height:140px;font:16px/1.4 ui-monospace,Menlo,monospace;
 .info{background:var(--c-fer-bg);color:var(--c-fer);border-radius:12px;padding:10px 12px;font-size:14px;font-weight:600;margin-top:10px}
 
 /* boutons de type */
-.types{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-.ty{background:var(--card);border:2px solid var(--line);color:var(--ink);font-weight:600;font-size:14px;padding:10px 4px}
+.types{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:12px}
+.ty{background:var(--card);border:2px solid var(--line);color:var(--ink);font-weight:600;font-size:13px;padding:10px 2px}
 .ty.on{background:var(--kb);border-color:var(--kb);color:var(--k)}
 .ty.dispo.on,.ty.ops.on,.ty.z.on{border-color:var(--k)}
 .halfrow{display:flex;align-items:center;justify-content:space-between;margin:-4px 0 12px;padding:8px 12px;background:var(--card);border:1px solid var(--line);border-radius:12px}
@@ -176,6 +177,9 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:10p
 .tpbtns button{padding:12px 4px}
 /* v0.20 : préparation, dispo puis opération, sport */
 .k-prep{--k:var(--c-dispo);--kb:var(--c-dispo-bg)}
+.k-form{--k:var(--c-form);--kb:var(--c-form-bg)}
+.ty.form.on{border-color:var(--k)}
+.tag.fo{background:var(--c-form-bg);color:var(--c-form)}
 .ty.prep.on{border-color:var(--k)}
 .k-mix{--kd:var(--c-dispo-bg);--kdk:var(--c-dispo)}
 .tag.sp{background:#fff;color:#000;border:1px solid #2b2230}
@@ -183,7 +187,7 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:10p
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chips button{padding:7px 12px;font-size:14px;border-radius:999px;background:#efe6f2;color:var(--accent);font-weight:600}
 .chips button.on{background:var(--c-dispo);color:#fff}
-.locked #bMiss,.locked #brkCard,.locked #prepRow{opacity:.45}
+.locked #bMiss,.locked #brkCard,.locked #prepRow,.locked #fpCard{opacity:.45}
 .brand{display:flex;align-items:center;gap:12px}
 .logo{width:44px;height:44px;border-radius:11px;box-shadow:0 2px 8px rgba(74,40,88,.3);flex:none}
 </style>
@@ -212,6 +216,7 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:10p
     <div class="types" id="types">
       <button data-type="dispo" class="ty dispo k-dispo" data-i18n="ty.dispo"></button>
       <button data-type="prep" class="ty prep k-prep" data-i18n="ty.prep"></button>
+      <button data-type="form" class="ty form k-form" data-i18n="ty.form"></button>
       <button data-type="ops" class="ty ops k-ops" data-i18n="ty.ops"></button>
       <button data-type="conge" class="ty conge k-conge" data-i18n="ty.conge"></button>
       <button data-type="z" class="ty z k-z" data-i18n="ty.z"></button>
@@ -233,6 +238,11 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:10p
       <button class="btn alt" id="bEnd" data-i18n="d.end"></button>
     </div>
     <button class="btn alt hidden" id="bMiss" style="width:100%;margin-bottom:12px" data-i18n="mi.btn"></button>
+    <div class="card hidden" id="fpCard">
+      <div class="toggle"><span data-i18n="fp.lab"></span><div class="sw" id="tFp"></div></div>
+      <div class="row between hidden" id="fpDur" style="margin-top:4px"><span class="small" data-i18n="fp.dur"></span><div class="chips" id="fpChips"><button data-m="30">30 min</button><button data-m="60">1 h</button></div></div>
+      <div class="note" id="fpNote"></div>
+    </div>
     <div class="card hidden" id="brkCard">
       <div class="toggle"><span data-i18n="br.lab"></span><div class="sw" id="tBrk"></div></div>
       <div class="grid2 hidden" id="brkTimes" style="margin-top:4px">
@@ -276,7 +286,7 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:10p
       <div class="small" style="margin-top:6px" id="mNote"></div>
     </div>
     <div class="legend">
-      <span class="k-dispo" data-i18n="ty.dispo"></span><span class="k-ops" data-i18n="ty.ops"></span><span class="k-conge" data-i18n="ty.conge"></span><span class="k-z" data-i18n="lg.z"></span><span class="k-ex" data-i18n="lg.ex"></span><span class="k-sam" data-i18n="lg.sam"></span><span class="k-dim" data-i18n="lg.dim"></span><span class="diag k-fw k-ops" data-i18n="lg.fw"></span><span class="diag k-wsam k-ops" data-i18n="lg.wsam"></span><span class="diag k-mix k-ops" data-i18n="lg.mix"></span><span class="sp" data-i18n="sp.tag"></span>
+      <span class="k-dispo" data-i18n="ty.dispo"></span><span class="k-ops" data-i18n="ty.ops"></span><span class="k-form" data-i18n="ty.form"></span><span class="k-conge" data-i18n="ty.conge"></span><span class="k-z" data-i18n="lg.z"></span><span class="k-ex" data-i18n="lg.ex"></span><span class="k-sam" data-i18n="lg.sam"></span><span class="k-dim" data-i18n="lg.dim"></span><span class="diag k-fw k-ops" data-i18n="lg.fw"></span><span class="diag k-wsam k-ops" data-i18n="lg.wsam"></span><span class="diag k-mix k-ops" data-i18n="lg.mix"></span><span class="sp" data-i18n="sp.tag"></span>
     </div>
     <div class="card days" id="mDays"></div>
     <button class="btn alt" id="mLock" style="width:100%;margin-bottom:12px" data-i18n="m.lockall"></button>
@@ -286,6 +296,7 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:10p
         <div><div class="n" id="tOps">0</div><div class="small" data-i18n="t.ops"></div></div>
         <div><div class="n" id="tDispo">0</div><div class="small" data-i18n="t.dispo"></div></div>
         <div><div class="n" id="tPrep">0</div><div class="small" data-i18n="t.prep"></div></div>
+        <div><div class="n" id="tForm">0</div><div class="small" data-i18n="t.form"></div></div>
         <div><div class="n" id="tRap">0</div><div class="small" data-i18n="t.rap"></div></div>
         <div><div class="n" id="tEx">0</div><div class="small" data-i18n="t.ex"></div></div>
         <div><div class="n" id="tRapp">0</div><div class="small" data-i18n="t.rapp"></div></div>
@@ -408,6 +419,7 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:10p
     <div style="display:grid;gap:8px;margin:14px 0">
       <button class="ty dispo k-dispo on" data-pick="dispo" data-i18n="ty.dispo"></button>
       <button class="ty prep k-prep on" data-pick="prep" data-i18n="ty.prep"></button>
+      <button class="ty form k-form on" data-pick="form" data-i18n="ty.form"></button>
       <button class="ty ops k-ops on" data-pick="ops" data-i18n="ty.ops"></button>
     </div>
     <button class="btn alt" id="tyNo" style="width:100%" data-i18n="tp.cancel"></button>
@@ -463,7 +475,7 @@ fr:{
 "r.bktxt":"Tes données restent uniquement sur ce téléphone. Enregistre régulièrement une sauvegarde : un fichier que tu ranges dans Fichiers (iCloud Drive), ton Drive ou que tu t'envoies par mail.",
 "r.bkfile":"Enregistrer une sauvegarde","r.bkopen":"Restaurer depuis un fichier","r.bkother":"Autre méthode : copier / coller",
 "r.bkcopy":"Copier la sauvegarde","r.bkpaste":"Colle ici une sauvegarde","r.bkload":"Restaurer cette sauvegarde",
-"r.version":"Version 0.21 · aucune donnée envoyée · rien d'autre que des horaires.",
+"r.version":"Version 0.22 · aucune donnée envoyée · rien d'autre que des horaires.",
 "nav.jour":"Jour","nav.mois":"Mois","nav.recap":"Récap","nav.reg":"Réglages",
 
 "s.s":"Service","s.r":"Rappel","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Congé","y.z":"Z","y.ex":"EX",
@@ -546,7 +558,7 @@ fr:{
 "fe.nouvelan":"Nouvel An","fe.paques":"Lundi de Pâques","fe.travail":"Fête du Travail","fe.ascension":"Ascension","fe.pentecote":"Lundi de Pentecôte","fe.nationale":"Fête nationale","fe.assomption":"Assomption","fe.toussaint":"Toussaint","fe.armistice":"Armistice","fe.noel":"Noël",
 "fe.defunts":"Jour des défunts","fe.roi":"Fête du Roi","fe.lendemain":"Lendemain de Noël",
 "cl.report":"Report congé année précédente","cl.pentecote":"Congé supplémentaire (lundi de Pentecôte travaillé)","cl.cg":"Jours CG","cl.feries":"Fériés au choix (15/11 et 26/12)","cl.vacances":"Congé annuel de vacances","cl.new":"Nouveau crédit",
-"tk.title":"Quel type de journée ?","r.dstart":"Heure de début","d.dstart":function(a,b){return "Dispo à partir de "+a+" (jusqu'à "+b+")"},"r.dset":function(a,b){return "Dispo gradé : "+a+" – "+b},
+"tk.title":"Quel type de journée ?","ty.form":"Formation","y.form":"Formation","t.form":"Formations","a.form":"Form.","fp.lab":"Pause","fp.dur":"Durée","fp.cut":function(x){return x+" de pause déduite"},"fp.wait":function(x){return x+" de pause seront déduites à la fin"},"fp.off":"Sans pause : rien n'est déduit.","fp.enc":"Formation : encode l'heure de début","r.dstart":"Heure de début","d.dstart":function(a,b){return "Dispo à partir de "+a+" (jusqu'à "+b+")"},"r.dset":function(a,b){return "Dispo gradé : "+a+" – "+b},
 "ty.prep":"Préparation","y.prep":"Prépa","t.prep":"Préparations","p.which":"Préparation :","p.none":"Ajoute tes préparations dans Réglages",
 "mi.btn":"Mission tombée à…","mi.title":"Heure de départ en mission",
 "mi.am":function(x){return "Mission à "+x+" : service continu, sans pause"},"mi.pm":function(x){return "Mission à "+x+" : dispo, puis opération"},
@@ -596,7 +608,7 @@ nl:{
 "r.bktxt":"Je gegevens blijven enkel op deze telefoon. Maak regelmatig een back-up: een bestand dat je bewaart in Bestanden (iCloud Drive), in je Drive of dat je naar jezelf mailt.",
 "r.bkfile":"Back-up opslaan","r.bkopen":"Herstellen vanuit een bestand","r.bkother":"Andere methode: kopiëren / plakken",
 "r.bkcopy":"Back-up kopiëren","r.bkpaste":"Plak hier een back-up","r.bkload":"Deze back-up herstellen",
-"r.version":"Versie 0.21 · geen gegevens verstuurd · enkel uurroosters.",
+"r.version":"Versie 0.22 · geen gegevens verstuurd · enkel uurroosters.",
 "nav.jour":"Dag","nav.mois":"Maand","nav.recap":"Overzicht","nav.reg":"Instellingen",
 
 "s.s":"Dienst","s.r":"Oproep","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Verlof","y.z":"Z","y.ex":"EX",
@@ -679,7 +691,7 @@ nl:{
 "fe.nouvelan":"Nieuwjaar","fe.paques":"Paasmaandag","fe.travail":"Dag van de Arbeid","fe.ascension":"O.L.H. Hemelvaart","fe.pentecote":"Pinkstermaandag","fe.nationale":"Nationale feestdag","fe.assomption":"O.L.V. Hemelvaart","fe.toussaint":"Allerheiligen","fe.armistice":"Wapenstilstand","fe.noel":"Kerstmis",
 "fe.defunts":"Allerzielen","fe.roi":"Koningsdag","fe.lendemain":"Tweede kerstdag",
 "cl.report":"Overdracht verlof vorig jaar","cl.pentecote":"Bijkomend verlof (Pinkstermaandag gewerkt)","cl.cg":"CG-dagen","cl.feries":"Feestdagen naar keuze (15/11 en 26/12)","cl.vacances":"Jaarlijks vakantieverlof","cl.new":"Nieuw tegoed",
-"tk.title":"Welk soort dag?","r.dstart":"Beginuur","d.dstart":function(a,b){return "Dispo vanaf "+a+" (tot "+b+")"},"r.dset":function(a,b){return "Dispo gegradeerde: "+a+" – "+b},
+"tk.title":"Welk soort dag?","ty.form":"Opleiding","y.form":"Opleiding","t.form":"Opleidingen","a.form":"Opl.","fp.lab":"Pauze","fp.dur":"Duur","fp.cut":function(x){return x+" pauze afgetrokken"},"fp.wait":function(x){return x+" pauze wordt op het einde afgetrokken"},"fp.off":"Zonder pauze: er wordt niets afgetrokken.","fp.enc":"Opleiding: voer het beginuur in","r.dstart":"Beginuur","d.dstart":function(a,b){return "Dispo vanaf "+a+" (tot "+b+")"},"r.dset":function(a,b){return "Dispo gegradeerde: "+a+" – "+b},
 "ty.prep":"Voorbereiding","y.prep":"Voorb.","t.prep":"Voorbereidingen","p.which":"Voorbereiding:","p.none":"Voeg je voorbereidingen toe in Instellingen",
 "mi.btn":"Opdracht binnen om…","mi.title":"Vertrekuur opdracht",
 "mi.am":function(x){return "Opdracht om "+x+": doorlopende dienst, zonder pauze"},"mi.pm":function(x){return "Opdracht om "+x+": dispo, daarna operatie"},
@@ -759,7 +771,7 @@ var JOURS,JC,MOIS,MC,PERN,TLAB,TYN;
 function setLang(){
   JOURS=L("jours");JC=L("jc");MOIS=L("mois");MC=L("mc");PERN=L("pern");
   TLAB={s:t("s.s"),r:t("s.r"),d:t("s.d")};
-  TYN={dispo:t("y.dispo"),prep:t("y.prep"),ops:t("y.ops"),conge:t("y.conge"),z:t("y.z"),ex:t("y.ex")};
+  TYN={dispo:t("y.dispo"),prep:t("y.prep"),form:t("y.form"),ops:t("y.ops"),conge:t("y.conge"),z:t("y.z"),ex:t("y.ex")};
   document.documentElement.lang=lang();
   document.querySelectorAll("[data-i18n]").forEach(function(e){e.textContent=t(e.dataset.i18n)});
   document.querySelectorAll("[data-ph]").forEach(function(e){e.placeholder=t(e.dataset.ph)});
@@ -874,17 +886,23 @@ function brkCut(x,live){
   });
   return cut;
 }
-function worked(k,live){var x=day(k),lv=live&&k===key(today()),t=0; x.segs.forEach(function(s){t+=segMin(s,lv)}); return Math.max(0,t-brkCut(x,lv));}
+/* pause de formation : déduite dès qu'un service de la journée est terminé */
+function fpCut(x,tot){
+  if(x.type!=="form"||!x.fp||!x.fp.on) return 0;
+  if(!x.segs.some(function(s){return s.t!=="r"&&s.a&&s.b})) return 0;
+  return Math.min(x.fp.m||0,tot);
+}
+function worked(k,live){var x=day(k),lv=live&&k===key(today()),t=0; x.segs.forEach(function(s){t+=segMin(s,lv)}); t=Math.max(0,t-brkCut(x,lv)); return t-fpCut(x,t);}
 function sportMin(x){return x.sport||0}
 function hasContent(x){return !!(x.type||x.sport||x.segs.some(function(s){return s.a}))}
 function prepLab(x){return t("y.prep")+(x.prep?" "+x.prep:"")}
 function isHalf(x){return !!x.half&&x.type==="conge"}
 /* jour presté (Dispo/Opération) complété par du congé : le reste de la norme est pris en congé */
-function isRest(d,x){return !!x.rest&&(dispoLike(x.type)||x.type==="ops")&&isWeekday(d)&&!ferie(d)}
+function isRest(d,x){return !!x.rest&&(dispoLike(x.type)||x.type==="ops"||x.type==="form")&&isWeekday(d)&&!ferie(d)}
 /* férié (lun.–ven.) où il a presté : +1 jour de congé, heures en heures sup */
 function workedFerie(d,x){
   if(!isWeekday(d)||!ferie(d)) return false;
-  return dispoLike(x.type)||x.type==="ops"||x.segs.some(function(s){return s.a&&s.b});
+  return dispoLike(x.type)||x.type==="ops"||x.type==="form"||x.segs.some(function(s){return s.a&&s.b});
 }
 function credit(k,live){
   var d=parseKey(k), x=day(k), w=worked(k,live), sp=sportMin(x);
@@ -906,9 +924,9 @@ function tracked(k){return k>=data.track.start}
 
 function kcls(d,x){
   var t=x.type;
-  var tc="k-"+(dispoLike(t)?"dispo":"ops");
+  var tc="k-"+(dispoLike(t)?"dispo":t==="form"?"form":"ops");
   if(workedFerie(d,x)) return "diag k-fw "+tc;
-  if(!isWeekday(d)&&(!t||dispoLike(t)||t==="ops")&&(t||x.segs.some(function(s){return s.a&&s.b})))
+  if(!isWeekday(d)&&(!t||dispoLike(t)||t==="ops"||t==="form")&&(t||x.segs.some(function(s){return s.a&&s.b})))
     return "diag "+(d.getDay()===6&&!ferie(d)?"k-wsam":"k-wdim")+" "+tc;
   if(x.mix&&t==="ops") return "diag k-mix k-ops";
   if(t) return "k-"+t;
@@ -921,11 +939,12 @@ function kcls(d,x){
 /* ---------- mois ---------- */
 function monthStats(y,m){
   var n=new Date(y,m+1,0).getDate(), obj=0, done=0, objToDate=0, doneToDate=0, fullDone=0, fullObj=0;
-  var c={ops:0,dispo:0,prep:0,prepBy:{},mix:0,sport:0,rap:0,conge:0,z:0,ex:0,fw:0,garde:0};
+  var c={ops:0,dispo:0,prep:0,form:0,prepBy:{},mix:0,sport:0,rap:0,conge:0,z:0,ex:0,fw:0,garde:0};
   for(var i=1;i<=n;i++){
     var d=new Date(y,m,i), k=key(d), x=day(k);
     if(x.type==="ops") c.ops++;
     if(x.type==="dispo") c.dispo++;
+    if(x.type==="form") c.form++;
     if(x.type==="prep"){ c.prep++; var pl=x.prep||t("ty.prep"); c.prepBy[pl]=(c.prepBy[pl]||0)+1; }
     if(x.mix&&x.type==="ops") c.mix++;
     c.sport+=sportMin(x)/60;
@@ -1003,7 +1022,17 @@ function renderJour(keepSegs){
   $("dNorm").textContent=wd?fmt(NORM()):"—";
   $("dayCard").className="card daycard "+kcls(cur,x);
   document.querySelectorAll("#types .ty").forEach(function(b){b.classList.toggle("on",x.type===b.dataset.type)});
-  var showHalf=(dispoLike(x.type)||x.type==="ops")&&wd&&!f;
+  var showHalf=(dispoLike(x.type)||x.type==="ops"||x.type==="form")&&wd&&!f;
+  /* pause de formation */
+  $("fpCard").classList.toggle("hidden",x.type!=="form");
+  if(x.type==="form"){
+    var fp=x.fp||{on:false,m:60};
+    $("tFp").classList.toggle("on",!!fp.on);
+    $("fpDur").classList.toggle("hidden",!fp.on);
+    document.querySelectorAll("#fpChips button").forEach(function(b){b.classList.toggle("on",+b.dataset.m===fp.m)});
+    var fc=fpCut(x,1e9);
+    $("fpNote").textContent=!fp.on?t("fp.off"):fc?t("fp.cut",fmt(fc)):t("fp.wait",fmt(fp.m));
+  }
   /* choix de la préparation */
   var pr=$("prepRow"), S=data.settings;
   pr.classList.toggle("hidden",!(x.type==="prep"||(x.mix&&x.from==="prep")));
@@ -1054,7 +1083,7 @@ function renderJour(keepSegs){
   x.segs.forEach(function(s,i){
     var row=document.createElement("div"); row.className="seg";
     var sub=pauseOn(s)?'<br><span class="pz">−'+s.p+' min</span>':(s.t==="r"&&padR?'<br><span class="pz">+'+(2*padR)+' min</span>':'');
-    row.innerHTML='<span class="tag '+(s.t==="r"?"r":s.t==="d"?"d":(x.type==="ops"?"o":""))+'">'+(s.t==="s"&&x.type==="ops"?"Ops":s.t==="d"&&(x.type==="prep"||x.from==="prep")?esc(t("y.prep")):TLAB[s.t])+sub+'</span>'+
+    row.innerHTML='<span class="tag '+(s.t==="r"?"r":s.t==="d"?"d":(x.type==="ops"?"o":x.type==="form"?"fo":""))+'">'+(s.t==="s"&&x.type==="form"?esc(t("y.form")):s.t==="s"&&x.type==="ops"?"Ops":s.t==="d"&&(x.type==="prep"||x.from==="prep")?esc(t("y.prep")):TLAB[s.t])+sub+'</span>'+
       '<button class="tbtn" data-i="'+i+'" data-f="a" aria-label="'+esc(t("a.begin"))+'">'+(s.a||"--:--")+'</button>'+
       '<span class="small">→</span>'+
       '<button class="tbtn" data-i="'+i+'" data-f="b" aria-label="'+esc(t("a.end"))+'">'+(s.b||"--:--")+'</button>'+
@@ -1117,7 +1146,7 @@ function renderMois(){
     row.innerHTML='<span class="dn '+(isWeekday(d)?"":"we")+'">'+JC[d.getDay()]+" "+i+'</span>'+(lab?'<span class="small">'+esc(lab)+'</span>':'')+tags+'<span class="dh '+(c?"":"small")+'">'+(c?fmt(c):"—")+'</span>';
     box.appendChild(row);
   }
-  $("tOps").textContent=st.c.ops; $("tEx").textContent=st.c.ex; $("tRapp").textContent=st.c.garde; $("tDispo").textContent=st.c.dispo; $("tPrep").textContent=st.c.prep; $("tRap").textContent=st.c.rap;
+  $("tOps").textContent=st.c.ops; $("tEx").textContent=st.c.ex; $("tRapp").textContent=st.c.garde; $("tDispo").textContent=st.c.dispo; $("tPrep").textContent=st.c.prep; $("tForm").textContent=st.c.form; $("tRap").textContent=st.c.rap;
   var o=[];
   if(st.c.conge) o.push(t("m.conge",num(st.c.conge)));
   if(st.c.z) o.push(t("m.z",num(st.c.z)));
@@ -1207,8 +1236,8 @@ function renderRecap(){
 }
 
 function renderAct(Y){
-  var F=[["ops","Ops"],["dispo","Dispo"],["prep",t("a.prep")],["rap",t("a.rap")],["ex","EX"],["garde","R"],["sport",t("a.sport")]];
-  var tot={ops:0,dispo:0,prep:0,rap:0,ex:0,garde:0,sport:0}, by={}, rows="";
+  var F=[["ops","Ops"],["dispo","Dispo"],["prep",t("a.prep")],["form",t("a.form")],["rap",t("a.rap")],["ex","EX"],["garde","R"],["sport",t("a.sport")]];
+  var tot={ops:0,dispo:0,prep:0,form:0,rap:0,ex:0,garde:0,sport:0}, by={}, rows="";
   for(var m=0;m<12;m++){
     var c=monthStats(Y,m).c;
     Object.keys(c.prepBy).forEach(function(n){by[n]=(by[n]||0)+c.prepBy[n]});
@@ -1219,6 +1248,7 @@ function renderAct(Y){
     '<div><div class="n">'+tot.ops+'</div><div class="small">'+esc(t("t.ops"))+'</div></div>'+
     '<div><div class="n">'+tot.dispo+'</div><div class="small">'+esc(t("t.dispo"))+'</div></div>'+
     '<div><div class="n">'+tot.prep+'</div><div class="small">'+esc(t("t.prep"))+'</div></div>'+
+    '<div><div class="n">'+tot.form+'</div><div class="small">'+esc(t("t.form"))+'</div></div>'+
     '<div><div class="n">'+tot.rap+'</div><div class="small">'+esc(t("t.rap"))+'</div></div>'+
     '<div><div class="n">'+tot.ex+'</div><div class="small">'+esc(t("t.ex"))+'</div></div>'+
     '<div><div class="n">'+tot.garde+'</div><div class="small">'+esc(t("t.rapp"))+'</div></div>'+
@@ -1397,7 +1427,7 @@ $("segs").addEventListener("click",function(e){
   setTimeout(function(){if(b.isConnected){delete b.dataset.armed;b.textContent="×";b.style.color=""}},2500);
 });
 $("tGarde").onclick=function(){if(blocked(key(cur)))return;var x=day(key(cur),true);x.garde=!x.garde;save();render()};
-$("tHalf").onclick=function(){if(blocked(key(cur)))return;var x=day(key(cur),true);if(!dispoLike(x.type)&&x.type!=="ops")return;x.rest=!x.rest;save();render()};
+$("tHalf").onclick=function(){if(blocked(key(cur)))return;var x=day(key(cur),true);if(!dispoLike(x.type)&&x.type!=="ops"&&x.type!=="form")return;x.rest=!x.rest;save();render()};
 function clearMix(x){ if(x.mix) x.segs=x.segs.filter(function(s){return s.t!=="d"}); delete x.mix; delete x.brk; delete x.from; delete x.mt; }
 $("types").addEventListener("click",function(e){
   var b=e.target.closest(".ty"); if(!b) return; if(blocked(key(cur))) return;
@@ -1410,10 +1440,11 @@ function setType(x,ty){
   var S=data.settings;
   var wasD=dispoLike(x.type);
   if(wasD) x.segs=x.segs.filter(function(s){return s.t!=="d"});
-  x.type=ty; x.half=false; if(!dispoLike(ty)&&ty!=="ops") x.rest=false;
+  x.type=ty; x.half=false; if(!dispoLike(ty)&&ty!=="ops"&&ty!=="form") x.rest=false;
   if(ty==="prep"&&!x.prep) x.prep=S.preps[0]||"";
   if(dispoLike(ty)){ x.segs=x.segs.filter(function(s){return s.a}); x.segs.unshift({t:"d",a:S.dispoA,b:S.dispoB,p:S.dispoP}); toast(t("tt.dispo",fmt(segMin(x.segs[0])))); }
-  if(ty==="ops" && !x.segs.some(function(s){return s.t==="s"})){ x.segs.push({t:"s",a:"",b:""}); toast(t("t.enc")); }
+  if(ty==="form"&&!x.fp) x.fp={on:true,m:60};
+  if((ty==="ops"||ty==="form") && !x.segs.some(function(s){return s.t==="s"})){ x.segs.push({t:"s",a:"",b:""}); toast(t(ty==="form"?"fp.enc":"t.enc")); }
   save(); render();
   if(ty==="z"){ var k=key(cur); if(counted(k)) warnHS(); else { var h=hsNow()-NORM(); if(h< -600) toast(t("t.afterz",fmt(h,true)),3500); } }
 }
@@ -1472,6 +1503,14 @@ $("bMiss").onclick=function(){
     save(); render();
   });
 };
+$("tFp").onclick=function(){
+  if(blocked(key(cur)))return; var x=day(key(cur),true); if(x.type!=="form") return;
+  if(!x.fp) x.fp={on:false,m:60}; x.fp.on=!x.fp.on; save(); render();
+};
+$("fpChips").addEventListener("click",function(e){
+  var b=e.target.closest("[data-m]"); if(!b) return; if(blocked(key(cur))) return;
+  var x=day(key(cur),true); if(!x.fp) x.fp={on:true,m:60}; x.fp.m=+b.dataset.m; save(); render();
+});
 $("tBrk").onclick=function(){
   if(blocked(key(cur)))return; var x=day(key(cur),true); if(!x.mix) return;
   if(!x.brk) x.brk={on:false,a:"12:00",b:"12:30"};
