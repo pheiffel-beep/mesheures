@@ -46,7 +46,13 @@ button{font:inherit;border:0;border-radius:12px;padding:12px 14px;cursor:pointer
 .seg{display:flex;align-items:center;gap:6px;padding:10px 0;border-top:1px solid var(--line)}
 .seg:first-child{border-top:0}
 .tag{font-size:12px;font-weight:700;padding:3px 8px;border-radius:999px;background:#efe6f2;color:var(--accent);white-space:nowrap}
-.tag.r{background:#fbefd9;color:#8a6212}
+.tag.r{background:#e8590c;color:#fff}
+.lockbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border-radius:12px;margin-bottom:12px;font-weight:600}
+.lockbar.on{background:#2b2230;color:#fff}
+.lockbar.off{background:var(--card);border:1px solid var(--line)}
+.lockbar button{padding:8px 12px;font-size:14px}
+.locked .types,.locked #segs,.locked .grid2,.locked #halfRow,.locked .toggle,.locked #addS,.locked #addR{opacity:.45}
+.lk{color:var(--muted);flex:none}
 .tag.g{background:#e3efe7;color:var(--pos)}
 .tag.d{background:var(--c-dispo-bg);color:var(--c-dispo)}
 .tag.o{background:var(--c-ops-bg);color:var(--c-ops)}
@@ -152,6 +158,7 @@ textarea{width:100%;min-height:140px;font:16px/1.4 ui-monospace,Menlo,monospace;
       <div style="text-align:center"><div class="mid" id="dLabel"></div><div class="small" id="dKind"></div></div>
       <button id="dNext" aria-label="Jour suivant">›</button>
     </div>
+    <div class="lockbar hidden" id="lockBar"><span id="lockTxt"></span><button class="btn alt" id="lockBtn"></button></div>
     <div class="types" id="types">
       <button data-type="dispo" class="ty dispo k-dispo">Dispo gradé</button>
       <button data-type="ops" class="ty ops k-ops">Opération</button>
@@ -209,6 +216,7 @@ textarea{width:100%;min-height:140px;font:16px/1.4 ui-monospace,Menlo,monospace;
       <span class="k-dispo">Dispo gradé</span><span class="k-ops">Opération</span><span class="k-conge">Congé</span><span class="k-z">Z</span><span class="k-ex">EX</span><span class="k-sam">Samedi</span><span class="k-dim">Dimanche / férié</span><span class="diag k-fw k-ops">Férié travaillé</span><span class="diag k-wsam k-ops">Samedi travaillé</span>
     </div>
     <div class="card days" id="mDays"></div>
+    <button class="btn alt" id="mLock" style="width:100%;margin-bottom:12px">Figer tous les jours passés du mois</button>
     <div class="card">
       <strong>Totaux du mois</strong>
       <div class="totals" style="margin-top:10px">
@@ -292,7 +300,7 @@ textarea{width:100%;min-height:140px;font:16px/1.4 ui-monospace,Menlo,monospace;
         <button class="btn" id="bkLoad" style="width:100%;margin-top:8px">Restaurer cette sauvegarde</button>
       </div>
     </div>
-    <div class="card small">Version 0.5 · aucune donnée envoyée · rien d'autre que des horaires.</div>
+    <div class="card small">Version 0.6 · aucune donnée envoyée · rien d'autre que des horaires.</div>
   </section>
 </main>
 
@@ -590,6 +598,13 @@ function renderJour(){
     box.appendChild(row);
   });
   $("tGarde").classList.toggle("on",!!x.garde);
+  var L=!!x.lock, lb=$("lockBar");
+  $("v-jour").classList.toggle("locked",L);
+  document.querySelectorAll("#segs input").forEach(function(i){i.disabled=L});
+  lb.classList.toggle("hidden",!L&&!hasContent(x));
+  lb.className="lockbar "+(L?"on":"off")+(!L&&!hasContent(x)?" hidden":"");
+  $("lockTxt").innerHTML=L?'<svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" style=\"vertical-align:-3px\"><rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"/><path d=\"M8 11V7a4 4 0 0 1 8 0v4\"/></svg> Jour figé':"Encodage terminé ?";
+  var bt=$("lockBtn"); delete bt.dataset.armed; bt.textContent=L?"Déverrouiller":"Figer ce jour";
 }
 
 /* ---------- rendu MOIS ---------- */
@@ -610,6 +625,7 @@ function renderMois(){
     var tags="";
     if(workedFerie(d,x)) tags+='<span class="tag plus">+1 j</span>';
     if(x.garde) tags+='<span class="tag g">R</span>';
+    if(x.lock) tags+='<span class="lk"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align:-3px"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>';
     if(x.segs.some(function(s){return s.t==="r"&&s.a})) tags+='<span class="tag r">Rappel</span>';
     var row=document.createElement("div"); row.className="d "+kcls(d,x); row.dataset.k=k;
     var lab=x.type?(TYN[x.type]+(isHalf(x)?" ½":"")):(f||"");
@@ -734,15 +750,23 @@ $("mNext").onclick=function(){mCur.setMonth(mCur.getMonth()+1);render()};
 $("yPrev").onclick=function(){rYear--;editCredits=false;render()};
 $("yNext").onclick=function(){rYear++;editCredits=false;render()};
 
+function blocked(k){ if(day(k).lock){ toast("Jour figé : déverrouille-le d'abord"); return true } return false }
+$("lockBtn").onclick=function(){
+  var x=day(key(cur),true), b=this;
+  if(!x.lock){ x.lock=true; save(); render(); toast("Jour figé"); return; }
+  if(b.dataset.armed){ x.lock=false; save(); render(); toast("Jour déverrouillé"); return; }
+  b.dataset.armed="1"; b.textContent="Sûr ? Touche encore";
+  setTimeout(function(){ if(b.isConnected&&b.dataset.armed){ delete b.dataset.armed; b.textContent="Déverrouiller"; } },3000);
+};
 $("bStart").onclick=function(){
-  cur=today(); var x=day(key(cur),true);
+  cur=today(); if(blocked(key(cur))){render();return} var x=day(key(cur),true);
   if(x.segs.some(function(s){return s.a&&!s.b})){toast("Un service est déjà en cours");return}
   var empty=x.segs.filter(function(s){return s.t!=="d"&&!s.a});
   if(empty.length) empty[0].a=nowHM(); else x.segs.push({t:"s",a:nowHM(),b:null});
   save(); render(); toast("Début noté à "+nowHM());
 };
 $("bEnd").onclick=function(){
-  cur=today(); var k=key(cur), x=day(k,true);
+  cur=today(); var k=key(cur); if(blocked(k)){render();return} var x=day(k,true);
   var open=x.segs.filter(function(s){return s.a&&!s.b});
   if(!open.length){
     var y=new Date(cur);y.setDate(y.getDate()-1);var xy=day(key(y));
@@ -752,25 +776,25 @@ $("bEnd").onclick=function(){
   }
   open[open.length-1].b=nowHM(); save(); render(); toast("Fin notée à "+nowHM());
 };
-$("addS").onclick=function(){day(key(cur),true).segs.push({t:"s",a:"",b:""});save();render()};
-$("addR").onclick=function(){day(key(cur),true).segs.push({t:"r",a:"",b:""});save();render()};
+$("addS").onclick=function(){if(blocked(key(cur)))return;day(key(cur),true).segs.push({t:"s",a:"",b:""});save();render()};
+$("addR").onclick=function(){if(blocked(key(cur)))return;day(key(cur),true).segs.push({t:"r",a:"",b:""});save();render()};
 $("segs").addEventListener("change",function(e){
-  var t=e.target; if(t.tagName!=="INPUT")return;
+  var t=e.target; if(t.tagName!=="INPUT")return; if(blocked(key(cur))){render();return}
   var x=day(key(cur),true), s=x.segs[+t.dataset.i]; if(!s)return;
   s[t.dataset.f]=t.value||null; save();
   render();
 });
 $("segs").addEventListener("click",function(e){
-  var t=e.target.closest("[data-del]"); if(!t)return;
+  var t=e.target.closest("[data-del]"); if(!t)return; if(blocked(key(cur)))return;
   var i=+t.dataset.del, b=t;
   if(b.dataset.armed){day(key(cur),true).segs.splice(i,1);save();render();toast("Supprimé");return}
   b.dataset.armed="1"; b.textContent="Suppr. ?"; b.style.color="var(--neg)";
   setTimeout(function(){if(b.isConnected){delete b.dataset.armed;b.textContent="×";b.style.color=""}},2500);
 });
-$("tGarde").onclick=function(){var x=day(key(cur),true);x.garde=!x.garde;save();render()};
-$("tHalf").onclick=function(){var x=day(key(cur),true);x.half=!x.half;save();render();if(x.type==="z")warnHS()};
+$("tGarde").onclick=function(){if(blocked(key(cur)))return;var x=day(key(cur),true);x.garde=!x.garde;save();render()};
+$("tHalf").onclick=function(){if(blocked(key(cur)))return;var x=day(key(cur),true);x.half=!x.half;save();render();if(x.type==="z")warnHS()};
 $("types").addEventListener("click",function(e){
-  var b=e.target.closest(".ty"); if(!b) return;
+  var b=e.target.closest(".ty"); if(!b) return; if(blocked(key(cur))) return;
   var x=day(key(cur),true), t=b.dataset.type, S=data.settings;
   if(x.type===t){ x.type=null; x.half=false; if(t==="dispo") x.segs=x.segs.filter(function(s){return s.t!=="d"}); save(); render(); return; }
   if(x.type==="dispo") x.segs=x.segs.filter(function(s){return s.t!=="d"});
@@ -780,6 +804,11 @@ $("types").addEventListener("click",function(e){
   save(); render();
   if(t==="z"){ var k=key(cur); if(counted(k)) warnHS(); else { var h=hsNow()-NORM(); if(h< -600) toast("Attention : après ce Z, heures sup à "+fmt(h,true),3500); } }
 });
+$("mLock").onclick=function(){
+  var y=mCur.getFullYear(), m=mCur.getMonth(), n=new Date(y,m+1,0).getDate(), tk=key(today()), c=0;
+  for(var i=1;i<=n;i++){ var k=key(new Date(y,m,i)), x=data.days[k]; if(x&&k<tk&&hasContent(x)&&!x.lock){x.lock=true;c++} }
+  save(); render(); toast(c?c+" jour"+(c>1?"s":"")+" figé"+(c>1?"s":""):"Rien de plus à figer");
+};
 $("mDays").addEventListener("click",function(e){var r=e.target.closest(".d");if(!r)return;cur=parseKey(r.dataset.k);view="jour";render();window.scrollTo(0,0)});
 
 /* récap : congés */
