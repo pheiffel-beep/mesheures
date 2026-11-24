@@ -174,13 +174,18 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:10p
 .wcol div.on{color:var(--text,#2b2230);font-size:30px;font-weight:700}
 .tpbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .tpbtns button{padding:12px 4px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:44px;height:44px;border-radius:11px;box-shadow:0 2px 8px rgba(74,40,88,.3);flex:none}
 </style>
 </head>
 <body>
 <header>
-  <div>
-    <h1 id="title">Heurêka</h1>
-    <div class="sub" id="subtitle"></div>
+  <div class="brand">
+    <img class="logo" src="icons/icon-192.png" alt="" width="44" height="44">
+    <div>
+      <h1 id="title">Heurêka</h1>
+      <div class="sub" id="subtitle"></div>
+    </div>
   </div>
   <button class="langbtn" id="langBtn" aria-label="Langue / Taal"></button>
 </header>
@@ -409,7 +414,7 @@ fr:{
 "r.bktxt":"Tes données restent uniquement sur ce téléphone. Enregistre régulièrement une sauvegarde : un fichier que tu ranges dans Fichiers (iCloud Drive), ton Drive ou que tu t'envoies par mail.",
 "r.bkfile":"Enregistrer une sauvegarde","r.bkopen":"Restaurer depuis un fichier","r.bkother":"Autre méthode : copier / coller",
 "r.bkcopy":"Copier la sauvegarde","r.bkpaste":"Colle ici une sauvegarde","r.bkload":"Restaurer cette sauvegarde",
-"r.version":"Version 0.18 · aucune donnée envoyée · rien d'autre que des horaires.",
+"r.version":"Version 0.19 · aucune donnée envoyée · rien d'autre que des horaires.",
 "nav.jour":"Jour","nav.mois":"Mois","nav.recap":"Récap","nav.reg":"Réglages",
 
 "s.s":"Service","s.r":"Rappel","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Congé","y.z":"Z","y.ex":"EX",
@@ -528,7 +533,7 @@ nl:{
 "r.bktxt":"Je gegevens blijven enkel op deze telefoon. Maak regelmatig een back-up: een bestand dat je bewaart in Bestanden (iCloud Drive), in je Drive of dat je naar jezelf mailt.",
 "r.bkfile":"Back-up opslaan","r.bkopen":"Herstellen vanuit een bestand","r.bkother":"Andere methode: kopiëren / plakken",
 "r.bkcopy":"Back-up kopiëren","r.bkpaste":"Plak hier een back-up","r.bkload":"Deze back-up herstellen",
-"r.version":"Versie 0.18 · geen gegevens verstuurd · enkel uurroosters.",
+"r.version":"Versie 0.19 · geen gegevens verstuurd · enkel uurroosters.",
 "nav.jour":"Dag","nav.mois":"Maand","nav.recap":"Overzicht","nav.reg":"Instellingen",
 
 "s.s":"Dienst","s.r":"Oproep","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Verlof","y.z":"Z","y.ex":"EX",
