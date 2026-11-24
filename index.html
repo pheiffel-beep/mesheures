@@ -53,6 +53,8 @@ button{font:inherit;border:0;border-radius:12px;padding:12px 14px;cursor:pointer
 .lockbar button{padding:8px 12px;font-size:14px}
 .locked .types,.locked #segs,.locked .grid2,.locked #halfRow,.locked .toggle,.locked #addS,.locked #addR{opacity:.45}
 .lk{color:var(--muted);flex:none}
+.bkwarn{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fdf0d8;border:1px solid #f0d49a;color:#7a4e0c;border-radius:12px;padding:10px 12px;font-size:14px;margin-bottom:12px}
+.bkwarn button{padding:8px 10px;font-size:13px;flex:none}
 .tag.g{background:#e3efe7;color:var(--pos)}
 .tag.d{background:var(--c-dispo-bg);color:var(--c-dispo)}
 .tag.o{background:var(--c-ops-bg);color:var(--c-ops)}
@@ -152,6 +154,7 @@ textarea{width:100%;min-height:140px;font:16px/1.4 ui-monospace,Menlo,monospace;
 </header>
 <main>
   <!-- JOUR -->
+  <div class="bkwarn hidden" id="bkWarn"><span id="bkWarnTxt"></span><button class="btn" id="bkNow">Copier</button></div>
   <section id="v-jour">
     <div class="navd">
       <button id="dPrev" aria-label="Jour précédent">‹</button>
@@ -295,12 +298,13 @@ textarea{width:100%;min-height:140px;font:16px/1.4 ui-monospace,Menlo,monospace;
         <button class="btn alt" id="bkCopy">Copier la sauvegarde</button>
         <button class="btn alt" id="bkShow">Restaurer…</button>
       </div>
+      <div class="note" id="bkLast"></div>
       <div id="bkBox" class="hidden" style="margin-top:10px">
         <textarea id="bkText" placeholder="Colle ici une sauvegarde"></textarea>
         <button class="btn" id="bkLoad" style="width:100%;margin-top:8px">Restaurer cette sauvegarde</button>
       </div>
     </div>
-    <div class="card small">Version 0.6 · aucune donnée envoyée · rien d'autre que des horaires.</div>
+    <div class="card small">Version 0.7 · aucune donnée envoyée · rien d'autre que des horaires.</div>
   </section>
 </main>
 
@@ -729,8 +733,23 @@ function renderReg(){
   fl.innerHTML=h||'<div class="small">Aucun.</div>';
 }
 
+var BK_DAYS=7;
+function bkAge(){ if(!data.lastBackup) return null; return Math.floor((Date.now()-data.lastBackup)/86400000); }
+function renderBk(){
+  var a=bkAge(), has=Object.keys(data.days).length>0;
+  var show=has&&(a===null||a>=BK_DAYS)&&(view==="jour"||view==="mois");
+  $("bkWarn").classList.toggle("hidden",!show);
+  $("bkWarnTxt").textContent=a===null?"Aucune sauvegarde de tes heures pour l'instant.":"Dernière sauvegarde il y a "+a+" jours.";
+  $("bkLast").textContent=a===null?"Pas encore de sauvegarde.":"Dernière sauvegarde : "+(a===0?"aujourd'hui":a===1?"hier":"il y a "+a+" jours")+". Un rappel s'affiche après "+BK_DAYS+" jours.";
+}
+function doBackup(){
+  data.lastBackup=Date.now(); save();
+  copy(JSON.stringify(data),"Sauvegarde copiée : colle-la dans Notes");
+  renderBk();
+}
 function render(){
   psMemo={};
+  renderBk();
   ["jour","mois","recap","reg"].forEach(function(v){$("v-"+v).classList.toggle("hidden",v!==view)});
   document.querySelectorAll("nav button").forEach(function(b){b.classList.toggle("on",b.dataset.v===view)});
   var t=today();
@@ -885,7 +904,8 @@ function copy(text,msg){
   function fallback(){var ta=document.createElement("textarea");ta.value=text;ta.readOnly=true;ta.style.cssText="position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;font-size:16px";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");toast(msg)}catch(e){toast("Sélectionne le texte et copie-le")}ta.remove()}
   try{navigator.clipboard.writeText(text).then(function(){toast(msg)},fallback)}catch(e){fallback()}
 }
-$("bkCopy").onclick=function(){copy(JSON.stringify(data),"Sauvegarde copiée")};
+$("bkCopy").onclick=doBackup;
+$("bkNow").onclick=doBackup;
 $("bkShow").onclick=function(){$("bkBox").classList.toggle("hidden")};
 $("bkLoad").onclick=function(){
   try{var d=JSON.parse($("bkText").value); if(!d.days) throw 0; data=d; migrate(); save(); render(); toast("Sauvegarde restaurée"); $("bkBox").classList.add("hidden")}
