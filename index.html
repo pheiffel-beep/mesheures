@@ -404,7 +404,7 @@ fr:{
 "r.bktxt":"Tes données restent uniquement sur ce téléphone. Enregistre régulièrement une sauvegarde : un fichier que tu ranges dans Fichiers (iCloud Drive), ton Drive ou que tu t'envoies par mail.",
 "r.bkfile":"Enregistrer une sauvegarde","r.bkopen":"Restaurer depuis un fichier","r.bkother":"Autre méthode : copier / coller",
 "r.bkcopy":"Copier la sauvegarde","r.bkpaste":"Colle ici une sauvegarde","r.bkload":"Restaurer cette sauvegarde",
-"r.version":"Version 0.15 · aucune donnée envoyée · rien d'autre que des horaires.",
+"r.version":"Version 0.16 · aucune donnée envoyée · rien d'autre que des horaires.",
 "nav.jour":"Jour","nav.mois":"Mois","nav.recap":"Récap","nav.reg":"Réglages",
 
 "s.s":"Service","s.r":"Rappel","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Congé","y.z":"Z","y.ex":"EX",
@@ -523,7 +523,7 @@ nl:{
 "r.bktxt":"Je gegevens blijven enkel op deze telefoon. Maak regelmatig een back-up: een bestand dat je bewaart in Bestanden (iCloud Drive), in je Drive of dat je naar jezelf mailt.",
 "r.bkfile":"Back-up opslaan","r.bkopen":"Herstellen vanuit een bestand","r.bkother":"Andere methode: kopiëren / plakken",
 "r.bkcopy":"Back-up kopiëren","r.bkpaste":"Plak hier een back-up","r.bkload":"Deze back-up herstellen",
-"r.version":"Versie 0.15 · geen gegevens verstuurd · enkel uurroosters.",
+"r.version":"Versie 0.16 · geen gegevens verstuurd · enkel uurroosters.",
 "nav.jour":"Dag","nav.mois":"Maand","nav.recap":"Overzicht","nav.reg":"Instellingen",
 
 "s.s":"Dienst","s.r":"Oproep","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Verlof","y.z":"Z","y.ex":"EX",
@@ -752,12 +752,20 @@ function day(k,create){
   if(!x&&create){x=data.days[k]={segs:[],garde:false,type:null}}
   return x||{segs:[],garde:false,type:null};
 }
+/* pause du Dispo gradé : seulement sur une journée complète (durée au moins égale à l'horaire standard) */
+function pauseOn(s){
+  if(!s.p) return false;
+  var S=data.settings, std=toMin(S.dispoB)-toMin(S.dispoA); if(std<=0) std+=1440;
+  var a=toMin(s.a), b=toMin(s.b); if(a==null||b==null) return true;
+  var d=b-a; if(d<0) d+=1440;
+  return d>=std;
+}
 function segMin(s,live){
   var a=toMin(s.a); if(a==null) return 0;
   var b=toMin(s.b);
   if(b==null){ if(!live) return 0; b=toMin(nowHM()); }
   var d=b-a; if(d<0) d+=1440;
-  if(s.p && s.b) d-= s.p;
+  if(s.b && pauseOn(s)) d-= s.p;
   if(s.t==="r" && s.b) d+=2*(data.settings.rappelPad||0);
   return Math.max(0,d);
 }
@@ -915,7 +923,7 @@ function renderJour(keepSegs){
   var padR=data.settings.rappelPad||0;
   x.segs.forEach(function(s,i){
     var row=document.createElement("div"); row.className="seg";
-    var sub=s.p?'<br><span class="pz">−'+s.p+' min</span>':(s.t==="r"&&padR?'<br><span class="pz">+'+(2*padR)+' min</span>':'');
+    var sub=pauseOn(s)?'<br><span class="pz">−'+s.p+' min</span>':(s.t==="r"&&padR?'<br><span class="pz">+'+(2*padR)+' min</span>':'');
     row.innerHTML='<span class="tag '+(s.t==="r"?"r":s.t==="d"?"d":(x.type==="ops"?"o":""))+'">'+(s.t==="s"&&x.type==="ops"?"Ops":TLAB[s.t])+sub+'</span>'+
       '<button class="tbtn" data-i="'+i+'" data-f="a" aria-label="'+esc(t("a.begin"))+'">'+(s.a||"--:--")+'</button>'+
       '<span class="small">→</span>'+
