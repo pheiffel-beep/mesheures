@@ -381,7 +381,7 @@ fr:{
 "r.bktxt":"Tes données restent uniquement sur ce téléphone. Enregistre régulièrement une sauvegarde : un fichier que tu ranges dans Fichiers (iCloud Drive), ton Drive ou que tu t'envoies par mail.",
 "r.bkfile":"Enregistrer une sauvegarde","r.bkopen":"Restaurer depuis un fichier","r.bkother":"Autre méthode : copier / coller",
 "r.bkcopy":"Copier la sauvegarde","r.bkpaste":"Colle ici une sauvegarde","r.bkload":"Restaurer cette sauvegarde",
-"r.version":"Version 0.10 · aucune donnée envoyée · rien d'autre que des horaires.",
+"r.version":"Version 0.11 · aucune donnée envoyée · rien d'autre que des horaires.",
 "nav.jour":"Jour","nav.mois":"Mois","nav.recap":"Récap","nav.reg":"Réglages",
 
 "s.s":"Service","s.r":"Rappel","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Congé","y.z":"Z","y.ex":"EX",
@@ -498,7 +498,7 @@ nl:{
 "r.bktxt":"Je gegevens blijven enkel op deze telefoon. Maak regelmatig een back-up: een bestand dat je bewaart in Bestanden (iCloud Drive), in je Drive of dat je naar jezelf mailt.",
 "r.bkfile":"Back-up opslaan","r.bkopen":"Herstellen vanuit een bestand","r.bkother":"Andere methode: kopiëren / plakken",
 "r.bkcopy":"Back-up kopiëren","r.bkpaste":"Plak hier een back-up","r.bkload":"Deze back-up herstellen",
-"r.version":"Versie 0.10 · geen gegevens verstuurd · enkel uurroosters.",
+"r.version":"Versie 0.11 · geen gegevens verstuurd · enkel uurroosters.",
 "nav.jour":"Dag","nav.mois":"Maand","nav.recap":"Overzicht","nav.reg":"Instellingen",
 
 "s.s":"Dienst","s.r":"Oproep","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Verlof","y.z":"Z","y.ex":"EX",
@@ -1147,11 +1147,20 @@ $("bEnd").onclick=function(){
 };
 $("addS").onclick=function(){if(blocked(key(cur)))return;day(key(cur),true).segs.push({t:"s",a:"",b:""});save();render()};
 $("addR").onclick=function(){if(blocked(key(cur)))return;day(key(cur),true).segs.push({t:"r",a:"",b:""});save();render()};
+var segDirty=false;
 $("segs").addEventListener("change",function(e){
   var t_=e.target; if(t_.tagName!=="INPUT")return; if(blocked(key(cur))){render();return}
   var x=day(key(cur),true), s=x.segs[+t_.dataset.i]; if(!s)return;
   s[t_.dataset.f]=t_.value||null; save();
-  render(true);
+  /* tant que le sélecteur d'heure est ouvert, on ne touche à rien d'autre que la durée et le total
+     (toute mise en page qui bouge le ferme sur iPhone) ; le reste est mis à jour à la fermeture */
+  segDirty=true;
+  x.segs.forEach(function(sg,i){var e=$("dur"+i); if(e) e.textContent=sg.b?fmt(segMin(sg)):"…";});
+  $("dTotal").textContent=fmt(credit(key(cur),true));
+});
+$("segs").addEventListener("focusout",function(){
+  if(!segDirty) return;
+  setTimeout(function(){ if(segDirty&&!(document.activeElement&&document.activeElement.type==="time")){ segDirty=false; render(true); } },250);
 });
 $("segs").addEventListener("click",function(e){
   var t_=e.target.closest("[data-del]"); if(!t_)return; if(blocked(key(cur)))return;
