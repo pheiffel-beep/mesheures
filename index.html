@@ -185,12 +185,13 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:10p
 .tag.fo{background:var(--c-form-bg);color:var(--c-form)}
 .ty.prep.on{border-color:var(--k)}
 .k-mix{--kd:var(--c-dispo-bg);--kdk:var(--c-dispo)}
+.k-mixf{--kd:var(--c-form-bg);--kdk:var(--c-form)}
 .tag.sp{background:#fff;color:#000;border:1px solid #2b2230}
 .legend .sp{background:#fff;color:#000;border:1px solid #2b2230}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chips button{padding:7px 12px;font-size:14px;border-radius:999px;background:#efe6f2;color:var(--accent);font-weight:600}
 .chips button.on{background:var(--c-dispo);color:#fff}
-.locked #bMiss,.locked #brkCard,.locked #prepRow,.locked #fpCard{opacity:.45}
+.locked #bMiss,.locked #pzCard,.locked #prepRow{opacity:.45}
 .brand{display:flex;align-items:center;gap:12px}
 .logo{width:44px;height:44px;border-radius:11px;box-shadow:0 2px 8px rgba(74,40,88,.3);flex:none}
 </style>
@@ -242,18 +243,13 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:10p
       <button class="btn alt" id="bEnd" data-i18n="d.end"></button>
     </div>
     <button class="btn alt hidden" id="bMiss" style="width:100%;margin-bottom:12px" data-i18n="mi.btn"></button>
-    <div class="card hidden" id="fpCard">
-      <div class="toggle"><span data-i18n="fp.lab"></span><div class="sw" id="tFp"></div></div>
-      <div class="row between hidden" id="fpDur" style="margin-top:4px"><span class="small" data-i18n="fp.dur"></span><div class="chips" id="fpChips"><button data-m="30">30 min</button><button data-m="60">1 h</button></div></div>
-      <div class="note" id="fpNote"></div>
-    </div>
-    <div class="card hidden" id="brkCard">
-      <div class="toggle"><span data-i18n="br.lab"></span><div class="sw" id="tBrk"></div></div>
-      <div class="grid2 hidden" id="brkTimes" style="margin-top:4px">
-        <div><div class="small" data-i18n="r.from"></div><button class="tbtn" id="brkA"></button></div>
-        <div><div class="small" data-i18n="r.to"></div><button class="tbtn" id="brkB"></button></div>
+    <div class="card hidden" id="pzCard">
+      <div class="toggle"><span data-i18n="pz.lab"></span><div class="sw" id="tPz"></div></div>
+      <div class="hidden" id="pzOpts">
+        <div class="row between" style="margin-top:4px"><span class="small" data-i18n="fp.dur"></span><div class="chips" id="pzChips"><button data-m="30">30 min</button><button data-m="60">1 h</button></div></div>
+        <div class="row between hidden" id="pzWin" style="margin-top:8px"><span class="small" data-i18n="pz.win"></span><button class="tbtn" id="pzA" style="width:auto;padding:6px 14px"></button></div>
       </div>
-      <div class="note" id="brkNote"></div>
+      <div class="note" id="pzNote"></div>
     </div>
     <div class="card">
       <div class="row between" style="margin-bottom:4px">
@@ -487,7 +483,7 @@ fr:{
 "r.bktxt":"Tes données restent uniquement sur ce téléphone. Enregistre régulièrement une sauvegarde : un fichier que tu ranges dans Fichiers (iCloud Drive), ton Drive ou que tu t'envoies par mail.",
 "r.bkfile":"Enregistrer une sauvegarde","r.bkopen":"Restaurer depuis un fichier","r.bkother":"Autre méthode : copier / coller",
 "r.bkcopy":"Copier la sauvegarde","r.bkpaste":"Colle ici une sauvegarde","r.bkload":"Restaurer cette sauvegarde",
-"r.version":"Version 0.24 · aucune donnée envoyée · rien d'autre que des horaires.",
+"r.version":"Version 0.25 · aucune donnée envoyée · rien d'autre que des horaires.",
 "nav.jour":"Jour","nav.mois":"Mois","nav.recap":"Récap","nav.reg":"Réglages",
 
 "s.s":"Service","s.r":"Rappel","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Congé","y.z":"Z","y.ex":"EX",
@@ -570,7 +566,7 @@ fr:{
 "fe.nouvelan":"Nouvel An","fe.paques":"Lundi de Pâques","fe.travail":"Fête du Travail","fe.ascension":"Ascension","fe.pentecote":"Lundi de Pentecôte","fe.nationale":"Fête nationale","fe.assomption":"Assomption","fe.toussaint":"Toussaint","fe.armistice":"Armistice","fe.noel":"Noël",
 "fe.defunts":"Jour des défunts","fe.roi":"Fête du Roi","fe.lendemain":"Lendemain de Noël",
 "cl.report":"Report congé année précédente","cl.pentecote":"Congé supplémentaire (lundi de Pentecôte travaillé)","cl.cg":"Jours CG","cl.feries":"Fériés au choix (15/11 et 26/12)","cl.vacances":"Congé annuel de vacances","cl.new":"Nouveau crédit",
-"tk.title":"Quel type de journée ?","ty.desc":"Descendant","y.desc":"Descendant","t.desc":"Descendants","a.desc":"Desc.","ex.desc":"Descendant : norme de 0 h, rien n'est retiré des heures sup.","ds.title":"Service terminé après minuit","ds.ask":function(d){return "Mettre "+d+" en descendant ?"},"ds.yes":"Oui","ds.no":"Non","ds.done":function(d){return d+" : descendant"},"ty.form":"Formation","y.form":"Formation","t.form":"Formations","a.form":"Form.","fp.lab":"Pause","fp.dur":"Durée","fp.cut":function(x){return x+" de pause déduite"},"fp.wait":function(x){return x+" de pause seront déduites à la fin"},"fp.off":"Sans pause : rien n'est déduit.","fp.enc":"Formation : encode l'heure de début","r.dstart":"Heure de début","d.dstart":function(a,b){return "Dispo à partir de "+a+" (jusqu'à "+b+")"},"r.dset":function(a,b){return "Dispo gradé : "+a+" – "+b},
+"tk.title":"Quel type de journée ?","pz.lab":"Pause repas","pz.win":"Horaire","pz.range":function(a,b){return a+" – "+b},"pz.cut":function(x){return x+" de pause déduite"},"pz.wait":function(x){return x+" de pause seront déduites à la fin"},"pz.nocov":function(a,b){return "Rien n'est déduit : ton service ne couvre pas "+a+" – "+b+"."},"pz.off":"Sans pause : rien n'est déduit.","pz.first":"Pause de midi : déduite seulement si ton service couvre ce créneau.","mi.fm":function(x){return "Mission à "+x+" : formation, puis opération"},"ty.desc":"Descendant","y.desc":"Descendant","t.desc":"Descendants","a.desc":"Desc.","ex.desc":"Descendant : norme de 0 h, rien n'est retiré des heures sup.","ds.title":"Service terminé après minuit","ds.ask":function(d){return "Mettre "+d+" en descendant ?"},"ds.yes":"Oui","ds.no":"Non","ds.done":function(d){return d+" : descendant"},"ty.form":"Formation","y.form":"Formation","t.form":"Formations","a.form":"Form.","fp.lab":"Pause","fp.dur":"Durée","fp.cut":function(x){return x+" de pause déduite"},"fp.wait":function(x){return x+" de pause seront déduites à la fin"},"fp.off":"Sans pause : rien n'est déduit.","fp.enc":"Formation : encode l'heure de début","r.dstart":"Heure de début","d.dstart":function(a,b){return "Dispo à partir de "+a+" (jusqu'à "+b+")"},"r.dset":function(a,b){return "Dispo gradé : "+a+" – "+b},
 "ty.prep":"Préparation","y.prep":"Prépa","t.prep":"Préparations","p.which":"Préparation :","p.none":"Ajoute tes préparations dans Réglages",
 "mi.btn":"Mission tombée à…","mi.title":"Heure de départ en mission",
 "mi.am":function(x){return "Mission à "+x+" : service continu, sans pause"},"mi.pm":function(x){return "Mission à "+x+" : dispo, puis opération"},
@@ -620,7 +616,7 @@ nl:{
 "r.bktxt":"Je gegevens blijven enkel op deze telefoon. Maak regelmatig een back-up: een bestand dat je bewaart in Bestanden (iCloud Drive), in je Drive of dat je naar jezelf mailt.",
 "r.bkfile":"Back-up opslaan","r.bkopen":"Herstellen vanuit een bestand","r.bkother":"Andere methode: kopiëren / plakken",
 "r.bkcopy":"Back-up kopiëren","r.bkpaste":"Plak hier een back-up","r.bkload":"Deze back-up herstellen",
-"r.version":"Versie 0.24 · geen gegevens verstuurd · enkel uurroosters.",
+"r.version":"Versie 0.25 · geen gegevens verstuurd · enkel uurroosters.",
 "nav.jour":"Dag","nav.mois":"Maand","nav.recap":"Overzicht","nav.reg":"Instellingen",
 
 "s.s":"Dienst","s.r":"Oproep","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Verlof","y.z":"Z","y.ex":"EX",
@@ -703,7 +699,7 @@ nl:{
 "fe.nouvelan":"Nieuwjaar","fe.paques":"Paasmaandag","fe.travail":"Dag van de Arbeid","fe.ascension":"O.L.H. Hemelvaart","fe.pentecote":"Pinkstermaandag","fe.nationale":"Nationale feestdag","fe.assomption":"O.L.V. Hemelvaart","fe.toussaint":"Allerheiligen","fe.armistice":"Wapenstilstand","fe.noel":"Kerstmis",
 "fe.defunts":"Allerzielen","fe.roi":"Koningsdag","fe.lendemain":"Tweede kerstdag",
 "cl.report":"Overdracht verlof vorig jaar","cl.pentecote":"Bijkomend verlof (Pinkstermaandag gewerkt)","cl.cg":"CG-dagen","cl.feries":"Feestdagen naar keuze (15/11 en 26/12)","cl.vacances":"Jaarlijks vakantieverlof","cl.new":"Nieuw tegoed",
-"tk.title":"Welk soort dag?","ty.desc":"Na nacht","y.desc":"Na nacht","t.desc":"Na nacht","a.desc":"N.n.","ex.desc":"Na nacht: dagnorm 0 u, er wordt niets van de overuren afgetrokken.","ds.title":"Dienst beëindigd na middernacht","ds.ask":function(d){return d+" als « na nacht » noteren?"},"ds.yes":"Ja","ds.no":"Nee","ds.done":function(d){return d+": na nacht"},"ty.form":"Opleiding","y.form":"Opleiding","t.form":"Opleidingen","a.form":"Opl.","fp.lab":"Pauze","fp.dur":"Duur","fp.cut":function(x){return x+" pauze afgetrokken"},"fp.wait":function(x){return x+" pauze wordt op het einde afgetrokken"},"fp.off":"Zonder pauze: er wordt niets afgetrokken.","fp.enc":"Opleiding: voer het beginuur in","r.dstart":"Beginuur","d.dstart":function(a,b){return "Dispo vanaf "+a+" (tot "+b+")"},"r.dset":function(a,b){return "Dispo gegradeerde: "+a+" – "+b},
+"tk.title":"Welk soort dag?","pz.lab":"Maaltijdpauze","pz.win":"Tijdstip","pz.range":function(a,b){return a+" – "+b},"pz.cut":function(x){return x+" pauze afgetrokken"},"pz.wait":function(x){return x+" pauze wordt op het einde afgetrokken"},"pz.nocov":function(a,b){return "Niets afgetrokken: je dienst valt niet in "+a+" – "+b+"."},"pz.off":"Zonder pauze: er wordt niets afgetrokken.","pz.first":"Middagpauze: enkel afgetrokken als je dienst dit tijdslot dekt.","mi.fm":function(x){return "Opdracht om "+x+": opleiding, daarna operatie"},"ty.desc":"Na nacht","y.desc":"Na nacht","t.desc":"Na nacht","a.desc":"N.n.","ex.desc":"Na nacht: dagnorm 0 u, er wordt niets van de overuren afgetrokken.","ds.title":"Dienst beëindigd na middernacht","ds.ask":function(d){return d+" als « na nacht » noteren?"},"ds.yes":"Ja","ds.no":"Nee","ds.done":function(d){return d+": na nacht"},"ty.form":"Opleiding","y.form":"Opleiding","t.form":"Opleidingen","a.form":"Opl.","fp.lab":"Pauze","fp.dur":"Duur","fp.cut":function(x){return x+" pauze afgetrokken"},"fp.wait":function(x){return x+" pauze wordt op het einde afgetrokken"},"fp.off":"Zonder pauze: er wordt niets afgetrokken.","fp.enc":"Opleiding: voer het beginuur in","r.dstart":"Beginuur","d.dstart":function(a,b){return "Dispo vanaf "+a+" (tot "+b+")"},"r.dset":function(a,b){return "Dispo gegradeerde: "+a+" – "+b},
 "ty.prep":"Voorbereiding","y.prep":"Voorb.","t.prep":"Voorbereidingen","p.which":"Voorbereiding:","p.none":"Voeg je voorbereidingen toe in Instellingen",
 "mi.btn":"Opdracht binnen om…","mi.title":"Vertrekuur opdracht",
 "mi.am":function(x){return "Opdracht om "+x+": doorlopende dienst, zonder pauze"},"mi.pm":function(x){return "Opdracht om "+x+": dispo, daarna operatie"},
@@ -867,46 +863,53 @@ function day(k,create){
   if(!x&&create){x=data.days[k]={segs:[],garde:false,type:null}}
   return x||{segs:[],garde:false,type:null};
 }
-/* pause du Dispo gradé : seulement sur une journée complète (durée au moins égale à l'horaire standard) */
-function pauseOn(s){
-  if(!s.p) return false;
-  var S=data.settings, std=toMin(S.dispoB)-toMin(S.dispoA); if(std<=0) std+=1440;
-  var a=toMin(s.a), b=toMin(s.b); if(a==null||b==null) return true;
-  var d=b-a; if(d<0) d+=1440;
-  return d>=std;
-}
 function segMin(s,live){
   var a=toMin(s.a); if(a==null) return 0;
   var b=toMin(s.b);
   if(b==null){ if(!live) return 0; b=toMin(nowHM()); }
   var d=b-a; if(d<0) d+=1440;
-  if(s.b && pauseOn(s)) d-= s.p;
   if(s.t==="r" && s.b) d+=2*(data.settings.rappelPad||0);
   return Math.max(0,d);
 }
 /* jour de type dispo gradé ou préparation (même calcul) */
 function dispoLike(ty){return ty==="dispo"||ty==="prep"}
-/* interruption repas (dispo puis opération) : minutes qui tombent dans l'interruption */
-function brkCut(x,live){
-  var br=x.brk; if(!br||!br.on) return 0;
-  var ba=toMin(br.a), bb=toMin(br.b); if(ba==null||bb==null||bb<=ba) return 0;
-  var cut=0;
+/* pause repas du jour : {on, m (minutes), a (début du créneau, ou null = pause libre)} */
+function pzDefault(ty){
+  var S=data.settings;
+  if(dispoLike(ty)) return {on:(S.dispoP||0)>0,m:S.dispoP||30,a:"12:00"};
+  if(ty==="form") return {on:true,m:60,a:null};
+  return {on:false,m:30,a:null};
+}
+/* anciennes données (avant v0.25) : on reconstruit la pause */
+function pzOf(x){
+  if(x.pz) return x.pz;
+  if(x.mix&&x.brk){var d=toMin(x.brk.b)-toMin(x.brk.a); return {on:!!x.brk.on,m:d>0?d:30,a:x.brk.a}}
+  if(x.type==="form"&&x.fp) return {on:!!x.fp.on,m:x.fp.m||60,a:null};
+  if(dispoLike(x.type)){var ds=x.segs.filter(function(s){return s.t==="d"})[0]; return {on:!!(ds&&ds.p),m:(ds&&ds.p)||30,a:"12:00"}}
+  return pzDefault(x.type);
+}
+function pzSegs(x,live){
+  var r=[];
   x.segs.forEach(function(s){
     if(s.t==="r") return;
     var a=toMin(s.a); if(a==null) return;
     var b=toMin(s.b); if(b==null){ if(!live) return; b=toMin(nowHM()); }
-    if(b<a) b+=1440;
-    cut+=Math.max(0,Math.min(b,bb)-Math.max(a,ba));
+    if(b<a) b+=1440; r.push([a,b]);
   });
-  return cut;
+  return r;
 }
-/* pause de formation : déduite dès qu'un service de la journée est terminé */
-function fpCut(x,tot){
-  if(x.type!=="form"||!x.fp||!x.fp.on) return 0;
+/* minutes de pause à retirer */
+function pzCut(x,tot,live){
+  var pz=pzOf(x); if(!pz.on||!pz.m) return 0;
+  if(pz.a){
+    var ba=toMin(pz.a), bb=ba+pz.m, cut=0;
+    pzSegs(x,live).forEach(function(r){cut+=Math.max(0,Math.min(r[1],bb)-Math.max(r[0],ba))});
+    return Math.min(cut,tot);
+  }
   if(!x.segs.some(function(s){return s.t!=="r"&&s.a&&s.b})) return 0;
-  return Math.min(x.fp.m||0,tot);
+  return Math.min(pz.m,tot);
 }
-function worked(k,live){var x=day(k),lv=live&&k===key(today()),t=0; x.segs.forEach(function(s){t+=segMin(s,lv)}); t=Math.max(0,t-brkCut(x,lv)); return t-fpCut(x,t);}
+function worked(k,live){var x=day(k),lv=live&&k===key(today()),t=0; x.segs.forEach(function(s){t+=segMin(s,lv)}); return t-pzCut(x,t,lv);}
 function sportMin(x){return x.sport||0}
 function hasContent(x){return !!(x.type||x.sport||x.segs.some(function(s){return s.a}))}
 function prepLab(x){return t("y.prep")+(x.prep?" "+x.prep:"")}
@@ -942,7 +945,7 @@ function kcls(d,x){
   if(workedFerie(d,x)) return "diag k-fw "+tc;
   if(!isWeekday(d)&&(!t||dispoLike(t)||t==="ops"||t==="form")&&(t||x.segs.some(function(s){return s.a&&s.b})))
     return "diag "+(d.getDay()===6&&!ferie(d)?"k-wsam":"k-wdim")+" "+tc;
-  if(x.mix&&t==="ops") return "diag k-mix k-ops";
+  if(x.mix&&t==="ops") return "diag "+(x.from==="form"?"k-mixf":"k-mix")+" k-ops";
   if(t) return "k-"+t;
   if(ferie(d)) return "k-fer";
   if(d.getDay()===6) return "k-sam";
@@ -1038,31 +1041,26 @@ function renderJour(keepSegs){
   $("dayCard").className="card daycard "+kcls(cur,x);
   document.querySelectorAll("#types .ty").forEach(function(b){b.classList.toggle("on",x.type===b.dataset.type)});
   var showHalf=(dispoLike(x.type)||x.type==="ops"||x.type==="form")&&wd&&!f;
-  /* pause de formation */
-  $("fpCard").classList.toggle("hidden",x.type!=="form");
-  if(x.type==="form"){
-    var fp=x.fp||{on:false,m:60};
-    $("tFp").classList.toggle("on",!!fp.on);
-    $("fpDur").classList.toggle("hidden",!fp.on);
-    document.querySelectorAll("#fpChips button").forEach(function(b){b.classList.toggle("on",+b.dataset.m===fp.m)});
-    var fc=fpCut(x,1e9);
-    $("fpNote").textContent=!fp.on?t("fp.off"):fc?t("fp.cut",fmt(fc)):t("fp.wait",fmt(fp.m));
+  /* pause repas */
+  var showPz=dispoLike(x.type)||x.type==="form"||x.type==="ops";
+  $("pzCard").classList.toggle("hidden",!showPz);
+  if(showPz){
+    var pz=pzOf(x), pc=pzCut(x,1e9,isToday);
+    $("tPz").classList.toggle("on",!!pz.on);
+    $("pzOpts").classList.toggle("hidden",!pz.on);
+    document.querySelectorAll("#pzChips button").forEach(function(b){b.classList.toggle("on",+b.dataset.m===pz.m)});
+    $("pzWin").classList.toggle("hidden",!pz.a);
+    if(pz.a) $("pzA").textContent=t("pz.range",pz.a,addMin(pz.a,pz.m));
+    $("pzA").disabled=!!x.lock;
+    var done=x.segs.some(function(s){return s.t!=="r"&&s.a&&s.b});
+    $("pzNote").textContent=!pz.on?t("pz.off"):pc?t("pz.cut",fmt(pc)):pz.a?(done?t("pz.nocov",pz.a,addMin(pz.a,pz.m)):t("pz.first")):t("pz.wait",fmt(pz.m));
   }
   /* choix de la préparation */
   var pr=$("prepRow"), S=data.settings;
   pr.classList.toggle("hidden",!(x.type==="prep"||(x.mix&&x.from==="prep")));
   $("prepChips").innerHTML=S.preps.length?S.preps.map(function(n){return '<button data-prep="'+esc(n)+'" class="'+(x.prep===n?"on":"")+'">'+esc(n)+'</button>'}).join(""):'<span class="small">'+esc(t("p.none"))+'</span>';
   /* dispo puis opération */
-  $("bMiss").classList.toggle("hidden",!(dispoLike(x.type)&&x.segs.some(function(s){return s.t==="d"})));
-  $("brkCard").classList.toggle("hidden",!x.mix);
-  if(x.mix){
-    var br=x.brk||{on:false,a:"12:00",b:"12:30"};
-    $("tBrk").classList.toggle("on",!!br.on);
-    $("brkTimes").classList.toggle("hidden",!br.on);
-    $("brkA").textContent=br.a; $("brkB").textContent=br.b;
-    $("brkA").disabled=$("brkB").disabled=!!x.lock;
-    $("brkNote").textContent=br.on?t("br.cut",fmt(brkCut(x,isToday))):t("br.off");
-  }
+  $("bMiss").classList.toggle("hidden",!((dispoLike(x.type)&&x.segs.some(function(s){return s.t==="d"}))||x.type==="form"));
   /* sport */
   $("sportRow").classList.toggle("hidden",!S.sport&&!x.sport);
   $("tSport").classList.toggle("on",!!x.sport);
@@ -1077,7 +1075,7 @@ function renderJour(keepSegs){
     if(x.type==="conge") ex=isHalf(x)?t("ex.congeh"):t("ex.conge1");
     if(x.type==="ex") ex=t("ex.ex",fmt(NORM()));
   }
-  if(x.mix&&x.mt) ex=t("ex.mix",x.from==="prep"?prepLab(x).toLowerCase():t("y.dispo").toLowerCase(),x.mt)+(ex?" "+ex:"");
+  if(x.mix&&x.mt) ex=t("ex.mix",(x.from==="prep"?prepLab(x):x.from==="form"?t("y.form"):t("y.dispo")).toLowerCase(),x.mt)+(ex?" "+ex:"");
   if(x.type==="desc") ex=t("ex.desc");
   if(!tracked(k)) ex=t("ex.untracked");
   $("dExplain").textContent=ex;
@@ -1098,8 +1096,8 @@ function renderJour(keepSegs){
   var padR=data.settings.rappelPad||0;
   x.segs.forEach(function(s,i){
     var row=document.createElement("div"); row.className="seg";
-    var sub=pauseOn(s)?'<br><span class="pz">−'+s.p+' min</span>':(s.t==="r"&&padR?'<br><span class="pz">+'+(2*padR)+' min</span>':'');
-    row.innerHTML='<span class="tag '+(s.t==="r"?"r":s.t==="d"?"d":(x.type==="ops"?"o":x.type==="form"?"fo":""))+'">'+(s.t==="s"&&x.type==="form"?esc(t("y.form")):s.t==="s"&&x.type==="ops"?"Ops":s.t==="d"&&(x.type==="prep"||x.from==="prep")?esc(t("y.prep")):TLAB[s.t])+sub+'</span>'+
+    var sub=(s.t==="r"&&padR?'<br><span class="pz">+'+(2*padR)+' min</span>':'');
+    row.innerHTML='<span class="tag '+(s.t==="r"?"r":s.t==="d"?"d":(s.k==="form"||x.type==="form"?"fo":x.type==="ops"?"o":""))+'">'+((s.k==="form"||s.t==="s"&&x.type==="form")?esc(t("y.form")):s.t==="s"&&x.type==="ops"?"Ops":s.t==="d"&&(x.type==="prep"||x.from==="prep")?esc(t("y.prep")):TLAB[s.t])+sub+'</span>'+
       '<button class="tbtn" data-i="'+i+'" data-f="a" aria-label="'+esc(t("a.begin"))+'">'+(s.a||"--:--")+'</button>'+
       '<span class="small">→</span>'+
       '<button class="tbtn" data-i="'+i+'" data-f="b" aria-label="'+esc(t("a.end"))+'">'+(s.b||"--:--")+'</button>'+
@@ -1157,7 +1155,7 @@ function renderMois(){
     var row=document.createElement("div"); row.className="d "+kcls(d,x); row.dataset.k=k;
     var lab=x.type?(TYN[x.type]+(isHalf(x)?" ½":"")):(f||"");
     if(x.type==="prep") lab=prepLab(x);
-    if(x.mix&&x.type==="ops") lab=(x.from==="prep"?prepLab(x):TYN.dispo)+" → "+TYN.ops;
+    if(x.mix&&x.type==="ops") lab=(x.from==="prep"?prepLab(x):x.from==="form"?TYN.form:TYN.dispo)+" → "+TYN.ops;
     if(x.type&&f) lab+=" · "+f;
     row.innerHTML='<span class="dn '+(isWeekday(d)?"":"we")+'">'+JC[d.getDay()]+" "+i+'</span>'+(lab?'<span class="small">'+esc(lab)+'</span>':'')+tags+'<span class="dh '+(c?"":"small")+'">'+(c?fmt(c):"—")+'</span>';
     box.appendChild(row);
@@ -1283,7 +1281,7 @@ function renderReg(){
   $("sLang").value=lang();
   $("sWeek").value=(S.weekMin/60);
   $("sDA").textContent=S.dispoA; $("sDB").textContent=S.dispoB; $("sDP").value=S.dispoP;
-  $("sDNote").textContent=t("r.dnote",fmt(segMin({t:"d",a:S.dispoA,b:S.dispoB,p:S.dispoP})));
+  $("sDNote").textContent=t("r.dnote",fmt(Math.max(0,segMin({t:"d",a:S.dispoA,b:S.dispoB})-(S.dispoP||0))));
   $("sDayNote").textContent=t("r.daynote",fmt(NORM()));
   $("sPad").value=String(S.rappelPad||0);
   $("sTS").value=data.track.start; $("sHS").value=fmtHM(data.track.hs);
@@ -1447,7 +1445,7 @@ $("segs").addEventListener("click",function(e){
 });
 $("tGarde").onclick=function(){if(blocked(key(cur)))return;var x=day(key(cur),true);x.garde=!x.garde;save();render()};
 $("tHalf").onclick=function(){if(blocked(key(cur)))return;var x=day(key(cur),true);if(!dispoLike(x.type)&&x.type!=="ops"&&x.type!=="form")return;x.rest=!x.rest;save();render()};
-function clearMix(x){ if(x.mix) x.segs=x.segs.filter(function(s){return s.t!=="d"}); delete x.mix; delete x.brk; delete x.from; delete x.mt; }
+function clearMix(x){ if(x.mix) x.segs=x.segs.filter(function(s){return s.t!=="d"&&!s.k}); delete x.mix; delete x.brk; delete x.from; delete x.mt; }
 $("types").addEventListener("click",function(e){
   var b=e.target.closest(".ty"); if(!b) return; if(blocked(key(cur))) return;
   var x=day(key(cur),true), ty=b.dataset.type;
@@ -1461,8 +1459,8 @@ function setType(x,ty){
   if(wasD) x.segs=x.segs.filter(function(s){return s.t!=="d"});
   x.type=ty; x.half=false; if(!dispoLike(ty)&&ty!=="ops"&&ty!=="form") x.rest=false;
   if(ty==="prep"&&!x.prep) x.prep=S.preps[0]||"";
-  if(dispoLike(ty)){ x.segs=x.segs.filter(function(s){return s.a}); x.segs.unshift({t:"d",a:S.dispoA,b:S.dispoB,p:S.dispoP}); toast(t("tt.dispo",fmt(segMin(x.segs[0])))); }
-  if(ty==="form"&&!x.fp) x.fp={on:true,m:60};
+  if(dispoLike(ty)){ x.segs=x.segs.filter(function(s){return s.a}); x.segs.unshift({t:"d",a:S.dispoA,b:S.dispoB,p:S.dispoP}); x.pz=pzDefault(ty); toast(t("tt.dispo",fmt(segMin(x.segs[0])-pzCut(x,1e9,false)))); }
+  x.pz=pzDefault(ty); delete x.fp;
   if((ty==="ops"||ty==="form") && !x.segs.some(function(s){return s.t==="s"})){ x.segs.push({t:"s",a:"",b:""}); toast(t(ty==="form"?"fp.enc":"t.enc")); }
   save(); render();
   if(ty==="z"){ var k=key(cur); if(counted(k)) warnHS(); else { var h=hsNow()-NORM(); if(h< -600) toast(t("t.afterz",fmt(h,true)),3500); } }
@@ -1516,45 +1514,49 @@ $("prepChips").addEventListener("click",function(e){
 $("bMiss").onclick=function(){
   var kk=key(cur); if(blocked(kk)) return;
   openTP(t("mi.title"), nowHM(), false, function(m){
-    var x=day(kk,true); if(!dispoLike(x.type)) return;
-    var ds=x.segs.filter(function(s){return s.t==="d"})[0], a0=(ds&&ds.a)||data.settings.dispoA;
-    var from=x.type;
-    x.segs=x.segs.filter(function(s){return s.t!=="d"&&!(s.t==="s"&&!s.a)});
-    if(toMin(m)<12*60||toMin(m)<=toMin(a0)){
-      /* avant midi : un seul service continu, sans pause */
-      x.segs.unshift({t:"s",a:toMin(m)<toMin(a0)?m:a0,b:""});
-      x.brk={on:false,a:"12:00",b:"12:30"};
-      toast(t("mi.am",m),2600);
+    var x=day(kk,true), from=x.type;
+    if(from==="form"){
+      /* formation, puis opération : la formation se termine à l'heure de la mission */
+      var fs=x.segs.filter(function(s){return s.t==="s"&&s.a})[0];
+      x.segs=x.segs.filter(function(s){return !(s.t==="s"&&!s.a)});
+      if(fs){ fs.k="form"; if(!fs.b) fs.b=m; }
+      x.segs.push({t:"s",a:m,b:""});
+      x.pz=pzOf(x);
+      toast(t("mi.fm",m),2600);
     } else {
-      /* l'après-midi : dispo jusqu'à la mission, puis opération ; interruption repas par défaut */
-      x.segs.unshift({t:"d",a:a0,b:m,p:0},{t:"s",a:m,b:""});
-      x.brk={on:true,a:"12:00",b:"12:30"};
-      toast(t("mi.pm",m),2600);
+      if(!dispoLike(from)) return;
+      var ds=x.segs.filter(function(s){return s.t==="d"})[0], a0=(ds&&ds.a)||data.settings.dispoA;
+      x.segs=x.segs.filter(function(s){return s.t!=="d"&&!(s.t==="s"&&!s.a)});
+      if(toMin(m)<12*60||toMin(m)<=toMin(a0)){
+        /* avant midi : un seul service continu, sans pause */
+        x.segs.unshift({t:"s",a:toMin(m)<toMin(a0)?m:a0,b:""});
+        x.pz={on:false,m:30,a:"12:00"};
+        toast(t("mi.am",m),2600);
+      } else {
+        /* l'après-midi : dispo jusqu'à la mission, puis opération ; pause de midi par défaut */
+        x.segs.unshift({t:"d",a:a0,b:m,p:0},{t:"s",a:m,b:""});
+        x.pz={on:true,m:30,a:"12:00"};
+        toast(t("mi.pm",m),2600);
+      }
     }
+    delete x.brk; delete x.fp;
     x.type="ops"; x.mix=true; x.from=from; x.mt=m;
     save(); render();
   });
 };
-$("tFp").onclick=function(){
-  if(blocked(key(cur)))return; var x=day(key(cur),true); if(x.type!=="form") return;
-  if(!x.fp) x.fp={on:false,m:60}; x.fp.on=!x.fp.on; save(); render();
+/* pause repas */
+$("tPz").onclick=function(){
+  if(blocked(key(cur)))return; var x=day(key(cur),true);
+  var pz=pzOf(x); x.pz={on:!pz.on,m:pz.m,a:pz.a}; delete x.brk; delete x.fp; save(); render();
 };
-$("fpChips").addEventListener("click",function(e){
+$("pzChips").addEventListener("click",function(e){
   var b=e.target.closest("[data-m]"); if(!b) return; if(blocked(key(cur))) return;
-  var x=day(key(cur),true); if(!x.fp) x.fp={on:true,m:60}; x.fp.m=+b.dataset.m; save(); render();
+  var x=day(key(cur),true), pz=pzOf(x); x.pz={on:true,m:+b.dataset.m,a:pz.a}; delete x.brk; delete x.fp; save(); render();
 });
-$("tBrk").onclick=function(){
-  if(blocked(key(cur)))return; var x=day(key(cur),true); if(!x.mix) return;
-  if(!x.brk) x.brk={on:false,a:"12:00",b:"12:30"};
-  x.brk.on=!x.brk.on; save(); render();
+$("pzA").onclick=function(){
+  var kk=key(cur); if(blocked(kk)) return; var pz=pzOf(day(kk));
+  openTP(t("tp.begin"), pz.a||"12:00", false, function(v){ var y=day(kk,true), p2=pzOf(y); y.pz={on:p2.on,m:p2.m,a:v}; delete y.brk; delete y.fp; save(); render(); });
 };
-["brkA","brkB"].forEach(function(id){
-  $(id).onclick=function(){
-    var kk=key(cur); if(blocked(kk)) return; var x=day(kk); if(!x.brk) return;
-    var f=id==="brkA"?"a":"b";
-    openTP(t(f==="a"?"tp.begin":"tp.end"), x.brk[f], false, function(v){ var y=day(kk,true); if(y.brk){ y.brk[f]=v; save(); render(); } });
-  };
-});
 /* heure de sport */
 $("tSport").onclick=function(){
   var k=key(cur); if(blocked(k)) return; var x=day(k,true);
