@@ -145,7 +145,9 @@ textarea{width:100%;min-height:140px;font:16px/1.4 ui-monospace,Menlo,monospace;
 .per{border-top:1px solid var(--line);padding:10px 0}
 .per:first-child{border-top:0}
 .per h4{margin:0 0 4px;font-size:15px;display:flex;justify-content:space-between;align-items:center}
-.per .ln{display:flex;justify-content:space-between;font-size:14px;padding:2px 0}
+.per .ln{display:flex;justify-content:space-between;align-items:baseline;gap:14px;font-size:14px;padding:3px 0}
+.per .ln span{flex:1;min-width:0}
+.per .ln b{white-space:nowrap;text-align:right;flex:none}
 .per .ed{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}
 .per .ed label{font-size:12px;color:var(--muted)}
 .per .ed input{width:100%}
@@ -490,7 +492,7 @@ fr:{
 "r.bktxt":"Tes données restent uniquement sur ce téléphone. Enregistre régulièrement une sauvegarde : un fichier que tu ranges dans Fichiers (iCloud Drive), ton Drive ou que tu t'envoies par mail.",
 "r.bkfile":"Enregistrer une sauvegarde","r.bkopen":"Restaurer depuis un fichier","r.bkother":"Autre méthode : copier / coller",
 "r.bkcopy":"Copier la sauvegarde","r.bkpaste":"Colle ici une sauvegarde","r.bkload":"Restaurer cette sauvegarde",
-"r.version":"Version 0.27 · aucune donnée envoyée · rien d'autre que des horaires.",
+"r.version":"Version 0.28 · aucune donnée envoyée · rien d'autre que des horaires.",
 "nav.jour":"Jour","nav.mois":"Mois","nav.recap":"Récap","nav.reg":"Réglages",
 
 "s.s":"Service","s.r":"Rappel","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Congé","y.z":"Z","y.ex":"EX",
@@ -629,7 +631,7 @@ nl:{
 "r.bktxt":"Je gegevens blijven enkel op deze telefoon. Maak regelmatig een back-up: een bestand dat je bewaart in Bestanden (iCloud Drive), in je Drive of dat je naar jezelf mailt.",
 "r.bkfile":"Back-up opslaan","r.bkopen":"Herstellen vanuit een bestand","r.bkother":"Andere methode: kopiëren / plakken",
 "r.bkcopy":"Back-up kopiëren","r.bkpaste":"Plak hier een back-up","r.bkload":"Deze back-up herstellen",
-"r.version":"Versie 0.27 · geen gegevens verstuurd · enkel uurroosters.",
+"r.version":"Versie 0.28 · geen gegevens verstuurd · enkel uurroosters.",
 "nav.jour":"Dag","nav.mois":"Maand","nav.recap":"Overzicht","nav.reg":"Instellingen",
 
 "s.s":"Dienst","s.r":"Oproep","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Verlof","y.z":"Z","y.ex":"EX",
