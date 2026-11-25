@@ -91,6 +91,12 @@ textarea{width:100%;min-height:140px;font:16px/1.4 ui-monospace,Menlo,monospace;
 .hidden{display:none!important}
 .note{font-size:13px;color:var(--muted);margin-top:6px}
 .live{font-size:13px;color:var(--pos);font-weight:600}
+#wiz{position:fixed;inset:0;z-index:50;background:var(--bg);overflow-y:auto;padding:calc(env(safe-area-inset-top) + 18px) 18px calc(24px + env(safe-area-inset-bottom))}
+#wiz .wbox{max-width:480px;margin:0 auto}
+#wiz input{width:100%;font:inherit;font-size:18px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff;margin-top:6px}
+.wdots{display:flex;gap:6px;margin:10px 0 16px}
+.wdots i{flex:1;height:5px;border-radius:3px;background:var(--line)}
+.wdots i.on{background:var(--accent)}
 .warnbox{background:#fdf0d8;border:1px solid #f0d49a;color:#7a4e0c;border-radius:12px;padding:10px 12px;font-size:14px;margin-top:10px}
 .info{background:var(--c-fer-bg);color:var(--c-fer);border-radius:12px;padding:10px 12px;font-size:14px;font-weight:600;margin-top:10px}
 
@@ -440,6 +446,7 @@ header{display:flex;justify-content:space-between;align-items:flex-start;gap:10p
     <div class="tpbtns"><button class="btn alt" id="tpClr" data-i18n="tp.clear"></button><button class="btn alt" id="tpNo" data-i18n="tp.cancel"></button><button class="btn" id="tpOk" data-i18n="tp.ok"></button></div>
   </div>
 </div>
+<div id="wiz" class="hidden"></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -483,7 +490,7 @@ fr:{
 "r.bktxt":"Tes données restent uniquement sur ce téléphone. Enregistre régulièrement une sauvegarde : un fichier que tu ranges dans Fichiers (iCloud Drive), ton Drive ou que tu t'envoies par mail.",
 "r.bkfile":"Enregistrer une sauvegarde","r.bkopen":"Restaurer depuis un fichier","r.bkother":"Autre méthode : copier / coller",
 "r.bkcopy":"Copier la sauvegarde","r.bkpaste":"Colle ici une sauvegarde","r.bkload":"Restaurer cette sauvegarde",
-"r.version":"Version 0.25 · aucune donnée envoyée · rien d'autre que des horaires.",
+"r.version":"Version 0.26 · aucune donnée envoyée · rien d'autre que des horaires.",
 "nav.jour":"Jour","nav.mois":"Mois","nav.recap":"Récap","nav.reg":"Réglages",
 
 "s.s":"Service","s.r":"Rappel","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Congé","y.z":"Z","y.ex":"EX",
@@ -579,7 +586,13 @@ fr:{
 "m.mix":function(n){return "Dont parties de dispo : "+n},"a.prep":"Prépa","a.sport":"Sport",
 "a.prepby":function(x){return "Préparations : "+x},
 "r.prep":"Préparations","r.preptxt":"Tes journées de préparation (ex. TK, Drone). Elles se calculent comme un dispo gradé, mais sont comptées à part.","r.prepname":"Nom (ex. TK)","r.prepadd":"Ajouter","r.noprep":"Aucune.","r.prepadded":"Préparation ajoutée",
-"r.sport":"Heure de sport","r.sportnote":"1 h par semaine, ajoutée au solde d'heures (week-end compris). Une pastille blanche « Sport » s'affiche sur le jour."
+"r.sport":"Heure de sport","r.sportnote":"1 h par semaine, ajoutée au solde d'heures (week-end compris). Une pastille blanche « Sport » s'affiche sur le jour.",
+"w.hello":"Bienvenue dans Heurêka","w.intro":"3 réglages rapides pour démarrer. Tu pourras tout modifier ensuite dans Récap et Réglages.",
+"w.step":function(n){return "Étape "+n+" sur 3"},
+"w.t1":"Tes jours de congé de l'année","w.d1":"Total des jours dont tu disposes cette année, tous crédits confondus (congé annuel, report, jours CG, fériés au choix…). Le détail figure sur ta fiche de congés ; tu pourras le détailler plus tard dans Récap.","w.p1":"Jours attribués (ex. 36)",
+"w.t2":"Congés déjà pris","w.d2":"Nombre de jours de congé déjà pris depuis le 1er janvier, avant de commencer à utiliser l'app (ex. 12,5). Mets 0 si tu n'en as pas encore pris.","w.p2":"Jours déjà pris (ex. 12,5)",
+"w.t3":"Ton solde d'heures sup","w.d3":"Ton solde d'heures supplémentaires aujourd'hui, avant d'encoder quoi que ce soit (ex. 22:03, ou -3:30 s'il est négatif). L'app compte à partir d'aujourd'hui.","w.p3":"Solde en heures (ex. 22:03)",
+"w.next":"Suivant","w.back":"Retour","w.finish":"Terminer","w.skip":"Passer, je règlerai plus tard","w.done":"C'est prêt !","cl.start":"Congés de l'année"
 },
 nl:{
 "app.sub":"Mijn uren",
@@ -616,7 +629,7 @@ nl:{
 "r.bktxt":"Je gegevens blijven enkel op deze telefoon. Maak regelmatig een back-up: een bestand dat je bewaart in Bestanden (iCloud Drive), in je Drive of dat je naar jezelf mailt.",
 "r.bkfile":"Back-up opslaan","r.bkopen":"Herstellen vanuit een bestand","r.bkother":"Andere methode: kopiëren / plakken",
 "r.bkcopy":"Back-up kopiëren","r.bkpaste":"Plak hier een back-up","r.bkload":"Deze back-up herstellen",
-"r.version":"Versie 0.25 · geen gegevens verstuurd · enkel uurroosters.",
+"r.version":"Versie 0.26 · geen gegevens verstuurd · enkel uurroosters.",
 "nav.jour":"Dag","nav.mois":"Maand","nav.recap":"Overzicht","nav.reg":"Instellingen",
 
 "s.s":"Dienst","s.r":"Oproep","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Verlof","y.z":"Z","y.ex":"EX",
@@ -712,7 +725,13 @@ nl:{
 "m.mix":function(n){return "Waarvan vanuit dispo: "+n},"a.prep":"Voorb.","a.sport":"Sport",
 "a.prepby":function(x){return "Voorbereidingen: "+x},
 "r.prep":"Voorbereidingen","r.preptxt":"Je voorbereidingsdagen (bv. TK, Drone). Ze worden berekend als een dispo gegradeerde, maar apart geteld.","r.prepname":"Naam (bv. TK)","r.prepadd":"Toevoegen","r.noprep":"Geen.","r.prepadded":"Voorbereiding toegevoegd",
-"r.sport":"Sportuur","r.sportnote":"1 u per week, toegevoegd aan het urensaldo (weekend inbegrepen). Een witte « Sport »-bol verschijnt op de dag."
+"r.sport":"Sportuur","r.sportnote":"1 u per week, toegevoegd aan het urensaldo (weekend inbegrepen). Een witte « Sport »-bol verschijnt op de dag.",
+"w.hello":"Welkom bij Heurêka","w.intro":"3 snelle instellingen om te starten. Je kunt alles nadien wijzigen in Overzicht en Instellingen.",
+"w.step":function(n){return "Stap "+n+" van 3"},
+"w.t1":"Je verlofdagen van dit jaar","w.d1":"Totaal aantal dagen waarover je dit jaar beschikt, alle tegoeden samen (jaarlijks verlof, overdracht, CG-dagen, feestdagen naar keuze…). Het detail staat op je verlofrekening; je kunt het later uitsplitsen in Overzicht.","w.p1":"Toegekende dagen (bv. 36)",
+"w.t2":"Verlof al opgenomen","w.d2":"Aantal verlofdagen dat je sinds 1 januari al hebt opgenomen, vóór je de app gebruikte (bv. 12,5). Vul 0 in als je nog niets hebt opgenomen.","w.p2":"Al opgenomen dagen (bv. 12,5)",
+"w.t3":"Je saldo overuren","w.d3":"Je saldo overuren vandaag, voor je iets invoert (bv. 22:03, of -3:30 als het negatief is). De app telt vanaf vandaag.","w.p3":"Saldo in uren (bv. 22:03)",
+"w.next":"Volgende","w.back":"Terug","w.finish":"Klaar","w.skip":"Overslaan, ik stel het later in","w.done":"Alles klaar!","cl.start":"Verlof van het jaar"
 }
 };
 function lang(){
@@ -732,7 +751,11 @@ var KEY="mesheures.v1";
 var mem=null;
 function load(){
   try{var s=localStorage.getItem(KEY); if(s) return JSON.parse(s);}catch(e){}
-  return mem||{days:{},settings:{weekMin:2280}};
+  if(mem) return mem;
+  /* premier lancement : point de départ neutre + écran de bienvenue */
+  var d0=today(), y0=d0.getFullYear(), yy={};
+  yy[y0]={before:0,credits:[]};
+  return {days:{},settings:{weekMin:2280},welcome:true,track:{start:key(d0),hs:0,v:2},years:yy};
 }
 function save(){
   mem=data; psMemo={};
@@ -1341,9 +1364,43 @@ function askRestore(txt){
   $("bkYes").onclick=function(){ data=pending; pending=null; migrate(); save(); c.classList.add("hidden"); render(); toast(t("b.restored")); };
   $("bkNo").onclick=function(){ pending=null; c.classList.add("hidden"); };
 }
+/* ---------- écran de bienvenue (premier lancement) ---------- */
+var wStep=1, wVal={1:"",2:"",3:""};
+function renderWiz(){
+  var w=$("wiz"); if(!w) return;
+  if(data.welcome!==true){ w.classList.add("hidden"); return; }
+  w.classList.remove("hidden");
+  var k=wStep, h='<div class="wbox"><div class="row between"><div class="small">'+esc(t("w.step",k))+'</div><button class="btn ghost sm" id="wLang">'+(lang()==="fr"?"NL":"FR")+'</button></div>';
+  h+='<div class="wdots">'+[1,2,3].map(function(i){return '<i class="'+(i<=k?"on":"")+'"></i>'}).join("")+'</div>';
+  if(k===1) h+='<h1>'+esc(t("w.hello"))+'</h1><p class="small">'+esc(t("w.intro"))+'</p>';
+  h+='<div class="card"><strong>'+esc(t("w.t"+k))+'</strong><p class="small" style="margin:6px 0 0">'+esc(t("w.d"+k))+'</p>'+
+     '<input id="wIn" type="text" inputmode="'+(k===3?"text":"decimal")+'" autocomplete="off" placeholder="'+esc(t("w.p"+k))+'" value="'+esc(wVal[k])+'"></div>';
+  h+='<div class="row" style="gap:8px"><button class="btn" id="wNext" style="flex:1">'+esc(t(k<3?"w.next":"w.finish"))+'</button>'+(k>1?'<button class="btn alt" id="wBack">'+esc(t("w.back"))+'</button>':'')+'</div>';
+  h+='<div style="text-align:center;margin-top:10px"><button class="btn ghost sm" id="wSkip">'+esc(t("w.skip"))+'</button></div></div>';
+  w.innerHTML=h;
+}
+function wNum(v){var n=parseFloat(String(v||"").replace(",","."));return isNaN(n)||n<0?0:n}
+function wEnd(){ data.welcome=false; save(); wStep=1; render(); }
+$("wiz").addEventListener("input",function(e){ if(e.target.id==="wIn") wVal[wStep]=e.target.value; });
+$("wiz").addEventListener("click",function(e){
+  var id=e.target.id;
+  if(id==="wLang"){ switchLang(lang()==="fr"?"nl":"fr"); return; }
+  if(id==="wBack"){ wStep=Math.max(1,wStep-1); render(); return; }
+  if(id==="wSkip"){ wEnd(); return; }
+  if(id==="wNext"){
+    if(wStep<3){ wStep++; render(); return; }
+    var hs=parseHM(wVal[3]); if(hs==null){ toast(t("r.fmt2")); return; }
+    var Y=today().getFullYear(), cr=wNum(wVal[1]);
+    data.years[Y]={before:wNum(wVal[2]),credits:cr>0?[{k:"cl.start",j:cr,u:Y+"-12-31"}]:[]};
+    data.track={start:key(today()),hs:hs,v:2};
+    wEnd(); toast(t("w.done"));
+  }
+});
+
 function render(keepSegs){
   psMemo={};
   setLang();
+  renderWiz();
   renderBk();
   ["jour","mois","recap","reg"].forEach(function(v){$("v-"+v).classList.toggle("hidden",v!==view)});
   document.querySelectorAll("nav button").forEach(function(b){b.classList.toggle("on",b.dataset.v===view)});
