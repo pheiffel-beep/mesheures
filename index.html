@@ -490,7 +490,7 @@ fr:{
 "r.bktxt":"Tes données restent uniquement sur ce téléphone. Enregistre régulièrement une sauvegarde : un fichier que tu ranges dans Fichiers (iCloud Drive), ton Drive ou que tu t'envoies par mail.",
 "r.bkfile":"Enregistrer une sauvegarde","r.bkopen":"Restaurer depuis un fichier","r.bkother":"Autre méthode : copier / coller",
 "r.bkcopy":"Copier la sauvegarde","r.bkpaste":"Colle ici une sauvegarde","r.bkload":"Restaurer cette sauvegarde",
-"r.version":"Version 0.26 · aucune donnée envoyée · rien d'autre que des horaires.",
+"r.version":"Version 0.27 · aucune donnée envoyée · rien d'autre que des horaires.",
 "nav.jour":"Jour","nav.mois":"Mois","nav.recap":"Récap","nav.reg":"Réglages",
 
 "s.s":"Service","s.r":"Rappel","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Congé","y.z":"Z","y.ex":"EX",
@@ -539,7 +539,7 @@ fr:{
 "c.created":function(y){return "Année "+y+" créée : vérifie les crédits"},
 "h.title":"Heures sup","h.bal":"Solde à ce jour",
 "h.warn":function(x){return "Attention : tu es à "+x+" d'heures sup (avertissement à partir de − 10 h)."},
-"h.cur":"en cours","h.closed":"terminée","h.in":"Report reçu","h.delta":"Prestées dans la période","h.paid":"Payées",
+"h.cur":"en cours","h.closed":"terminée","h.in":"Report reçu","h.delta":function(x){return "Écart par rapport à une journée normale ("+x+")"},"h.deltahelp":function(x){return "Chaque jour est comparé à "+x+" : plus long, ça monte ; plus court ou rien d'encodé, ça descend."},"h.paid":"Payées",
 "h.convl":function(n){return "Converties en congé ("+n+" j)"},
 "h.out":"Reporté à la période suivante","h.solde":"Solde",
 "h.paidin":"Payées (h:mm)","h.convin":"Converties (jours)","h.payall":"Tout payer","h.repall":"Tout reporter",
@@ -629,7 +629,7 @@ nl:{
 "r.bktxt":"Je gegevens blijven enkel op deze telefoon. Maak regelmatig een back-up: een bestand dat je bewaart in Bestanden (iCloud Drive), in je Drive of dat je naar jezelf mailt.",
 "r.bkfile":"Back-up opslaan","r.bkopen":"Herstellen vanuit een bestand","r.bkother":"Andere methode: kopiëren / plakken",
 "r.bkcopy":"Back-up kopiëren","r.bkpaste":"Plak hier een back-up","r.bkload":"Deze back-up herstellen",
-"r.version":"Versie 0.26 · geen gegevens verstuurd · enkel uurroosters.",
+"r.version":"Versie 0.27 · geen gegevens verstuurd · enkel uurroosters.",
 "nav.jour":"Dag","nav.mois":"Maand","nav.recap":"Overzicht","nav.reg":"Instellingen",
 
 "s.s":"Dienst","s.r":"Oproep","s.d":"Dispo","y.ops":"Ops","y.dispo":"Dispo","y.conge":"Verlof","y.z":"Z","y.ex":"EX",
@@ -678,7 +678,7 @@ nl:{
 "c.created":function(y){return "Jaar "+y+" aangemaakt: controleer de tegoeden"},
 "h.title":"Overuren","h.bal":"Saldo tot vandaag",
 "h.warn":function(x){return "Opgelet: je staat op "+x+" overuren (waarschuwing vanaf − 10 u)."},
-"h.cur":"lopend","h.closed":"afgesloten","h.in":"Ontvangen overdracht","h.delta":"Gepresteerd in de periode","h.paid":"Uitbetaald",
+"h.cur":"lopend","h.closed":"afgesloten","h.in":"Ontvangen overdracht","h.delta":function(x){return "Verschil met een normale dag ("+x+")"},"h.deltahelp":function(x){return "Elke dag wordt vergeleken met "+x+": langer, dan stijgt het; korter of niets ingevoerd, dan daalt het."},"h.paid":"Uitbetaald",
 "h.convl":function(n){return "Omgezet in verlof ("+n+" d)"},
 "h.out":"Overgedragen naar de volgende periode","h.solde":"Saldo",
 "h.paidin":"Uitbetaald (u:mm)","h.convin":"Omgezet (dagen)","h.payall":"Alles uitbetalen","h.repall":"Alles overdragen",
@@ -1257,7 +1257,7 @@ function renderRecap(){
     var gross=s.inBal+s.delta;
     h+='<div class="per"><h4><span>'+PERN[p2]+'</span><span class="chip '+(s.closed?"done":"")+'">'+esc(s.cur?t("h.cur"):t("h.closed"))+'</span></h4>';
     h+='<div class="ln"><span>'+esc(t("h.in"))+'</span><b>'+fmt(s.inBal,true)+'</b></div>';
-    h+='<div class="ln"><span>'+esc(t("h.delta"))+'</span><b>'+fmt(s.delta,true)+'</b></div>';
+    h+='<div class="ln"><span>'+esc(t("h.delta",fmt(NORM())))+'</span><b>'+fmt(s.delta,true)+'</b></div><div class="small" style="margin:-2px 0 6px">'+esc(t("h.deltahelp",fmt(NORM())))+'</div>';
     if(s.paid) h+='<div class="ln"><span>'+esc(t("h.paid"))+'</span><b>− '+fmt(s.paid)+'</b></div>';
     if(s.conv) h+='<div class="ln"><span>'+esc(t("h.convl",s.conv))+'</span><b>− '+fmt(s.conv*NORM())+'</b></div>';
     h+='<div class="ln"><span>'+esc(s.closed?t("h.out"):t("h.solde"))+'</span><b class="'+(s.out<0?"neg":"")+'">'+fmt(s.out,true)+'</b></div>';
